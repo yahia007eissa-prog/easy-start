@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PROJECT_NAME}} - دراسة جدوى صناعية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #F7F8FA;
+      color: #111827;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    .header {
+      background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 12px 12px 0 0;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .header .category {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+    .header .date {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .content {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .content h2 {
+      color: #2D3748;
+      font-size: 22px;
+      margin: 30px 0 15px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #E2E8F0;
+    }
+    .content h3 {
+      color: #4A5568;
+      font-size: 18px;
+      margin: 25px 0 12px 0;
+    }
+    .content p {
+      margin: 15px 0;
+      color: #4A5568;
+    }
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .content th {
+      background: #2D3748;
+      color: white;
+      padding: 12px;
+      text-align: right;
+    }
+    .content td {
+      padding: 12px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .content tr:nth-child(even) {
+      background: #F7FAFC;
+    }
+    .footer {
+      margin-top: 40px;
+      padding: 20px;
+      background: #E2E8F0;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      color: #4A5568;
+    }
+    .footer strong {
+      color: #2D3748;
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .container { box-shadow: none; padding: 20px; }
+      .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="category">{{CATEGORY}}</div>
+    <h1>{{PROJECT_NAME}}</h1>
+    <div class="date">{{DATE}}</div>
+  </div>
+  <div class="container">
+    <div class="content">
+      {{CONTENT}}
+    </div>
+    <div class="footer">
+      <strong>ملاحظة:</strong> هذه دراسة تقديرية - تواصل مع فريق Easy Start للحصول على تفاصيل دقيقة.
+    </div>
+  </div>
+</body>
+</html>

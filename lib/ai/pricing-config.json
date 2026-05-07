@@ -1,0 +1,697 @@
+{
+  "realEstate": {
+    "name": "Real Estate",
+    "nameAr": "عقاري",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "data": {
+      "residential": {
+        "constructionPerSqm": {
+          "normal": 8500,
+          "medium": 12000,
+          "premium": 18000,
+          "luxury": 28000
+        },
+        "basementAddition": {
+          "one": 4500,
+          "two": 3800,
+          "more": 3200
+        }
+      },
+      "commercial": {
+        "constructionPerSqm": {
+          "normal": 12000,
+          "medium": 16000,
+          "premium": 22000,
+          "luxury": 35000
+        },
+        "basementAddition": {
+          "one": 5500,
+          "two": 4800,
+          "more": 4200
+        }
+      },
+      "administrative": {
+        "constructionPerSqm": {
+          "normal": 9500,
+          "medium": 13500,
+          "premium": 19500,
+          "luxury": 30000
+        },
+        "basementAddition": {
+          "one": 5000,
+          "two": 4300,
+          "more": 3700
+        }
+      },
+      "hotel": {
+        "constructionPerSqm": {
+          "normal": 14000,
+          "medium": 20000,
+          "premium": 30000,
+          "luxury": 45000
+        },
+        "basementAddition": {
+          "one": 6000,
+          "two": 5200,
+          "more": 4500
+        }
+      },
+      "mixed": {
+        "constructionPerSqm": {
+          "normal": 10000,
+          "medium": 14500,
+          "premium": 21000,
+          "luxury": 32000
+        },
+        "basementAddition": {
+          "one": 5200,
+          "two": 4500,
+          "more": 3900
+        }
+      }
+    }
+  },
+  "medical": {
+    "name": "Medical & Health",
+    "nameAr": "طبي وصحي",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "data": {
+      "clinic": {
+        "constructionPerSqm": {
+          "normal": 11000,
+          "medium": 15500,
+          "premium": 22000,
+          "luxury": 35000
+        }
+      },
+      "hospital": {
+        "constructionPerSqm": {
+          "normal": 18000,
+          "medium": 25000,
+          "premium": 38000,
+          "luxury": 55000
+        },
+        "basementAddition": {
+          "one": 8000,
+          "two": 7000,
+          "more": 6000
+        }
+      },
+      "medicalCenter": {
+        "constructionPerSqm": {
+          "normal": 12000,
+          "medium": 17000,
+          "premium": 25000,
+          "luxury": 40000
+        }
+      }
+    }
+  },
+  "agricultural": {
+    "name": "Agricultural",
+    "nameAr": "زراعي",
+    "updatedAt": "2026-04-27T09:04:26.281Z",
+    "data": {
+      "version": "2.0.0",
+      "last_updated": "2026-04-27",
+      "sector": "agriculture",
+      "category": "tree_crops",
+      "inject_rule": "Send ONLY the crop matching the user project — never send the full file",
+      "crops": [
+        {
+          "id": "olives",
+          "name_ar": "زيتون",
+          "type": "tree",
+          "economic_life_years": 50,
+          "yield_tons_per_feddan_by_year": [
+            0.2,
+            0.8,
+            2.5,
+            4,
+            5.5,
+            6.5,
+            7,
+            7.2,
+            7.3,
+            7.3
+          ],
+          "soil": {
+            "texture": "sandy_loam",
+            "ph_min": 6,
+            "ph_max": 8,
+            "salinity_ec": 5
+          },
+          "water": {
+            "annual_m3_per_feddan": 1200,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 12000,
+            "pruning_tools": 500,
+            "harvest_nets": 2000,
+            "first_fertilizer": 3000
+          },
+          "post_harvest": [
+            {
+              "type": "drying",
+              "desc": "تجفيف للمخللات",
+              "cost_per_ton": 1500,
+              "fixed_line": 50000
+            },
+            {
+              "type": "pressing_oil",
+              "desc": "عصر زيت",
+              "cost_per_ton": 2000,
+              "fixed_line": 80000
+            }
+          ],
+          "notes": "عائد مرتفع بعد العام الخامس، يتحمل الجفاف والملوحة المتوسطة",
+          "source": "FAO + Egyptian Olive Council 2025"
+        },
+        {
+          "id": "dates",
+          "name_ar": "نخيل بلح",
+          "type": "tree",
+          "economic_life_years": 60,
+          "yield_tons_per_feddan_by_year": [
+            0.3,
+            1,
+            2.5,
+            4,
+            5,
+            5.8,
+            6.2,
+            6.5,
+            6.6,
+            6.6
+          ],
+          "soil": {
+            "texture": "sandy",
+            "ph_min": 7,
+            "ph_max": 8.5,
+            "salinity_ec": 7
+          },
+          "water": {
+            "annual_m3_per_feddan": 1400,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 12000,
+            "climbing_tools": 1500,
+            "pollination_kits": 800,
+            "first_fertilizer": 4000
+          },
+          "post_harvest": [
+            {
+              "type": "drying",
+              "desc": "تجفيف رطب إلى تمر",
+              "cost_per_ton": 1000,
+              "fixed_solar_dryer": 30000
+            },
+            {
+              "type": "freezing",
+              "desc": "تجميد رطب طازج",
+              "cost_per_ton": 2500,
+              "fixed_cold_storage": 100000
+            }
+          ],
+          "notes": "مناسب للسيوة والواحات، استثمار طويل الأجل، عائد تصديري عالي",
+          "source": "FAO + ARI Egypt 2024"
+        },
+        {
+          "id": "mangoes",
+          "name_ar": "مانجو",
+          "type": "tree",
+          "economic_life_years": 40,
+          "yield_tons_per_feddan_by_year": [
+            0.1,
+            0.5,
+            2,
+            4,
+            6,
+            7.5,
+            8.5,
+            9,
+            9.5,
+            10
+          ],
+          "soil": {
+            "texture": "loamy",
+            "ph_min": 5.5,
+            "ph_max": 7.5,
+            "salinity_ec": 2.5
+          },
+          "water": {
+            "annual_m3_per_feddan": 1600,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 13000,
+            "pruning_saws": 700,
+            "fruit_bags": 1200,
+            "first_fertilizer": 5000
+          },
+          "post_harvest": [
+            {
+              "type": "freezing",
+              "desc": "شرائح مانجو مجمدة",
+              "cost_per_ton": 3000,
+              "fixed_line": 150000
+            },
+            {
+              "type": "drying",
+              "desc": "مانجو مجففة",
+              "cost_per_ton": 4000,
+              "fixed_line": 80000
+            },
+            {
+              "type": "pulping",
+              "desc": "لب مانجو للعصائر",
+              "cost_per_ton": 1500,
+              "fixed_line": 60000
+            }
+          ],
+          "notes": "عائد تصديري ممتاز لأصناف التيمور والكيت، لا يتحمل الملوحة",
+          "source": "FAO + Mango Research Center Ismailia 2025"
+        },
+        {
+          "id": "citrus_oranges",
+          "name_ar": "برتقال",
+          "type": "tree",
+          "economic_life_years": 35,
+          "yield_tons_per_feddan_by_year": [
+            0.8,
+            2,
+            4,
+            6,
+            7.5,
+            8.5,
+            9,
+            9.2,
+            9.3,
+            9.3
+          ],
+          "soil": {
+            "texture": "sandy_loam",
+            "ph_min": 6,
+            "ph_max": 7.5,
+            "salinity_ec": 2
+          },
+          "water": {
+            "annual_m3_per_feddan": 1500,
+            "best_method": "sprinkler"
+          },
+          "setup_costs_per_feddan_egp": {
+            "sprinkler_irrigation": 8000,
+            "pruning_tools": 600,
+            "first_fertilizer": 4500
+          },
+          "post_harvest": [
+            {
+              "type": "freezing",
+              "desc": "عصير برتقال مجمد",
+              "cost_per_ton": 2000,
+              "fixed_cold_storage": 80000
+            },
+            {
+              "type": "drying",
+              "desc": "قشور برتقال مجففة",
+              "cost_per_ton": 2500,
+              "fixed_dryer": 40000
+            }
+          ],
+          "notes": "أكثر محصول تصديري في مصر، عائد جيد من العام الرابع",
+          "source": "FAO + Citrus Research Institute Egypt 2024"
+        },
+        {
+          "id": "grapes",
+          "name_ar": "عنب",
+          "type": "tree_fruit_vine",
+          "economic_life_years": 30,
+          "yield_tons_per_feddan_by_year": [
+            0.5,
+            1.5,
+            3.5,
+            5,
+            6,
+            6.5,
+            6.8,
+            7,
+            7,
+            7
+          ],
+          "soil": {
+            "texture": "sandy_loam",
+            "ph_min": 6,
+            "ph_max": 7.5,
+            "salinity_ec": 3
+          },
+          "water": {
+            "annual_m3_per_feddan": 1800,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 12000,
+            "trellis_system": 15000,
+            "pruning_shears": 800,
+            "first_fertilizer": 6000
+          },
+          "post_harvest": [
+            {
+              "type": "freezing",
+              "desc": "عنب مجمد للتصدير",
+              "cost_per_ton": 3500,
+              "fixed_blast_freezer": 120000
+            },
+            {
+              "type": "drying",
+              "desc": "زبيب",
+              "cost_per_ton": 2000,
+              "fixed_drying_yards": 30000
+            },
+            {
+              "type": "juice",
+              "desc": "عصير عنب مركز",
+              "cost_per_ton": 1800,
+              "fixed_juice_line": 100000
+            }
+          ],
+          "notes": "ربحية مرتفعة في أصناف المائدة والزبيب، يحتاج دعائم (trellis)",
+          "source": "FAO + Egyptian Grape Board 2025"
+        },
+        {
+          "id": "apples",
+          "name_ar": "تفاح",
+          "type": "tree",
+          "economic_life_years": 30,
+          "yield_tons_per_feddan_by_year": [
+            0.3,
+            1.2,
+            3,
+            5,
+            7,
+            8,
+            8.5,
+            8.8,
+            9,
+            9
+          ],
+          "soil": {
+            "texture": "loamy",
+            "ph_min": 6,
+            "ph_max": 7,
+            "salinity_ec": 2
+          },
+          "water": {
+            "annual_m3_per_feddan": 1700,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 12000,
+            "trellis": 12000,
+            "first_fertilizer": 5000
+          },
+          "post_harvest": [
+            {
+              "type": "freezing",
+              "desc": "شرائح تفاح مجمدة",
+              "cost_per_ton": 2800,
+              "fixed_cold_storage": 90000
+            },
+            {
+              "type": "drying",
+              "desc": "تفاح مجفف شيبس",
+              "cost_per_ton": 3500,
+              "fixed_dehydrator": 70000
+            }
+          ],
+          "notes": "مناسب للأراضي المرتفعة كسيناء، مجدي مع الأصناف المبكرة",
+          "source": "FAO + MOA Sinai Development 2024"
+        },
+        {
+          "id": "peaches",
+          "name_ar": "خوخ",
+          "type": "tree",
+          "economic_life_years": 20,
+          "yield_tons_per_feddan_by_year": [
+            0.5,
+            1.5,
+            3.5,
+            5.5,
+            7,
+            8,
+            8.5,
+            8.5,
+            8,
+            8
+          ],
+          "soil": {
+            "texture": "sandy_loam",
+            "ph_min": 6,
+            "ph_max": 7,
+            "salinity_ec": 2
+          },
+          "water": {
+            "annual_m3_per_feddan": 1600,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 12000,
+            "pruning_cost": 600,
+            "first_fertilizer": 4500
+          },
+          "post_harvest": [
+            {
+              "type": "freezing",
+              "desc": "خوخ مجمد معلب",
+              "cost_per_ton": 3000,
+              "fixed_cold_storage": 80000
+            },
+            {
+              "type": "drying",
+              "desc": "خوخ مجفف قمريات",
+              "cost_per_ton": 4000,
+              "fixed_dryer": 60000
+            }
+          ],
+          "notes": "عائد سريع نسبياً، العمر الاقتصادي قصير، مناسب للأسواق المحلية",
+          "source": "FAO + Egyptian Horticulture Export Council 2024"
+        },
+        {
+          "id": "pomegranates",
+          "name_ar": "رمان",
+          "type": "tree",
+          "economic_life_years": 30,
+          "yield_tons_per_feddan_by_year": [
+            0.3,
+            1,
+            2.5,
+            4.5,
+            6,
+            7,
+            7.5,
+            7.8,
+            8,
+            8
+          ],
+          "soil": {
+            "texture": "sandy_loam",
+            "ph_min": 5.5,
+            "ph_max": 7.5,
+            "salinity_ec": 4
+          },
+          "water": {
+            "annual_m3_per_feddan": 1300,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 11000,
+            "pruning_tools": 500,
+            "first_fertilizer": 3500
+          },
+          "post_harvest": [
+            {
+              "type": "freezing",
+              "desc": "حبات رمان مجمدة أريل",
+              "cost_per_ton": 5000,
+              "fixed_freezer": 120000
+            },
+            {
+              "type": "drying",
+              "desc": "قشور رمان مجففة طبية",
+              "cost_per_ton": 2000,
+              "fixed_dryer": 40000
+            },
+            {
+              "type": "juice",
+              "desc": "عصير رمان مركز",
+              "cost_per_ton": 2500,
+              "fixed_juice_line": 90000
+            }
+          ],
+          "notes": "يتحمل الملوحة المتوسطة، إقبال تصديري كبير خاصة أوروبا والخليج",
+          "source": "FAO + Pomegranate Research Unit Egypt 2025"
+        },
+        {
+          "id": "apricots",
+          "name_ar": "مشمش",
+          "type": "tree",
+          "economic_life_years": 25,
+          "yield_tons_per_feddan_by_year": [
+            0.4,
+            1.2,
+            3,
+            5,
+            6.5,
+            7.5,
+            8,
+            8.2,
+            8.2,
+            8.2
+          ],
+          "soil": {
+            "texture": "loamy_sandy",
+            "ph_min": 6,
+            "ph_max": 7.5,
+            "salinity_ec": 2.5
+          },
+          "water": {
+            "annual_m3_per_feddan": 1500,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 12000,
+            "pruning_cost": 600,
+            "first_fertilizer": 4000
+          },
+          "post_harvest": [
+            {
+              "type": "drying",
+              "desc": "مشمش مجفف قمر الدين",
+              "cost_per_ton": 3500,
+              "fixed_dryer": 70000
+            },
+            {
+              "type": "freezing",
+              "desc": "مشمش مجمد",
+              "cost_per_ton": 2800,
+              "fixed_cold_storage": 80000
+            }
+          ],
+          "notes": "صنف قمر الدين ذو عائد تصديري مرتفع، لا يناسب الأراضي عالية الملوحة",
+          "source": "FAO + Ministry of Agriculture 2025"
+        },
+        {
+          "id": "figs",
+          "name_ar": "تين",
+          "type": "tree",
+          "economic_life_years": 40,
+          "yield_tons_per_feddan_by_year": [
+            0.2,
+            0.7,
+            2,
+            3.5,
+            5,
+            5.5,
+            6,
+            6.2,
+            6.3,
+            6.3
+          ],
+          "soil": {
+            "texture": "sandy_loam",
+            "ph_min": 6,
+            "ph_max": 7.5,
+            "salinity_ec": 4.5
+          },
+          "water": {
+            "annual_m3_per_feddan": 1100,
+            "best_method": "drip"
+          },
+          "setup_costs_per_feddan_egp": {
+            "drip_irrigation": 11000,
+            "pruning_cost": 500,
+            "first_fertilizer": 3000
+          },
+          "post_harvest": [
+            {
+              "type": "drying",
+              "desc": "تين مجفف",
+              "cost_per_ton": 3000,
+              "fixed_dryer": 50000
+            },
+            {
+              "type": "freezing",
+              "desc": "تين مجمد",
+              "cost_per_ton": 2500,
+              "fixed_cold_storage": 70000
+            }
+          ],
+          "notes": "يتحمل الجفاف، مناسب للأراضي الجديدة، عائد تصديري جيد للمجفف",
+          "source": "FAO + Agricultural Research Center 2024"
+        }
+      ],
+      "references_base": {
+        "fao": "https://www.fao.org/faostat/en/#data",
+        "egypt_moa": "https://www.agriegypt.gov.eg",
+        "researchgate": "https://www.researchgate.net"
+      }
+    }
+  },
+  "industrial": {
+    "name": "Industrial",
+    "nameAr": "صناعي",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "data": {
+      "warehouse": {
+        "constructionPerSqm": {
+          "light": 5500,
+          "medium": 8500,
+          "heavy": 12000
+        }
+      },
+      "factory": {
+        "constructionPerSqm": {
+          "light": 8000,
+          "medium": 12000,
+          "heavy": 18000
+        }
+      },
+      "workshop": {
+        "constructionPerSqm": {
+          "light": 6000,
+          "medium": 9000,
+          "heavy": 13000
+        }
+      }
+    }
+  },
+  "global": {
+    "name": "Global Settings",
+    "nameAr": "الإعدادات العامة",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "finishingLevels": {
+      "normal": "تشطيب عادي — Basic finishes, paint, simple flooring",
+      "medium": "تشطيب متوسط — Ceramic, standard fixtures, normal paint",
+      "premium": "تشطيب راقي — Premium tiles, modern fixtures, quality paint",
+      "luxury": "تشطيب فندقي — Luxury materials, designer fixtures, smart home"
+    },
+    "additionalCosts": {
+      "electricalPerSqm": 1200,
+      "plumbingPerSqm": 800,
+      "hvacPerSqm": 2500,
+      "elevatorPerUnit": 350000,
+      "parkingPerSqm": 6000,
+      "landscapingPerSqm": 450,
+      "consultingPercent": 8,
+      "licensingPercent": 3,
+      "contingencyPercent": 10
+    },
+    "notes": {
+      "allPricesInEGP": "جنيه مصري",
+      "accuracyNote": "Prices include materials and labor, exclude land cost",
+      "exchangeRate": "Dollar rate: market price (check current rates)",
+      "updateFrequency": "Updated monthly based on market conditions"
+    }
+  }
+}

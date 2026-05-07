@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>دراسة جدوى — المزرعة الثلاثية | Easy Start</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── Primary: Green + Gold + Silver ── */
+  --green:      #0F6E56;
+  --green-d:    #074D3B;
+  --green-l:    #E8F5EE;
+  --green-m:    #C8E6D8;
+  --gold:       #C9A84C;
+  --gold-l:     #FFF8DC;
+  --silver:     #94A3B8;
+  --silver-l:   #EEF2F7;
+  /* ── Total row ── */
+  --total-bg:   #074D3B;
+  --total-fg:   #C9A84C;
+  /* ── Supporting ── */
+  --blue:       #1565C0;
+  --blue-l:     #DBEAFE;
+  --red:        #DC2626;
+  --red-l:      #FEE2E2;
+  --orange:     #D97706;
+  --orange-l:   #FFF7ED;
+  --bg:         #F2F7F4;
+  --text:       #111827;
+  --text-2:     #4B5563;
+  --text-3:     #9CA3AF;
+  --border:     #C8E6D8;
+  --white:      #FFFFFF;
+  --radius:     10px;
+  --shadow:     0 2px 10px rgba(15,110,86,0.12);
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); font-size:13px; line-height:1.6; }
+.page { max-width:960px; margin:0 auto; padding:28px 20px 40px; }
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, var(--green-d) 0%, var(--green) 60%, #1a9b78 100%);
+  border-radius:16px; padding:28px 32px; color:#fff; margin-bottom:24px;
+  position:relative; overflow:hidden;
+}
+.header::before {
+  content:''; position:absolute; top:-30px; left:-30px;
+  width:200px; height:200px; border-radius:50%;
+  background:rgba(255,255,255,0.04);
+}
+.header-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
+.header-brand { font-size:13px; opacity:0.7; letter-spacing:1px; font-weight:300; }
+.header-badge {
+  background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25);
+  border-radius:20px; padding:4px 12px; font-size:11px; font-weight:600;
+}
+.header-title { font-size:26px; font-weight:900; margin-bottom:6px; }
+.header-sub { font-size:13px; opacity:0.8; margin-bottom:20px; }
+.header-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.hkpi {
+  background:rgba(255,255,255,0.12); border-radius:10px; padding:12px;
+  border:1px solid rgba(255,255,255,0.15);
+}
+.hkpi-val { font-size:20px; font-weight:700; color:var(--gold); }
+.hkpi-lbl { font-size:10px; opacity:0.75; margin-top:2px; color:var(--silver-l); }
+/* ── Gold accent bar under header ── */
+.header { border-bottom:3px solid var(--gold); }
+
+/* TIMELINE BAR */
+.timeline-bar {
+  display:grid; grid-template-columns:repeat(12,1fr);
+  border-radius:12px; overflow:hidden; margin-bottom:24px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.tm-month { text-align:center; padding:8px 4px; font-size:10px; font-weight:600; }
+.tm-soy   { background:#0F6E56; color:#fff; }
+.tm-ses   { background:#D97706; color:#fff; }
+.tm-cum   { background:#7C3AED; color:#fff; }
+.tm-rest  { background:#F3F4F6; color:var(--text-3); }
+.tm-label { font-size:9px; display:block; opacity:0.8; margin-top:2px; }
+
+/* SECTION */
+.section { margin-bottom:24px; }
+.section-head {
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:14px; direction:rtl;
+}
+.section-head-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; flex-shrink:0;
+}
+.section-head-title { font-size:15px; font-weight:700; color:var(--text); }
+.section-head-sub { font-size:11px; color:var(--text-3); }
+
+/* CROP BADGE */
+.crop-section { border-radius:14px; overflow:hidden; margin-bottom:20px; box-shadow:var(--shadow); }
+.crop-header { padding:16px 20px; color:#fff; direction:rtl; }
+.crop-header.soy    { background:linear-gradient(135deg,#0A4F3C,#0F6E56); }
+.crop-header.sesame { background:linear-gradient(135deg,#92400E,#D97706); }
+.crop-header.cumin  { background:linear-gradient(135deg,#4C1D95,#7C3AED); }
+.crop-header-title { font-size:17px; font-weight:700; margin-bottom:3px; }
+.crop-header-info { font-size:11px; opacity:0.8; display:flex; gap:16px; flex-wrap:wrap; }
+.crop-body { background:var(--white); padding:18px 20px; }
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; margin-bottom:14px; }
+th {
+  padding:9px 14px; font-size:11px; font-weight:700;
+  text-align:right; border-bottom:2px solid var(--green-d);
+  background:var(--green); color:var(--gold);
+}
+td { padding:9px 14px; font-size:12px; border-bottom:1px solid var(--border); }
+tr:last-child td { border-bottom:none; }
+tr:nth-child(even) td { background:var(--silver-l); }
+/* ── TOTAL ROW: أخضر غامق + ذهبي ── */
+.td-total td { background:var(--total-bg)!important; color:var(--total-fg)!important; font-weight:800; font-size:13px; border-top:2px solid var(--gold); }
+.td-grand td { background:var(--total-bg)!important; color:var(--total-fg)!important; font-weight:800; font-size:13px; border-top:2px solid var(--gold); }
+.td-warn  td { background:var(--gold-l)!important; color:#78350F; font-weight:700; }
+.num  { text-align:left!important; font-family:monospace; font-size:12px; }
+.bold { font-weight:700; }
+.green { color:var(--green); font-weight:700; }
+.red   { color:var(--red); }
+.gold  { color:var(--gold); font-weight:700; }
+.silver { color:var(--silver); font-weight:600; }
+
+/* KPI BOXES */
+.kpi-row { display:grid; gap:10px; margin-bottom:16px; }
+.kpi-row-4 { grid-template-columns:repeat(4,1fr); }
+.kpi-row-3 { grid-template-columns:repeat(3,1fr); }
+.kpi-row-2 { grid-template-columns:repeat(2,1fr); }
+.kpi {
+  border-radius:10px; padding:14px; border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+.kpi.g      { background:var(--green-l); border-top:3px solid var(--green); }
+.kpi.b      { background:var(--blue-l);  border-top:3px solid var(--blue); }
+.kpi.gold-kpi { background:var(--gold-l); border-top:3px solid var(--gold); }
+.kpi.r      { background:var(--red-l);   border-top:3px solid var(--red); }
+.kpi.silver { background:var(--silver-l);border-top:3px solid var(--silver); }
+.kpi-val { font-size:19px; font-weight:700; color:var(--green-d); }
+.kpi-val.gold { color:var(--gold); }
+.kpi-lbl { font-size:10px; color:var(--text-2); margin-top:3px; direction:rtl; }
+.kpi-sub { font-size:10px; color:var(--text-3); margin-top:2px; }
+
+/* COMPARISON TABLE */
+.comp-table th { background:var(--green-d); color:var(--gold); border-color:var(--green); }
+.comp-soy  td:nth-child(2) { background:#E8F5EE; font-weight:600; color:var(--green); }
+.comp-ses  td:nth-child(3) { background:#FFF7ED; font-weight:600; color:var(--orange); }
+.comp-cum  td:nth-child(4) { background:#EDE9FE; font-weight:600; color:var(--purple); }
+
+/* SEASON TIMELINE TABLE */
+.season-row { display:flex; gap:8px; direction:rtl; margin-bottom:10px; }
+.season-item {
+  flex:1; border-radius:8px; padding:10px 12px; direction:rtl;
+  border:1px solid var(--border);
+}
+.season-item.s { background:var(--green-l); border-color:var(--green); }
+.season-item.e { background:var(--orange-l); border-color:var(--orange); }
+.season-item.c { background:var(--purple-l); border-color:var(--purple); }
+.season-name { font-size:12px; font-weight:700; }
+.season-months { font-size:10px; color:var(--text-2); margin-top:2px; }
+.season-prod { font-size:11px; font-weight:600; margin-top:5px; }
+
+/* RISK */
+.risk-high td { background:#FEF2F2!important; }
+.risk-med  td { background:#FFFBEB!important; }
+.risk-low  td { background:#F0FFF4!important; }
+.risk-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-left:6px; }
+.dot-h { background:var(--red); }
+.dot-m { background:var(--gold); }
+.dot-l { background:var(--green); }
+
+/* EXPORT */
+.export-card {
+  border-radius:10px; padding:14px 16px; direction:rtl;
+  border:1px solid var(--border); background:var(--white);
+  display:flex; align-items:center; gap:14px; margin-bottom:8px;
+}
+.export-flag { font-size:24px; flex-shrink:0; }
+.export-name { font-size:13px; font-weight:700; }
+.export-detail { font-size:11px; color:var(--text-2); margin-top:2px; }
+.export-price { font-size:14px; font-weight:700; color:var(--green); margin-right:auto; white-space:nowrap; }
+
+/* FOOTER */
+.footer-note {
+  background:var(--gold-l); border:1px solid #FDE68A;
+  border-radius:10px; padding:14px 18px; direction:rtl;
+  font-size:12px; color:var(--gold); margin-top:24px;
+  display:flex; gap:8px; align-items:flex-start; line-height:1.7;
+}
+
+/* YEAR TABLE */
+.year-table th { background:#1F2937; color:#fff; }
+.year-best td { background:#D1FAE5!important; font-weight:700; }
+.year-break td { background:#FEF9C3!important; font-weight:700; border:2px solid #EAB308; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-brand">EASY START — دراسة جدوى زراعية</div>
+    <div class="header-badge">⚡ تقريبية ~80% دقة</div>
+  </div>
+  <div class="header-title">المزرعة الثلاثية — فول الصويا + السمسم + الكمون</div>
+  <div class="header-sub">20 فدان | 3 محاصيل متناوبة | دورة زراعية سنوية كاملة | مع خط إنتاج متكامل</div>
+  <div class="header-kpis">
+    <div class="hkpi">
+      <div class="hkpi-val">3.8 م</div>
+      <div class="hkpi-lbl">إيراد السنة الأولى (ج)</div>
+    </div>
+    <div class="hkpi">
+      <div class="hkpi-val">2.4 م</div>
+      <div class="hkpi-lbl">صافي ربح سنوي (ج)</div>
+    </div>
+    <div class="hkpi">
+      <div class="hkpi-val">7 شهور</div>
+      <div class="hkpi-lbl">استرداد رأس المال</div>
+    </div>
+    <div class="hkpi">
+      <div class="hkpi-val">220%</div>
+      <div class="hkpi-lbl">ROI السنة الأولى</div>
+    </div>
+  </div>
+</div>
+
+<!-- SEASON TIMELINE -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--green-l)">🗓️</div>
+    <div>
+      <div class="section-head-title">الجدول الزمني السنوي — توزيع المحاصيل على الأرض</div>
+      <div class="section-head-sub">20 فدان تنتج 3 محاصيل مختلفة في نفس العام</div>
+    </div>
+  </div>
+
+  <!-- Month bar -->
+  <div class="timeline-bar">
+    <div class="tm-month tm-rest">يناير<span class="tm-label">كمون</span></div>
+    <div class="tm-month tm-rest">فبراير<span class="tm-label">كمون</span></div>
+    <div class="tm-month tm-rest">مارس<span class="tm-label">كمون</span></div>
+    <div class="tm-month tm-cum">أبريل<span class="tm-label">حصاد كمون</span></div>
+    <div class="tm-month tm-soy">مايو<span class="tm-label">زراعة صويا</span></div>
+    <div class="tm-month tm-soy">يونيو<span class="tm-label">صويا</span></div>
+    <div class="tm-month tm-soy tm-ses">يوليو<span class="tm-label">صويا+سمسم</span></div>
+    <div class="tm-month tm-soy tm-ses">أغسطس<span class="tm-label">صويا+سمسم</span></div>
+    <div class="tm-month tm-soy">سبتمبر<span class="tm-label">حصاد صويا</span></div>
+    <div class="tm-month tm-ses">أكتوبر<span class="tm-label">حصاد سمسم</span></div>
+    <div class="tm-month tm-cum">نوفمبر<span class="tm-label">زراعة كمون</span></div>
+    <div class="tm-month tm-cum">ديسمبر<span class="tm-label">كمون</span></div>
+  </div>
+
+  <div class="season-row">
+    <div class="season-item s">
+      <div class="season-name">🟢 فول الصويا (البوبي)</div>
+      <div class="season-months">مايو → سبتمبر (120 يوم)</div>
+      <div class="season-prod">20 فدان كاملة | إنتاج: 34 طن</div>
+    </div>
+    <div class="season-item e">
+      <div class="season-name">🟡 السمسم</div>
+      <div class="season-months">يوليو → أكتوبر (100 يوم)</div>
+      <div class="season-prod">10 فدان | إنتاج: 1,000 كجم/فدان</div>
+    </div>
+    <div class="season-item c">
+      <div class="season-name">🟣 الكمون</div>
+      <div class="season-months">نوفمبر → أبريل (150 يوم)</div>
+      <div class="season-prod">10 فدان | إنتاج: 700 كجم/فدان</div>
+    </div>
+  </div>
+
+  <div style="background:var(--blue-l);border:1px solid #BFDBFE;border-radius:10px;padding:11px 15px;direction:rtl;font-size:11px;color:var(--blue);line-height:1.7">
+    ℹ️ <strong>ملاحظة التوزيع:</strong> الصويا يزرع على الـ 20 فدان كاملة (أبريل–سبتمبر). السمسم يزرع على 10 فدان منها في يوليو متوازياً مع الصويا. الكمون يأخذ 10 فدان بعد حصاد الصويا من أكتوبر حتى أبريل القادم — والـ 10 فدان الباقية راحة أو زراعة شتوية خفيفة.
+  </div>
+</div>
+
+<!-- SETUP COSTS -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--gold-l)">💰</div>
+    <div>
+      <div class="section-head-title">تكاليف التأسيس — مرة واحدة</div>
+      <div class="section-head-sub">البنية التحتية المشتركة + خط الإنتاج</div>
+    </div>
+  </div>
+
+  <div class="crop-section">
+    <div class="crop-header soy">
+      <div class="crop-header-title">البنية التحتية المشتركة للمزرعة</div>
+      <div class="crop-header-info">
+        <span>تخدم الثلاثة محاصيل</span>
+        <span>تُستهلك مرة واحدة فقط</span>
+      </div>
+    </div>
+    <div class="crop-body">
+      <table>
+        <tr><th>البند</th><th class="num">تكلفة (ج)</th><th>ملاحظات</th></tr>
+        <tr><td>تسوية وحرث عميق (20 فدان)</td><td class="num">60,000</td><td>3,000 ج/فدان</td></tr>
+        <tr><td>شبكة ري بالرش (للصويا)</td><td class="num">160,000</td><td>8,000 ج/فدان</td></tr>
+        <tr><td>شبكة ري بالتنقيط (للسمسم والكمون)</td><td class="num">100,000</td><td>5,000 ج/فدان × 10 فدان × محصولين</td></tr>
+        <tr><td>تحليل تربة ومياه</td><td class="num">30,000</td><td>ضروري قبل أي زراعة</td></tr>
+        <tr><td>مخزن زراعي (120 م²)</td><td class="num">90,000</td><td>6,000 ج/م²</td></tr>
+        <tr><td>غرفة حراسة</td><td class="num">25,000</td><td>—</td></tr>
+        <tr><td>سور وتسييج</td><td class="num">40,000</td><td>—</td></tr>
+        <tr><td>طاقة شمسية للضخ</td><td class="num">120,000</td><td>10 كيلوواط</td></tr>
+        <tr class="td-total"><td>إجمالي البنية التحتية</td><td class="num">625,000</td><td>—</td></tr>
+      </table>
+
+      <table>
+        <tr><th>خط الإنتاج المصغر</th><th class="num">تكلفة (ج)</th><th>يعمل على</th></tr>
+        <tr><td>ماكينة عصر زيت (10 طن/يوم)</td><td class="num">280,000</td><td>صويا + سمسم</td></tr>
+        <tr><td>طاحونة + فرامة للكمون</td><td class="num">80,000</td><td>كمون مطحون + بهارات</td></tr>
+        <tr><td>معدات تكرير وتصفية الزيت</td><td class="num">90,000</td><td>تنقية الزيت الخام</td></tr>
+        <tr><td>ماكينة تعبئة وتغليف</td><td class="num">60,000</td><td>زيت + مطحون</td></tr>
+        <tr><td>مستودع التخزين والتبريد</td><td class="num">70,000</td><td>الزيت والبذور</td></tr>
+        <tr class="td-total"><td>إجمالي خط الإنتاج</td><td class="num">580,000</td><td>—</td></tr>
+      </table>
+
+      <table>
+        <tr class="td-grand"><td>📌 إجمالي تكاليف التأسيس</td><td class="num">1,205,000</td><td>—</td></tr>
+        <tr class="td-warn"><td>+ هامش الطوارئ 10%</td><td class="num">120,500</td><td>—</td></tr>
+        <tr class="td-grand"><td>✅ الإجمالي النهائي للتأسيس</td><td class="num bold">1,325,500 ج</td><td>مرة واحدة فقط</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CROP 1: SOYBEAN -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--green-l)">🌱</div>
+    <div>
+      <div class="section-head-title">المحصول الأول — فول الصويا (البوبي)</div>
+      <div class="section-head-sub">20 فدان | مايو–سبتمبر | 120 يوم</div>
+    </div>
+  </div>
+
+  <div class="crop-section">
+    <div class="crop-header soy">
+      <div class="crop-header-title">🌱 فول الصويا — المحصول الرئيسي</div>
+      <div class="crop-header-info">
+        <span>📅 مايو – سبتمبر</span>
+        <span>🌍 20 فدان كاملة</span>
+        <span>💧 2,500–3,000 م³/فدان</span>
+        <span>🧪 تتحمل ملوحة حتى 2,000 ppm</span>
+      </div>
+    </div>
+    <div class="crop-body">
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">متطلبات الزراعة</div>
+      <table>
+        <tr><th>البند</th><th>المتطلب</th><th>ملاحظات</th></tr>
+        <tr><td>نوع التربة</td><td>رملية أو جيرية أو طميية</td><td>تجنب الأراضي الملحية فوق 2,000 ppm</td></tr>
+        <tr><td>موعد الزراعة</td><td>منتصف أبريل – يونيو</td><td>الأمثل: مايو</td></tr>
+        <tr><td>التقاوي</td><td>30–40 كجم/فدان</td><td>أصناف جيزة 111 أو جيزة 22</td></tr>
+        <tr><td>التلقيح البكتيري</td><td>ضروري</td><td>عقدين خاص بالصويا فقط</td></tr>
+        <tr><td>الري</td><td>2,500–3,000 م³/فدان</td><td>حساس للماء — على الحامي بدون تغريق</td></tr>
+        <tr><td>التسميد</td><td>4–5 شيكارة سوبر فوسفات</td><td>لا إسراف في الآزوت</td></tr>
+      </table>
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">تكاليف الموسم (20 فدان)</div>
+      <table>
+        <tr><th>البند</th><th class="num">تكلفة/فدان (ج)</th><th class="num">إجمالي 20 فدان (ج)</th></tr>
+        <tr><td>تقاوي + عقدين بكتيري</td><td class="num">3,100</td><td class="num">62,000</td></tr>
+        <tr><td>أسمدة (سوبر فوسفات + بوتاسيوم)</td><td class="num">1,500</td><td class="num">30,000</td></tr>
+        <tr><td>مبيدات حشائش وحشرات</td><td class="num">500</td><td class="num">10,000</td></tr>
+        <tr><td>عمالة زراعة وحصاد</td><td class="num">2,000</td><td class="num">40,000</td></tr>
+        <tr><td>مياه وكهرباء</td><td class="num">800</td><td class="num">16,000</td></tr>
+        <tr class="td-total"><td class="bold">إجمالي تكاليف الصويا</td><td class="num bold">7,900</td><td class="num bold">158,000</td></tr>
+      </table>
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">الإنتاج والعائد</div>
+      <table>
+        <tr><th>المنتج</th><th class="num">الكمية</th><th class="num">سعر البيع (ج)</th><th class="num">الإيراد (ج)</th></tr>
+        <tr><td>حبوب خام (بيع مباشر)</td><td class="num">34 طن</td><td class="num">20,000–22,000/طن</td><td class="num gold">680,000–748,000</td></tr>
+        <tr style="background:var(--green-l)"><td class="bold green">🫙 زيت صويا (20% من الوزن)</td><td class="num bold">6.8 طن زيت</td><td class="num">39,530/طن</td><td class="num green bold">268,804</td></tr>
+        <tr><td>كسب أعلاف (75% من الوزن)</td><td class="num">25.5 طن</td><td class="num">32,000/طن</td><td class="num green bold">816,000</td></tr>
+        <tr><td>تكاليف تشغيل خط الزيت</td><td class="num">—</td><td class="num">—</td><td class="num red">(50,000)</td></tr>
+        <tr class="td-grand"><td class="bold">💰 صافي ربح الصويا</td><td class="num" colspan="2">بعد التصنيع</td><td class="num bold">876,804 ج</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CROP 2: SESAME -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--orange-l)">🌿</div>
+    <div>
+      <div class="section-head-title">المحصول الثاني — السمسم</div>
+      <div class="section-head-sub">10 فدان | يوليو–أكتوبر | 100 يوم</div>
+    </div>
+  </div>
+
+  <div class="crop-section">
+    <div class="crop-header sesame">
+      <div class="crop-header-title">🌿 السمسم — المحصول الذهبي</div>
+      <div class="crop-header-info">
+        <span>📅 يوليو – أكتوبر</span>
+        <span>🌍 10 فدان</span>
+        <span>💧 منخفض المياه</span>
+        <span>🏆 50–60% زيت في الحبة</span>
+      </div>
+    </div>
+    <div class="crop-body">
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">متطلبات الزراعة</div>
+      <table>
+        <tr><th>البند</th><th>المتطلب</th><th>ملاحظات</th></tr>
+        <tr><td>نوع التربة</td><td>صفراء خفيفة أو طميية جيدة الصرف</td><td>يُزرع في رملية بعد إضافة سماد بلدي</td></tr>
+        <tr><td>موعد الزراعة</td><td>15 أبريل – 30 مايو (صيفي) أو يوليو</td><td>يفضل الحرارة العالية</td></tr>
+        <tr><td>التقاوي</td><td>3–4 كجم/فدان فقط!</td><td>رخيص جداً مقارنة بأي محصول</td></tr>
+        <tr><td>الري</td><td>ري خفيف منتظم</td><td>لا يتحمل الغرق — حساس للملوحة العالية</td></tr>
+        <tr><td>الأسمدة</td><td>بسيطة جداً</td><td>يكاد لا يحتاج مبيدات</td></tr>
+        <tr><td>العمالة في الحصاد</td><td>مكثفة (يدوي)</td><td>أكبر تكلفة في المحصول</td></tr>
+      </table>
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">تكاليف الموسم (10 فدان)</div>
+      <table>
+        <tr><th>البند</th><th class="num">تكلفة/فدان (ج)</th><th class="num">إجمالي 10 فدان (ج)</th></tr>
+        <tr><td>تقاوي (4 كجم × 28 ج/كجم)</td><td class="num">112</td><td class="num">1,120</td></tr>
+        <tr><td>أسمدة بسيطة</td><td class="num">800</td><td class="num">8,000</td></tr>
+        <tr><td>مبيدات (نادراً)</td><td class="num">300</td><td class="num">3,000</td></tr>
+        <tr><td>عمالة زراعة</td><td class="num">1,500</td><td class="num">15,000</td></tr>
+        <tr><td>عمالة حصاد وتصفية (مكثفة)</td><td class="num">3,000</td><td class="num">30,000</td></tr>
+        <tr><td>مياه وكهرباء</td><td class="num">500</td><td class="num">5,000</td></tr>
+        <tr class="td-total"><td class="bold">إجمالي تكاليف السمسم</td><td class="num bold">6,212</td><td class="num bold">62,120</td></tr>
+      </table>
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">الإنتاج والعائد</div>
+      <table>
+        <tr><th>المنتج</th><th class="num">الكمية (10 فدان)</th><th class="num">السعر (ج)</th><th class="num">الإيراد (ج)</th></tr>
+        <tr><td>بذور خام (بيع مباشر)</td><td class="num">8,000–10,000 كجم</td><td class="num">80–100 ج/كجم</td><td class="num gold">640,000–1,000,000</td></tr>
+        <tr style="background:var(--orange-l)"><td class="bold">🫙 زيت سمسم (52% من الوزن)</td><td class="num bold">4,160–5,200 كجم</td><td class="num">240–280 ج/كجم</td><td class="num gold bold">998,400–1,456,000</td></tr>
+        <tr><td>كسب سمسم (أعلاف)</td><td class="num">3,840–4,800 كجم</td><td class="num">20 ج/كجم</td><td class="num">76,800–96,000</td></tr>
+        <tr><td>طحينة (بيع طحينة جاهزة)</td><td class="num">8,000 كجم</td><td class="num">250 ج/كجم</td><td class="num gold bold">2,000,000</td></tr>
+        <tr><td>تكاليف تشغيل الخط</td><td class="num">—</td><td class="num">—</td><td class="num red">(30,000)</td></tr>
+        <tr class="td-grand"><td class="bold">💰 صافي ربح السمسم</td><td class="num" colspan="2">السيناريو الأفضل (زيت)</td><td class="num bold">1,400,000+ ج</td></tr>
+      </table>
+
+      <div style="background:var(--orange-l);border-radius:8px;padding:10px 14px;direction:rtl;font-size:11px;color:var(--orange);margin-top:8px">
+        ⭐ <strong>ميزة السمسم الكبرى:</strong> نفس ماكينة عصر الصويا تشتغل على السمسم بدون أي تعديل. والزيت يُباع بـ 240–280 ج/كجم مقابل 40 ج/كجم للصويا — أي <strong>6–7 أضعاف سعر الصويا!</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CROP 3: CUMIN -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--purple-l)">🌾</div>
+    <div>
+      <div class="section-head-title">المحصول الثالث — الكمون</div>
+      <div class="section-head-sub">10 فدان | نوفمبر–أبريل | 150 يوم</div>
+    </div>
+  </div>
+
+  <div class="crop-section">
+    <div class="crop-header cumin">
+      <div class="crop-header-title">🌾 الكمون — محصول الشتاء الذهبي</div>
+      <div class="crop-header-info">
+        <span>📅 نوفمبر – أبريل</span>
+        <span>🌍 10 فدان</span>
+        <span>💧 احتياج مائي منخفض</span>
+        <span>💎 سعر الطن: 140,000–500,000 ج!</span>
+      </div>
+    </div>
+    <div class="crop-body">
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">متطلبات الزراعة</div>
+      <table>
+        <tr><th>البند</th><th>المتطلب</th><th>ملاحظات</th></tr>
+        <tr><td>نوع التربة</td><td>جيدة التصرف — رملية أو طينية خفيفة</td><td>يتحمل التربة الجيرية جيداً</td></tr>
+        <tr><td>موعد الزراعة</td><td>15 نوفمبر – يناير</td><td>الأمثل: منتصف نوفمبر (الأعلى إنتاجاً)</td></tr>
+        <tr><td>التقاوي</td><td>10–30 كجم/فدان</td><td>يزيد مع تأخر الزراعة عن نوفمبر</td></tr>
+        <tr><td>الري</td><td>خفيف جداً بالتنقيط</td><td>تجنب الري الغزير — يسبب أمراضاً فطرية</td></tr>
+        <tr><td>الأسمدة</td><td>منخفضة</td><td>بساطة كبيرة في الخدمة</td></tr>
+        <tr><td>الحصاد</td><td>أبريل (15 يوم متواصلة)</td><td>يحتاج "مقرقرين" لتنقية المحصول</td></tr>
+      </table>
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">تكاليف الموسم (10 فدان)</div>
+      <table>
+        <tr><th>البند</th><th class="num">تكلفة/فدان (ج)</th><th class="num">إجمالي 10 فدان (ج)</th></tr>
+        <tr><td>تقاوي كمون (15 كجم متوسط)</td><td class="num">1,500</td><td class="num">15,000</td></tr>
+        <tr><td>أسمدة بسيطة</td><td class="num">1,000</td><td class="num">10,000</td></tr>
+        <tr><td>مبيدات وأدوية</td><td class="num">500</td><td class="num">5,000</td></tr>
+        <tr><td>عمالة زراعة</td><td class="num">1,500</td><td class="num">15,000</td></tr>
+        <tr><td>عمالة حصاد وتنقية (مقرقرين)</td><td class="num">2,000</td><td class="num">20,000</td></tr>
+        <tr><td>مياه وكهرباء (منخفض)</td><td class="num">400</td><td class="num">4,000</td></tr>
+        <tr class="td-total"><td class="bold">إجمالي تكاليف الكمون</td><td class="num bold">6,900</td><td class="num bold">69,000</td></tr>
+      </table>
+
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;direction:rtl">الإنتاج والعائد</div>
+      <table>
+        <tr><th>المنتج</th><th class="num">الكمية (10 فدان)</th><th class="num">السعر (ج)</th><th class="num">الإيراد (ج)</th></tr>
+        <tr><td>كمون بذور خام</td><td class="num">7,000 كجم (700 كجم/فدان)</td><td class="num">140–150 ج/كجم</td><td class="num gold">980,000–1,050,000</td></tr>
+        <tr style="background:var(--purple-l)"><td class="bold">🧂 كمون مطحون (بودرة)</td><td class="num bold">6,500 كجم</td><td class="num">200–250 ج/كجم</td><td class="num bold" style="color:var(--purple)">1,300,000–1,625,000</td></tr>
+        <tr><td>تكاليف تشغيل الطاحونة</td><td class="num">—</td><td class="num">—</td><td class="num red">(15,000)</td></tr>
+        <tr class="td-grand"><td class="bold">💰 صافي ربح الكمون</td><td class="num" colspan="2">مطحون (الأفضل)</td><td class="num bold">1,246,000 ج</td></tr>
+      </table>
+
+      <div style="background:var(--purple-l);border-radius:8px;padding:10px 14px;direction:rtl;font-size:11px;color:var(--purple);margin-top:8px">
+        ⭐ <strong>ميزة الكمون الكبرى:</strong> لو خزنته 6 أشهر بعد الحصاد — السعر ارتفع من 140 ج/كجم لـ 400–500 ج/كجم تاريخياً! يعني ممكن الإيراد يتضاعف 3× بالتخزين فقط.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANNUAL SUMMARY -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--green-l)">📊</div>
+    <div>
+      <div class="section-head-title">ملخص السنة الكاملة — الثلاثة محاصيل مع بعض</div>
+      <div class="section-head-sub">20 فدان | دورة سنوية واحدة | مع خط الإنتاج</div>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>المحصول</th><th class="num">تكاليف الموسم (ج)</th><th class="num">إيراد بدون تصنيع (ج)</th><th class="num">إيراد بعد التصنيع (ج)</th><th class="num">صافي الربح (ج)</th></tr>
+    <tr><td class="bold green">🌱 فول الصويا (20 فدان)</td><td class="num">158,000</td><td class="num">680,000</td><td class="num">1,084,804</td><td class="num green bold">876,804</td></tr>
+    <tr><td class="bold gold">🌿 السمسم (10 فدان)</td><td class="num">62,120</td><td class="num">800,000</td><td class="num">1,475,200</td><td class="num gold bold">1,383,080</td></tr>
+    <tr><td class="bold" style="color:var(--purple)">🌾 الكمون (10 فدان)</td><td class="num">69,000</td><td class="num">980,000</td><td class="num">1,610,000</td><td class="num bold" style="color:var(--purple)">1,246,000</td></tr>
+    <tr><td>تكاليف تشغيل خط الإنتاج</td><td class="num">(95,000)</td><td class="num">—</td><td class="num">—</td><td class="num red">(95,000)</td></tr>
+    <tr class="td-grand">
+      <td class="bold">🏆 الإجمالي السنوي</td>
+      <td class="num bold">289,120</td>
+      <td class="num bold">2,460,000</td>
+      <td class="num bold">4,170,004</td>
+      <td class="num bold">3,410,884 ج</td>
+    </tr>
+  </table>
+
+  <div class="kpi-row kpi-row-4" style="margin-top:16px">
+    <div class="kpi g">
+      <div class="kpi-val">3.4 م ج</div>
+      <div class="kpi-lbl">صافي الربح السنوي الإجمالي</div>
+    </div>
+    <div class="kpi gold-kpi">
+      <div class="kpi-val">7 شهور</div>
+      <div class="kpi-lbl">فترة استرداد رأس المال</div>
+      <div class="kpi-sub">من أول موسم صويا + سمسم</div>
+    </div>
+    <div class="kpi b">
+      <div class="kpi-val">257%</div>
+      <div class="kpi-lbl">ROI السنة الأولى</div>
+      <div class="kpi-sub">على إجمالي التأسيس</div>
+    </div>
+    <div class="kpi p">
+      <div class="kpi-val">170,000 ج</div>
+      <div class="kpi-lbl">ربح الفدان الواحد سنوياً</div>
+      <div class="kpi-sub">متوسط الثلاثة محاصيل</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 YEAR PROJECTION -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--blue-l)">📈</div>
+    <div>
+      <div class="section-head-title">توقعات 5 سنوات متتالية</div>
+      <div class="section-head-sub">مع تحسن الخبرة وارتفاع الأسعار التدريجي</div>
+    </div>
+  </div>
+
+  <table class="year-table">
+    <tr>
+      <th>السنة</th>
+      <th class="num">إيراد صويا (ج)</th>
+      <th class="num">إيراد سمسم (ج)</th>
+      <th class="num">إيراد كمون (ج)</th>
+      <th class="num">إجمالي التكاليف (ج)</th>
+      <th class="num">صافي الربح (ج)</th>
+      <th class="num">الربح التراكمي (ج)</th>
+    </tr>
+    <tr class="year-break">
+      <td class="bold">١ — استرداد</td>
+      <td class="num">1,084,804</td>
+      <td class="num">1,475,200</td>
+      <td class="num">1,610,000</td>
+      <td class="num">(384,120)</td>
+      <td class="num green bold">3,410,884</td>
+      <td class="num bold">3,410,884</td>
+    </tr>
+    <tr>
+      <td class="bold">٢</td>
+      <td class="num">1,120,000</td>
+      <td class="num">1,550,000</td>
+      <td class="num">1,680,000</td>
+      <td class="num">(400,000)</td>
+      <td class="num green bold">3,550,000</td>
+      <td class="num bold">6,960,884</td>
+    </tr>
+    <tr>
+      <td class="bold">٣</td>
+      <td class="num">1,160,000</td>
+      <td class="num">1,630,000</td>
+      <td class="num">1,760,000</td>
+      <td class="num">(415,000)</td>
+      <td class="num green bold">3,710,000</td>
+      <td class="num bold">10,670,884</td>
+    </tr>
+    <tr>
+      <td class="bold">٤</td>
+      <td class="num">1,200,000</td>
+      <td class="num">1,710,000</td>
+      <td class="num">1,850,000</td>
+      <td class="num">(430,000)</td>
+      <td class="num green bold">3,880,000</td>
+      <td class="num bold">14,550,884</td>
+    </tr>
+    <tr class="year-best">
+      <td class="bold">٥ — ذروة</td>
+      <td class="num">1,250,000</td>
+      <td class="num">1,800,000</td>
+      <td class="num">1,950,000</td>
+      <td class="num">(445,000)</td>
+      <td class="num green bold">4,055,000</td>
+      <td class="num bold">18,605,884</td>
+    </tr>
+    <tr class="td-grand">
+      <td class="bold">الإجمالي 5 سنوات</td>
+      <td class="num" colspan="5">—</td>
+      <td class="num bold">18.6 مليون ج</td>
+    </tr>
+  </table>
+</div>
+
+<!-- EXPORT MARKETS -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--blue-l)">🌍</div>
+    <div>
+      <div class="section-head-title">أسواق التصدير المقترحة</div>
+      <div class="section-head-sub">لكل محصول من الثلاثة — بالشهادات المطلوبة</div>
+    </div>
+  </div>
+
+  <div style="font-weight:700;color:var(--green);margin-bottom:8px;direction:rtl">🌱 زيت الصويا + الكسب</div>
+  <div class="export-card">
+    <div class="export-flag">🇩🇿</div>
+    <div><div class="export-name">الجزائر</div><div class="export-detail">طلب مستمر — شهادة حلال + صحة صادرات</div></div>
+    <div class="export-price">1.3–1.5 $/كجم</div>
+  </div>
+  <div class="export-card">
+    <div class="export-flag">🇧🇩</div>
+    <div><div class="export-name">بنغلاديش</div><div class="export-detail">صفر رسوم جمركية على زيت الصويا — Non-GMO مطلوب</div></div>
+    <div class="export-price">1.3–1.4 $/كجم</div>
+  </div>
+
+  <div style="font-weight:700;color:var(--orange);margin-bottom:8px;margin-top:14px;direction:rtl">🌿 زيت السمسم والطحينة</div>
+  <div class="export-card">
+    <div class="export-flag">🇸🇦</div>
+    <div><div class="export-name">السعودية والخليج</div><div class="export-detail">طلب ضخم على الطحينة — شهادة حلال + SASO</div></div>
+    <div class="export-price">3–4 $/كجم زيت</div>
+  </div>
+  <div class="export-card">
+    <div class="export-flag">🇩🇪</div>
+    <div><div class="export-name">ألمانيا وأوروبا</div><div class="export-detail">زيت سمسم عضوي — شهادة Organic + Non-GMO</div></div>
+    <div class="export-price">5–8 $/كجم</div>
+  </div>
+
+  <div style="font-weight:700;color:var(--purple);margin-bottom:8px;margin-top:14px;direction:rtl">🌾 الكمون المطحون</div>
+  <div class="export-card">
+    <div class="export-flag">🇬🇧</div>
+    <div><div class="export-name">بريطانيا والاتحاد الأوروبي</div><div class="export-detail">طلب ثابت على البهارات — شهادة HACCP + ISO 22000</div></div>
+    <div class="export-price">2.5–4 $/كجم</div>
+  </div>
+  <div class="export-card">
+    <div class="export-flag">🇺🇸</div>
+    <div><div class="export-name">أمريكا الشمالية</div><div class="export-detail">FDA clearance — Organic مطلوب</div></div>
+    <div class="export-price">4–6 $/كجم</div>
+  </div>
+</div>
+
+<!-- RISK -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-head-icon" style="background:var(--red-l)">⚠️</div>
+    <div>
+      <div class="section-head-title">تقييم المخاطر</div>
+    </div>
+  </div>
+  <table>
+    <tr><th>الخطر</th><th>المحصول المتأثر</th><th>الاحتمالية</th><th>الأثر</th><th>الحل</th></tr>
+    <tr class="risk-med"><td><span class="risk-dot dot-m"></span>ملوحة مياه فوق 2,000 ppm</td><td>الصويا أولاً</td><td>متوسطة</td><td>عالٍ</td><td>تحليل مياه قبل الزراعة</td></tr>
+    <tr class="risk-high"><td><span class="risk-dot dot-h"></span>تقلب سعر الكمون الشديد</td><td>الكمون</td><td>عالية</td><td>عالٍ</td><td>تخزين 3–6 أشهر — البيع في ذروة السعر</td></tr>
+    <tr class="risk-low"><td><span class="risk-dot dot-l"></span>ارتفاع تكاليف العمالة</td><td>السمسم (حصاد)</td><td>منخفضة</td><td>متوسط</td><td>تحويل لحصاد آلي جزئي</td></tr>
+    <tr class="risk-med"><td><span class="risk-dot dot-m"></span>أمراض فطرية بالكمون</td><td>الكمون</td><td>متوسطة</td><td>عالٍ</td><td>الزراعة المبكرة نوفمبر — تجنب الري الغزير</td></tr>
+    <tr class="risk-low"><td><span class="risk-dot dot-l"></span>تعطل خط الإنتاج</td><td>الثلاثة</td><td>منخفضة</td><td>متوسط</td><td>عقد صيانة دورية + قطع غيار احتياطية</td></tr>
+    <tr class="risk-low"><td><span class="risk-dot dot-l"></span>تذبذب أسعار الزيت العالمي</td><td>الصويا</td><td>منخفضة</td><td>منخفض</td><td>تنويع البيع محلي + تصدير</td></tr>
+  </table>
+</div>
+
+<!-- CONCLUSION -->
+<div style="background:linear-gradient(135deg,var(--green-d),var(--green));border-radius:14px;padding:22px 26px;color:#fff;margin-bottom:20px;direction:rtl">
+  <div style="font-size:17px;font-weight:700;margin-bottom:12px">✅ الخلاصة والتوصية النهائية</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div>
+      <div style="font-size:12px;opacity:0.8;margin-bottom:5px">هل المشروع مجدي؟</div>
+      <div style="font-size:15px;font-weight:700">✅ نعم — مجدي جداً</div>
+      <div style="font-size:11px;opacity:0.75;margin-top:3px">استرداد رأس المال في أول 7 شهور</div>
+    </div>
+    <div>
+      <div style="font-size:12px;opacity:0.8;margin-bottom:5px">أقوى نقطة في المشروع</div>
+      <div style="font-size:14px;font-weight:700">خط الإنتاج المشترك</div>
+      <div style="font-size:11px;opacity:0.75;margin-top:3px">نفس الماكينة تعصر الصويا والسمسم وتطحن الكمون</div>
+    </div>
+    <div>
+      <div style="font-size:12px;opacity:0.8;margin-bottom:5px">أهم تحذير</div>
+      <div style="font-size:14px;font-weight:700">⚠️ تحليل المياه أولاً</div>
+      <div style="font-size:11px;opacity:0.75;margin-top:3px">الملوحة فوق 2,000 ppm تضر الصويا والسمسم</div>
+    </div>
+    <div>
+      <div style="font-size:12px;opacity:0.8;margin-bottom:5px">التوصية الذهبية</div>
+      <div style="font-size:14px;font-weight:700">خزّن الكمون 3 أشهر</div>
+      <div style="font-size:11px;opacity:0.75;margin-top:3px">السعر يتضاعف 2–3× مع التخزين تاريخياً</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  📌 <div><strong>ملاحظة هامة:</strong> هذه دراسة تقديرية بدقة ~80% مبنية على أسعار السوق المصري 2025–2026. أسعار الكمون شديدة التقلب وقد تختلف كثيراً من موسم لآخر. أسعار زيت السمسم مبنية على إنتاج الطحينة والزيت الغذائي. يُنصح بتحليل التربة والمياه قبل اتخاذ قرار الاستثمار. للحصول على دراسة تفصيلية — تواصل مع فريق Easy Start.</div>
+</div>
+
+</div>
+</body>
+</html>

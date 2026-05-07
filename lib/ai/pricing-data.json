@@ -1,0 +1,170 @@
+{
+  "realEstate": {
+    "residential": {
+      "constructionPerSqm": {
+        "normal": 8500,
+        "medium": 12000,
+        "premium": 18000,
+        "luxury": 28000
+      },
+      "basementAddition": {
+        "one": 4500,
+        "two": 3800,
+        "more": 3200
+      }
+    },
+    "commercial": {
+      "constructionPerSqm": {
+        "normal": 12000,
+        "medium": 16000,
+        "premium": 22000,
+        "luxury": 35000
+      },
+      "basementAddition": {
+        "one": 5500,
+        "two": 4800,
+        "more": 4200
+      }
+    },
+    "administrative": {
+      "constructionPerSqm": {
+        "normal": 9500,
+        "medium": 13500,
+        "premium": 19500,
+        "luxury": 30000
+      },
+      "basementAddition": {
+        "one": 5000,
+        "two": 4300,
+        "more": 3700
+      }
+    },
+    "hotel": {
+      "constructionPerSqm": {
+        "normal": 14000,
+        "medium": 20000,
+        "premium": 30000,
+        "luxury": 45000
+      },
+      "basementAddition": {
+        "one": 6000,
+        "two": 5200,
+        "more": 4500
+      }
+    },
+    "mixed": {
+      "constructionPerSqm": {
+        "normal": 10000,
+        "medium": 14500,
+        "premium": 21000,
+        "luxury": 32000
+      },
+      "basementAddition": {
+        "one": 5200,
+        "two": 4500,
+        "more": 3900
+      }
+    }
+  },
+  "medical": {
+    "clinic": {
+      "constructionPerSqm": {
+        "normal": 11000,
+        "medium": 15500,
+        "premium": 22000,
+        "luxury": 35000
+      }
+    },
+    "hospital": {
+      "constructionPerSqm": {
+        "normal": 18000,
+        "medium": 25000,
+        "premium": 38000,
+        "luxury": 55000
+      },
+      "basementAddition": {
+        "one": 8000,
+        "two": 7000,
+        "more": 6000
+      }
+    },
+    "medicalCenter": {
+      "constructionPerSqm": {
+        "normal": 12000,
+        "medium": 17000,
+        "premium": 25000,
+        "luxury": 40000
+      }
+    }
+  },
+  "agricultural": {
+    "reclamation": {
+      "perFeddan": {
+        "basic": 120000,
+        "intermediate": 180000,
+        "full": 250000
+      }
+    },
+    "greenhouses": {
+      "perSqm": {
+        "basic": 800,
+        "standard": 1500,
+        "advanced": 3000
+      }
+    },
+    "orchards": {
+      "perFeddan": {
+        "citrus": 85000,
+        "olives": 95000,
+        "grapes": 110000,
+        "dates": 75000
+      }
+    }
+  },
+  "industrial": {
+    "warehouse": {
+      "constructionPerSqm": {
+        "light": 5500,
+        "medium": 8500,
+        "heavy": 12000
+      }
+    },
+    "factory": {
+      "constructionPerSqm": {
+        "light": 8000,
+        "medium": 12000,
+        "heavy": 18000
+      }
+    },
+    "workshop": {
+      "constructionPerSqm": {
+        "light": 6000,
+        "medium": 9000,
+        "heavy": 13000
+      }
+    }
+  },
+  "finishingLevels": {
+    "normal": "تشطيب عادي — Basic finishes, paint, simple flooring",
+    "medium": "تشطيب متوسط — Ceramic, standard fixtures, normal paint",
+    "premium": "تشطيب راقي — Premium tiles, modern fixtures, quality paint",
+    "luxury": "تشطيب فندقي — Luxury materials, designer fixtures, smart home"
+  },
+  "additionalCosts": {
+    "electricalPerSqm": 1200,
+    "plumbingPerSqm": 800,
+    "hvacPerSqm": 2500,
+    "elevatorPerUnit": 350000,
+    "parkingPerSqm": 6000,
+    "landscapingPerSqm": 450,
+    "consultingPercent": 8,
+    "licensingPercent": 3,
+    "contingencyPercent": 10
+  },
+  "notes": {
+    "allPricesInEGP": "جنيه مصري",
+    "accuracyNote": "Prices include materials and labor, exclude land cost",
+    "exchangeRate": "Dollar rate: market price (check current rates)",
+    "updateFrequency": "Updated monthly based on market conditions"
+  }
+}

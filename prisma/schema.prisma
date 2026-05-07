@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  MIXED_USE
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+// Core Project
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  type        ProjectType
+  status      ProjectStatus @default(DRAFT)
+  description String?
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Type-specific data stored as JSON
+  residentialData Json?
+  commercialData  Json?
+  industrialData  Json?
+  mixedUseData    Json?
+
+  // Relations
+  costEstimation  CostEstimation?
+  roiCalculations RoiCalculations?
+  materialTakeoff MaterialTakeoff?
+
+  @@map("projects")
+}
+
+// Cost Estimation
+model CostEstimation {
+  id                      String  @id @default(uuid())
+  projectId               String  @unique
+  project                 Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  landCost                Float   @default(0)
+  constructionCostPerSqft  Float   @default(0)
+  totalConstructionCost   Float   @default(0)
+  contingencyPercent      Float   @default(10)
+  profitMarginPercent     Float   @default(15)
+  subtotal                Float   @default(0)
+  contingency             Float   @default(0)
+  grandTotal              Float   @default(0)
+
+  lineItems               CostLineItem[]
+
+  @@map("cost_estimations")
+}
+
+model CostLineItem {
+  id                 String @id @default(uuid())
+  costEstimationId   String
+  category           String
+  description        String
+  unit               String
+  quantity           Float
+  unitCost           Float
+  total              Float
+  itemType           String
+
+  costEstimation     CostEstimation @relation(fields: [costEstimationId], references: [id], onDelete: Cascade)
+
+  @@index([costEstimationId])
+  @@map("cost_line_items")
+}
+
+// ROI Calculations
+model RoiCalculations {
+  id                     String  @id @default(uuid())
+  projectId               String  @unique
+  project                 Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  monthlyRevenue          Float   @default(0)
+  annualRevenue           Float   @default(0)
+  totalOperatingExpenses   Float   @default(0)
+  netOperatingIncome      Float   @default(0)
+  annualDebtService       Float   @default(0)
+  annualCashFlow          Float   @default(0)
+  capRate                 Float   @default(0)
+  cashOnCashReturn        Float   @default(0)
+  paybackPeriod           Float   @default(0)
+
+  expenseItems           ExpenseLineItem[]
+
+  @@map("roi_calculations")
+}
+
+model ExpenseLineItem {
+  id                String @id @default(uuid())
+  roiCalculationsId String
+  category          String
+  description       String
+  amount            Float
+  frequency         String
+
+  roiCalculations   RoiCalculations @relation(fields: [roiCalculationsId], references: [id], onDelete: Cascade)
+
+  @@index([roiCalculationsId])
+  @@map("expense_line_items")
+}
+
+// Material Takeoff
+model MaterialTakeoff {
+  id                  String  @id @default(uuid())
+  projectId           String  @unique
+  project             Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  totalMaterialsCost  Float   @default(0)
+  totalLaborHours     Float   @default(0)
+  totalLaborCost      Float   @default(0)
+  grandTotal          Float   @default(0)
+
+  phases              ConstructionPhase[]
+
+  @@map("material_takeoffs")
+}
+
+model ConstructionPhase {
+  id                 String  @id @default(uuid())
+  materialTakeoffId  String
+  name               String
+  order              Int
+  materialsCost      Float   @default(0)
+  laborCost          Float   @default(0)
+  laborHours         Float   @default(0)
+
+  materialItems      MaterialItem[]
+  laborItems         LaborItem[]
+
+  materialTakeoff     MaterialTakeoff @relation(fields: [materialTakeoffId], references: [id], onDelete: Cascade)
+
+  @@index([materialTakeoffId])
+  @@map("construction_phases")
+}
+
+model MaterialItem {
+  id              String @id @default(uuid())
+  phaseId          String
+  category        String
+  name            String
+  unit            String
+  quantity        Float
+  wasteFactor     Float  @default(5)
+  adjustedQty     Float
+  unitCost        Float
+  total           Float
+
+  constructionPhase ConstructionPhase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+
+  @@index([phaseId])
+  @@map("material_items")
+}
+
+model LaborItem {
+  id           String @id @default(uuid())
+  phaseId      String
+  task         String
+  hoursPerUnit Float
+  unitCount    Float
+  totalHours   Float
+  hourlyRate   Float
+  total        Float
+
+  constructionPhase ConstructionPhase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+
+  @@index([phaseId])
+  @@map("labor_items")
+}
