@@ -230,7 +230,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
                 background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)',
                 cursor: 'pointer',
               }}>
-                Sign In
+                {t('authSignIn')}
               </button>
               <button onClick={() => { setSidebarOpen(false); setDrawerTab('signup'); setDrawerOpen(true); }} style={{
                 display: 'block', width: '100%', textAlign: 'center', padding: '8px',
@@ -238,7 +238,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
                 background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
                 color: 'white', cursor: 'pointer',
               }}>
-                Create Account
+                {t('authCreateAccount')}
               </button>
             </div>
           )}
@@ -288,7 +288,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
             <button
               onClick={() => signOut({ callbackUrl: '/' })}
               style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', opacity: 0.5 }}
-              title="Sign out"
+              title={t('authSignOut')}
             >↩</button>
           </div>
         ) : (
@@ -299,7 +299,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
               background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)',
               cursor: 'pointer', transition: 'all 0.15s',
             }}>
-              Sign In
+              {t('authSignIn')}
             </button>
             <button onClick={() => { setDrawerTab('signup'); setDrawerOpen(true); }} style={{
               display: 'block', width: '100%', textAlign: 'center', padding: '8px',
@@ -307,7 +307,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
               background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
               color: 'white', cursor: 'pointer', transition: 'all 0.15s',
             }}>
-              Create Account
+              {t('authCreateAccount')}
             </button>
           </div>
         )}
