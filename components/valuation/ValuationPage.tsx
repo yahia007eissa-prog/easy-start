@@ -23,7 +23,7 @@ const CONDITIONS: { key: Condition; icon: string }[] = [
   { key: 'needsMaint', icon: '🔧' },
 ];
 
-const UTILITIES = ['الكهرباء', 'المياه', 'الغاز', 'طريق معبد', 'مستندات موثقة'];
+const UTILITIES = ['الكهرباء', 'المياه', 'الغاز', 'وصول لطريق أسفلت', 'مستندات موثقة'];
 
 export function ValuationPage() {
   const t = useTranslations('easyStart');
