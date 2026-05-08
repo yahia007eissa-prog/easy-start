@@ -23,7 +23,13 @@ const CONDITIONS: { key: Condition; icon: string }[] = [
   { key: 'needsMaint', icon: '🔧' },
 ];
 
-const UTILITIES = ['الكهرباء', 'المياه', 'الغاز', 'وصول لطريق أسفلت', 'مستندات موثقة'];
+const UTILITIES = ['الكهرباء', 'المياه', 'الغاز', 'مستندات موثقة'];
+const ROAD_TYPES = [
+  { key: 'main',    label: 'طريق رئيسي',  icon: '🛣️' },
+  { key: 'side',    label: 'طريق فرعي',   icon: '🛤️' },
+  { key: 'unpaved', label: 'مدق (غير مسفلت)', icon: '🌿' },
+  { key: 'none',    label: 'لا يوجد طريق', icon: '❌' },
+];
 
 export function ValuationPage() {
   const t = useTranslations('easyStart');
@@ -34,6 +40,7 @@ export function ValuationPage() {
   const [areaUnit,    setAreaUnit]    = useState('sqm');
   const [condition,   setCondition]   = useState<Condition | null>(null);
   const [utilities,   setUtilities]   = useState<string[]>([]);
+  const [roadType,    setRoadType]    = useState<string>('');
   const [floor,       setFloor]       = useState('');
   const [buildingAge, setBuildingAge] = useState('');
   const [finishLevel, setFinishLevel] = useState('');
@@ -60,7 +67,7 @@ export function ValuationPage() {
       area,
       areaUnit,
       condition:   condition!,
-      utilities,
+      utilities: roadType ? [...utilities, `نوع الطريق: ${ROAD_TYPES.find(r => r.key === roadType)?.label ?? roadType}`] : utilities,
       floor,
       buildingAge,
       finishLevel,
@@ -170,7 +177,7 @@ export function ValuationPage() {
                     <div className="easy-section-title" style={{ marginTop: '18px', marginBottom: '10px' }}>
                       {t('valuationUtilities')}
                     </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
                       {UTILITIES.map(u => (
                         <button
                           key={u}
@@ -187,6 +194,31 @@ export function ValuationPage() {
                           }}
                         >
                           {utilities.includes(u) ? '✓ ' : ''}{u}
+                        </button>
+                      ))}
+                    </div>
+                    {/* Road type */}
+                    <div style={{ fontSize: '12px', color: '#555', fontWeight: 600, marginBottom: '8px' }}>
+                      نوع الطريق المتاح
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {ROAD_TYPES.map(r => (
+                        <button
+                          key={r.key}
+                          onClick={() => setRoadType(prev => prev === r.key ? '' : r.key)}
+                          style={{
+                            padding: '7px 14px',
+                            borderRadius: '8px',
+                            border: `1.5px solid ${roadType === r.key ? '#e67e22' : '#ddd'}`,
+                            background: roadType === r.key ? '#fef3e2' : 'white',
+                            color: roadType === r.key ? '#c0392b' : '#555',
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s',
+                            display: 'flex', alignItems: 'center', gap: '5px',
+                          }}
+                        >
+                          {r.icon} {r.label}
                         </button>
                       ))}
                     </div>
