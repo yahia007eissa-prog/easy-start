@@ -60,15 +60,12 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
     return <FinishingForm formData={formData} onChange={onChange} />;
   }
 
-  const isRenovation = false;
-  const isFinishing  = subType === 'finishing';
-  const isEfficiency = subType === 'efficiency';
-  const isMixed      = formData.projectType === 'mixed';
+  const isMixed = formData.projectType === 'mixed';
 
   return (
     <>
       {/* Project type selector — shown for residential/default subtypes */}
-      {!isRenovation && !isFinishing && !isEfficiency && (
+      {(
         <div className="easy-form-row">
           <div className="easy-form-group">
             <label className="easy-form-label">
@@ -174,29 +171,6 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
         </div>
       )}
 
-      {/* Finishing-only: level + area */}
-      {isFinishing && (
-        <div className="easy-form-row">
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('finishingLevel')}
-              <RequiredBadge label={t('fieldRequired')} />
-            </label>
-            <select
-              className="easy-form-input"
-              value={formData.finishingLevel || 'medium'}
-              onChange={(e) => updateField('finishingLevel', e.target.value)}
-            >
-              <option value="none">{t('finishingNone')}</option>
-              <option value="normal">{t('finishingNormal')}</option>
-              <option value="medium">{t('finishingMedium')}</option>
-              <option value="premium">{t('finishingPremium')}</option>
-              <option value="luxury">{t('finishingLuxury')}</option>
-            </select>
-          </div>
-        </div>
-      )}
-
       {/* Land + Construction area */}
       <div className="easy-form-row">
         <div className="easy-form-group">
@@ -297,40 +271,38 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
         </div>
       )}
 
-      {/* Floors + Basement — not for finishing-only */}
-      {!isFinishing && (
-        <div className="easy-form-row">
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('floorsCount')}
-              <RequiredBadge label={t('fieldRequired')} />
-            </label>
-            <input
-              type="text"
-              className="easy-form-input"
-              placeholder={t('floorsPlaceholder')}
-              value={formData.floorsCount || ''}
-              onChange={(e) => updateField('floorsCount', e.target.value)}
-            />
-          </div>
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('basement')}
-              <OptionalBadge label={t('fieldOptional')} />
-            </label>
-            <select
-              className="easy-form-input"
-              value={formData.basement || 'none'}
-              onChange={(e) => updateField('basement', e.target.value)}
-            >
-              <option value="none">{t('noBasement')}</option>
-              <option value="one">{t('oneBasement')}</option>
-              <option value="two">{t('twoBasement')}</option>
-              <option value="more">{t('moreBasement')}</option>
-            </select>
-          </div>
+      {/* Floors + Basement */}
+      <div className="easy-form-row">
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('floorsCount')}
+            <RequiredBadge label={t('fieldRequired')} />
+          </label>
+          <input
+            type="text"
+            className="easy-form-input"
+            placeholder={t('floorsPlaceholder')}
+            value={formData.floorsCount || ''}
+            onChange={(e) => updateField('floorsCount', e.target.value)}
+          />
         </div>
-      )}
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('basement')}
+            <OptionalBadge label={t('fieldOptional')} />
+          </label>
+          <select
+            className="easy-form-input"
+            value={formData.basement || 'none'}
+            onChange={(e) => updateField('basement', e.target.value)}
+          >
+            <option value="none">{t('noBasement')}</option>
+            <option value="one">{t('oneBasement')}</option>
+            <option value="two">{t('twoBasement')}</option>
+            <option value="more">{t('moreBasement')}</option>
+          </select>
+        </div>
+      </div>
     </>
   );
 }

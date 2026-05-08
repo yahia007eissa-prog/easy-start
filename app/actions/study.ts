@@ -1,6 +1,6 @@
 'use server';
 
-import { deepseek, DEEPSEEK_MODEL } from '@/lib/ai/deepseek';
+import { getDeepseekClient, DEEPSEEK_MODEL } from '@/lib/ai/deepseek';
 import { getBuilder, hasBuilder } from '@/lib/ai/prompt-builder';
 import type { StudyFormData } from '@/lib/ai/prompt-builder/types';
 
@@ -57,7 +57,7 @@ export async function generateStudy(formData: StudyFormData): Promise<StudyRespo
     console.log('[StudyAction] ========== END PROMPT ==========');
     console.log('[StudyAction] Prompt length:', fullPrompt.length, 'characters');
 
-    const completion = await deepseek.chat.completions.create({
+    const completion = await getDeepseekClient().chat.completions.create({
       model: DEEPSEEK_MODEL,
       messages: [{ role: 'user', content: fullPrompt }],
       temperature: 0.7,

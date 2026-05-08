@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { deepseek, DEEPSEEK_MODEL } from "@/lib/ai/deepseek";
+import { getDeepseekClient, DEEPSEEK_MODEL } from "@/lib/ai/deepseek";
 import { getEdgeSystemPrompt } from "@/lib/ai/system-prompts/edge-prompts";
 import type { ProjectCategory } from "@/lib/ai/system-prompts/dynamic-prompts";
 
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       ...messages,
     ];
 
-    const stream = await deepseek.chat.completions.create({
+    const stream = await getDeepseekClient().chat.completions.create({
       model: DEEPSEEK_MODEL,
       messages: systemMessages,
       temperature: 0.7,
