@@ -477,108 +477,134 @@ export function ValuationPage() {
                   </button>
                 </div>
 
-                {/* Certificate */}
+                {/* Certificate — Black & Silver */}
                 <div id="valuation-certificate" style={{
-                  background: 'white',
-                  border: '3px solid #1e3a5f',
-                  borderRadius: '12px',
+                  background: 'linear-gradient(160deg, #111 0%, #1a1a1a 50%, #0d0d0d 100%)',
+                  border: '1px solid #3a3a3a',
+                  borderRadius: '14px',
                   padding: '40px 48px',
                   position: 'relative',
                   fontFamily: 'inherit',
+                  color: '#e0e0e0',
                 }}>
-                  {/* Watermark border */}
+                  {/* Silver inner border */}
                   <div style={{
-                    position: 'absolute', inset: '8px', border: '1px solid #c8d8ee',
+                    position: 'absolute', inset: '8px',
+                    border: '1px solid rgba(192,192,192,0.2)',
                     borderRadius: '8px', pointerEvents: 'none',
                   }} />
 
+                  {/* Decorative corner accents */}
+                  {[
+                    { top: 12, left: 12 }, { top: 12, right: 12 },
+                    { bottom: 12, left: 12 }, { bottom: 12, right: 12 },
+                  ].map((pos, i) => (
+                    <div key={i} style={{
+                      position: 'absolute', ...pos,
+                      width: 18, height: 18,
+                      borderTop: i < 2 ? '2px solid #888' : 'none',
+                      borderBottom: i >= 2 ? '2px solid #888' : 'none',
+                      borderLeft: (i === 0 || i === 2) ? '2px solid #888' : 'none',
+                      borderRight: (i === 1 || i === 3) ? '2px solid #888' : 'none',
+                    }} />
+                  ))}
+
                   {/* Header */}
                   <div style={{ textAlign: 'center', marginBottom: '28px', position: 'relative' }}>
-                    <div style={{ fontSize: '28px', marginBottom: '6px' }}>⚖️</div>
-                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#1e3a5f', letterSpacing: '0.5px' }}>
+                    <div style={{ fontSize: '28px', marginBottom: '8px' }}>⚖️</div>
+                    <div className="cert-header-title" style={{
+                      fontSize: '22px', fontWeight: 800, letterSpacing: '1px',
+                      background: 'linear-gradient(135deg, #c0c0c0, #ffffff, #a8a8a8)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    }}>
                       {t('valuationCertTitle')}
                     </div>
-                    <div style={{ fontSize: '13px', color: '#4a7ab5', marginTop: '4px', fontWeight: 500 }}>
+                    <div style={{ fontSize: '12px', color: '#888', marginTop: '5px', letterSpacing: '0.5px' }}>
                       {t('valuationCertSubtitle')}
                     </div>
-                    <div style={{ width: '60px', height: '3px', background: '#1e3a5f', margin: '12px auto 0' }} />
+                    <div style={{
+                      width: '80px', height: '2px', margin: '14px auto 0',
+                      background: 'linear-gradient(90deg, transparent, #888, transparent)',
+                    }} />
                   </div>
 
                   {/* Cert meta */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '12px', color: '#666' }}>
-                    <div>
-                      <span style={{ fontWeight: 600, color: '#1e3a5f' }}>{t('valuationCertNo')}: </span>
-                      <span style={{ fontFamily: 'monospace', color: '#c0392b' }}>{certNo}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '12px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #333', borderRadius: '6px', padding: '7px 14px' }}>
+                      <span style={{ color: '#888' }}>{t('valuationCertNo')}: </span>
+                      <span style={{ fontFamily: 'monospace', color: '#d4af37', fontWeight: 700 }}>{certNo}</span>
                     </div>
-                    <div>
-                      <span style={{ fontWeight: 600, color: '#1e3a5f' }}>{t('valuationCertDate')}: </span>
-                      <span>{formatDate(locale)}</span>
+                    <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #333', borderRadius: '6px', padding: '7px 14px' }}>
+                      <span style={{ color: '#888' }}>{t('valuationCertDate')}: </span>
+                      <span style={{ color: '#e0e0e0' }}>{formatDate(locale)}</span>
                     </div>
                   </div>
 
                   {/* Property details box */}
                   <div style={{
-                    background: '#f4f7fb', borderRadius: '8px', padding: '16px 20px',
-                    marginBottom: '24px', border: '1px solid #dde8f5',
+                    background: 'rgba(255,255,255,0.03)',
+                    borderRadius: '10px', padding: '16px 20px',
+                    marginBottom: '24px',
+                    border: '1px solid rgba(192,192,192,0.15)',
                   }}>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e3a5f', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      {t('valuationCertPropDetails')}
+                    <div style={{ fontSize: '10px', fontWeight: 700, color: '#888', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+                      ▪ {t('valuationCertPropDetails')}
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-                      <div>
-                        <div style={{ fontSize: '10px', color: '#888', marginBottom: '2px' }}>{t('valuationCertPropType')}</div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                          {propType ? t(`propType${propType.charAt(0).toUpperCase() + propType.slice(1)}` as never) : '—'}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                      {[
+                        { label: t('valuationCertPropType'), val: propType ? t(`propType${propType.charAt(0).toUpperCase() + propType.slice(1)}` as never) : '—' },
+                        { label: t('valuationCertLocation'), val: location || '—' },
+                        { label: t('valuationCertArea'), val: `${area} ${areaUnit === 'feddan' ? 'فدان' : 'م²'}` },
+                      ].map(({ label, val }) => (
+                        <div key={label}>
+                          <div style={{ fontSize: '10px', color: '#666', marginBottom: '3px' }}>{label}</div>
+                          <div style={{ fontSize: '13px', fontWeight: 600, color: '#d0d0d0' }}>{val}</div>
                         </div>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '10px', color: '#888', marginBottom: '2px' }}>{t('valuationCertLocation')}</div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>{location || '—'}</div>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '10px', color: '#888', marginBottom: '2px' }}>{t('valuationCertArea')}</div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                          {area} {areaUnit === 'feddan' ? 'فدان' : 'م²'}
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
 
                   {/* Report body */}
                   <div style={{ marginBottom: '28px' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e3a5f', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      {t('valuationCertReport')}
+                    <div style={{ fontSize: '10px', fontWeight: 700, color: '#888', marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+                      ▪ {t('valuationCertReport')}
                     </div>
                     <div style={{
-                      whiteSpace: 'pre-wrap', lineHeight: '1.9', fontSize: '14px', color: '#1a1a2e',
-                      borderRight: '3px solid #1e3a5f', paddingRight: '16px',
+                      whiteSpace: 'pre-wrap', lineHeight: '1.9', fontSize: '14px', color: '#cccccc',
+                      borderRight: '3px solid #555', paddingRight: '18px',
                     }}>
                       {report}
                     </div>
                   </div>
 
                   {/* Signature area */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '32px', paddingTop: '20px', borderTop: '1px solid #ddd' }}>
+                  <div style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+                    marginTop: '32px', paddingTop: '20px',
+                    borderTop: '1px solid rgba(255,255,255,0.08)',
+                  }}>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ width: '120px', borderBottom: '1px solid #1e3a5f', marginBottom: '6px', height: '32px' }} />
+                      <div style={{ width: '120px', borderBottom: '1px solid #555', marginBottom: '6px', height: '32px' }} />
                       <div style={{ fontSize: '11px', color: '#666' }}>توقيع المُقيِّم</div>
                     </div>
                     <div style={{
-                      width: '80px', height: '80px', border: '2px dashed #4a7ab5',
+                      width: '80px', height: '80px',
+                      border: '2px solid rgba(192,192,192,0.3)',
                       borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'radial-gradient(circle, rgba(192,192,192,0.05), transparent)',
                     }}>
-                      <div style={{ fontSize: '10px', color: '#4a7ab5', textAlign: 'center', lineHeight: '1.3' }}>
+                      <div style={{ fontSize: '10px', color: '#666', textAlign: 'center', lineHeight: '1.4' }}>
                         الختم<br />الرسمي
                       </div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ width: '120px', borderBottom: '1px solid #1e3a5f', marginBottom: '6px', height: '32px' }} />
+                      <div style={{ width: '120px', borderBottom: '1px solid #555', marginBottom: '6px', height: '32px' }} />
                       <div style={{ fontSize: '11px', color: '#666' }}>توقيع العميل</div>
                     </div>
                   </div>
 
                   {/* Disclaimer */}
-                  <div style={{ marginTop: '20px', fontSize: '10px', color: '#999', textAlign: 'center', lineHeight: '1.6' }}>
+                  <div style={{ marginTop: '20px', fontSize: '10px', color: '#555', textAlign: 'center', lineHeight: '1.7' }}>
                     {t('valuationCertDisclaimer')}
                   </div>
                 </div>
