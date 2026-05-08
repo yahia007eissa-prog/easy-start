@@ -37,6 +37,13 @@ const ProjectsIcon = () => (
   </svg>
 );
 
+const ValuationIcon = () => (
+  <svg className="easy-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4zm-1 3a1 1 0 112 0v3.586l2.707 2.707a1 1 0 01-1.414 1.414l-3-3A1 1 0 019 13V9z" clipRule="evenodd"/>
+    <path d="M10 6a1 1 0 00-1 1v3.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7a1 1 0 00-1-1z"/>
+  </svg>
+);
+
 const PriceIcon = () => (
   <svg className="easy-nav-icon" viewBox="0 0 20 20" fill="currentColor">
     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
@@ -72,6 +79,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { href: '/', icon: <DashboardIcon />, labelKey: 'navDashboard', section: 'navMain' },
   { href: '/new-study', icon: <PlusIcon />, labelKey: 'navNewStudy', section: 'navMain' },
+  { href: '/valuation', icon: <ValuationIcon />, labelKey: 'navValuation', section: 'navMain' },
   { href: '/projects', icon: <ProjectsIcon />, labelKey: 'navMyProjects', section: 'navMain' },
 ];
 

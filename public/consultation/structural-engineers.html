@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استمارة بيانات التكلفة الإنشائية — مهندس إنشاءات</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: white;
+    padding: 14mm 16mm;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #1e3a5f;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .header-logo {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1e3a5f;
+    letter-spacing: -0.5px;
+  }
+  .header-logo span { color: #e67e22; }
+  .header-meta { text-align: left; font-size: 11px; color: #666; }
+  .header-meta strong { display: block; font-size: 13px; color: #1e3a5f; }
+
+  .doc-title {
+    text-align: center;
+    background: linear-gradient(135deg, #1e3a5f, #2d5986);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  .doc-title h1 { font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+  .doc-title p  { font-size: 11px; opacity: 0.85; }
+
+  .notice {
+    background: #fff8e1;
+    border-right: 4px solid #f39c12;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    margin-bottom: 16px;
+    color: #7d5a00;
+  }
+
+  /* Consultant Info */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .info-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .info-field label { font-size: 11px; color: #666; font-weight: 600; }
+  .info-field .line {
+    border-bottom: 1.5px solid #ccc;
+    height: 26px;
+    padding: 2px 6px;
+    font-size: 12px;
+  }
+
+  /* Section */
+  .section { margin-bottom: 18px; }
+  .section-title {
+    background: #1e3a5f;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 6px 6px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-subtitle {
+    background: #eaf0f8;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: #444;
+    border-right: 3px solid #1e3a5f;
+    margin-bottom: 4px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  th {
+    background: #2d5986;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 11.5px;
+    border: 1px solid #1e3a5f;
+  }
+  th.col-right { text-align: right; }
+  td {
+    padding: 6px 10px;
+    border: 1px solid #dde3ea;
+    vertical-align: middle;
+  }
+  td.label-cell {
+    background: #f4f7fb;
+    font-weight: 600;
+    color: #2c3e50;
+    white-space: nowrap;
+  }
+  td.input-cell {
+    background: #fffde7;
+    min-width: 80px;
+  }
+  td.input-cell input, td.unit-cell {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    text-align: center;
+    outline: none;
+    color: #1a1a2e;
+  }
+  td.note-cell { background: #f9f9f9; color: #888; font-size: 11px; }
+  tr:nth-child(even) td.label-cell { background: #edf1f7; }
+  tr:hover td { background-color: #f0f5ff; }
+  tr:hover td.label-cell { background-color: #dce6f3; }
+
+  .sub-header td {
+    background: #e8f0fe !important;
+    font-weight: 700;
+    color: #1e3a5f;
+    font-size: 12px;
+    text-align: right;
+    padding-right: 14px;
+  }
+
+  /* Notes area */
+  .notes-area {
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    min-height: 60px;
+    background: #fafafa;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  /* Signature */
+  .signature-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 20px;
+  }
+  .sig-box {
+    flex: 1;
+    border: 1.5px dashed #aaa;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    min-height: 80px;
+  }
+  .sig-box p { font-size: 11px; color: #888; margin-bottom: 8px; }
+  .sig-box strong { font-size: 12px; color: #333; display: block; margin-bottom: 4px; }
+
+  /* Footer */
+  .footer {
+    margin-top: 16px;
+    border-top: 2px solid #1e3a5f;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #888;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e67e22;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  .required { color: #e74c3c; font-size: 10px; margin-right: 3px; }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; padding: 12mm 14mm; box-shadow: none; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-logo">Easy<span>Start</span> <span style="font-size:12px;color:#888;font-weight:400;">دراسات الجدوى</span></div>
+    <div class="header-meta">
+      <strong>استمارة بيانات المهندس الإنشائي</strong>
+      رقم المستند: STR-2026-01 &nbsp;|&nbsp; الإصدار: 1.0
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="doc-title">
+    <h1>🏗️ استمارة تكاليف الأعمال الإنشائية</h1>
+    <p>خاصة بمهندسي الإنشاءات المدنية — يُرجى تعبئة البيانات بناءً على خبرتكم الميدانية الفعلية في السوق المصري</p>
+  </div>
+
+  <!-- Notice -->
+  <div class="notice">
+    <strong>⚠️ تنبيه هام:</strong> جميع الأسعار المدخلة ستُستخدم مرجعاً في نظام دراسات الجدوى العقارية.
+    يُرجى إدخال <strong>متوسط السعر الواقعي</strong> الشامل للمواد والعمالة والإشراف، <strong>باستثناء سعر الأرض</strong>.
+    العملة: <strong>جنيه مصري / المتر المربع</strong> ما لم يُذكر غير ذلك. <span class="required">★</span> = مطلوب
+  </div>
+
+  <!-- Consultant Info -->
+  <div class="info-grid">
+    <div class="info-field"><label>اسم المهندس / الشركة <span class="required">★</span></label><div class="line"></div></div>
+    <div class="info-field"><label>رقم عضوية النقابة</label><div class="line"></div></div>
+    <div class="info-field"><label>المنطقة الجغرافية المرجعية <span class="required">★</span></label><div class="line"></div></div>
+    <div class="info-field"><label>تاريخ تعبئة الاستمارة <span class="required">★</span></label><div class="line"></div></div>
+    <div class="info-field"><label>سنوات الخبرة</label><div class="line"></div></div>
+    <div class="info-field"><label>رقم التواصل / البريد الإلكتروني</label><div class="line"></div></div>
+  </div>
+
+  <!-- Section 1: Residential -->
+  <div class="section">
+    <div class="section-title">🏠 القسم الأول — تكاليف البناء السكني (جنيه / م²)</div>
+    <div class="section-subtitle">التكلفة الإجمالية للمتر المربع مبنياً — شاملة: هيكل + خرسانة + حديد + طوب + عزل + لياسة — غير شاملة التشطيب</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:30%">نوع المبنى</th>
+        <th>تشطيب عادي<br><small>(بدون نقشة)</small></th>
+        <th>متوسط</th>
+        <th>راقي<br><small>(مواصفات جيدة)</small></th>
+        <th>فندقي / فاخر</th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr>
+        <td class="label-cell">عمارة سكنية عادية (أرضي + أدوار)</td>
+        <td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td>
+        <td class="note-cell"></td>
+      </tr>
+      <tr>
+        <td class="label-cell">فيلا مستقلة</td>
+        <td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td>
+        <td class="note-cell"></td>
+      </tr>
+      <tr>
+        <td class="label-cell">تاون هاوس / دوبلكس</td>
+        <td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td>
+        <td class="note-cell"></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Section 2: Commercial / Admin -->
+  <div class="section">
+    <div class="section-title">🏢 القسم الثاني — تجاري / إداري / طبي (جنيه / م²)</div>
+    <div class="section-subtitle">نفس المعيار السابق — هيكل فقط بدون تشطيب</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:30%">النوع</th>
+        <th>عادي</th>
+        <th>متوسط</th>
+        <th>راقي</th>
+        <th>فندقي / فاخر</th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">مبنى تجاري (محلات / مول)</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">مبنى إداري (مكاتب)</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">مستشفى / مركز طبي</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">فندق</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 3: Industrial -->
+  <div class="section">
+    <div class="section-title">🏭 القسم الثالث — صناعي / مخازن (جنيه / م²)</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:30%">النوع</th>
+        <th>خفيف<br><small>(مخزن بسيط)</small></th>
+        <th>متوسط<br><small>(مصنع عادي)</small></th>
+        <th>ثقيل<br><small>(مصنع متخصص)</small></th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">مخزن / هنجر</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">مصنع</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">ورشة</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 4: Extras -->
+  <div class="section">
+    <div class="section-title">⚙️ القسم الرابع — تكاليف إضافية (جنيه / م² أو وحدة)</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:40%">البند</th>
+        <th style="width:20%">التكلفة</th>
+        <th>الوحدة</th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">أعمال كهرباء (خشن)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م²</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">أعمال سباكة (خشن)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م²</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">تكييف مركزي (تمديدات)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م²</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">أسانسير (لفت) — عدد الأدوار 6-8</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / وحدة</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">طابق بدروم إضافي (أول بدروم)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م²</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">طابق بدروم إضافي (ثاني فأكثر)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م²</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">جراج / بدروم سيارات</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م²</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">أعمال خارجية (حديقة / رصف)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م²</td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 5: Materials Reference -->
+  <div class="section">
+    <div class="section-title">💰 القسم الخامس — أسعار المواد المرجعية (للتحقق)</div>
+    <div class="section-subtitle">هذه الأسعار تُستخدم للمراجعة فقط — أدخل السعر الذي تعمل به فعلياً في مشاريعك الحالية</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:35%">المادة</th>
+        <th style="width:25%">سعرك الفعلي</th>
+        <th>الوحدة</th>
+        <th>المصدر / الموردّ</th>
+      </tr>
+      <tr><td class="label-cell">حديد تسليح (طن)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / طن</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">أسمنت (طن)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / طن</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">رمل فينو (م³)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م³</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">طوب أحمر (ألف طوبة)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / ألف</td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">خرسانة جاهزة (م³)</td><td class="input-cell"></td><td style="text-align:center;color:#666;">جنيه / م³</td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Notes -->
+  <div class="section">
+    <div class="section-title">📝 ملاحظات وتحفظات إضافية</div>
+    <div class="notes-area">أكتب هنا أي تحفظات أو عوامل تؤثر على الأسعار (منطقة جغرافية، حجم المشروع، موسمية، إلخ)...</div>
+  </div>
+
+  <!-- Signature -->
+  <div class="signature-row">
+    <div class="sig-box">
+      <strong>توقيع المهندس</strong>
+      <p>الاسم بالكامل + توقيع</p>
+    </div>
+    <div class="sig-box">
+      <strong>ختم الشركة / مكتب الاستشارات</strong>
+      <p>اختياري</p>
+    </div>
+    <div class="sig-box">
+      <strong>تاريخ الاعتماد</strong>
+      <p>_____ / _____ / 2026</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>EasyStart — نظام دراسات الجدوى العقارية | استمارة STR-2026-01</span>
+    <span>البيانات سرية ولأغراض البرنامج فقط</span>
+  </div>
+
+</div>
+</body>
+</html>

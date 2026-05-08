@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استمارة بيانات التكلفة — مهندس تشطيبات</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: white;
+    padding: 14mm 16mm;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #1a6b3c;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .header-logo { font-size: 22px; font-weight: 900; color: #1a6b3c; }
+  .header-logo span { color: #e67e22; }
+  .header-meta { text-align: left; font-size: 11px; color: #666; }
+  .header-meta strong { display: block; font-size: 13px; color: #1a6b3c; }
+
+  .doc-title {
+    text-align: center;
+    background: linear-gradient(135deg, #1a6b3c, #27ae60);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  .doc-title h1 { font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+  .doc-title p  { font-size: 11px; opacity: 0.85; }
+
+  .notice {
+    background: #e8f5e9;
+    border-right: 4px solid #27ae60;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    margin-bottom: 16px;
+    color: #1a6b3c;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .info-field { display: flex; flex-direction: column; gap: 4px; }
+  .info-field label { font-size: 11px; color: #666; font-weight: 600; }
+  .info-field .line { border-bottom: 1.5px solid #ccc; height: 26px; padding: 2px 6px; font-size: 12px; }
+
+  .section { margin-bottom: 18px; }
+  .section-title {
+    background: #1a6b3c;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 6px 6px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-subtitle {
+    background: #e8f5e9;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: #2d7a4f;
+    border-right: 3px solid #27ae60;
+    margin-bottom: 4px;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    background: #27ae60;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 11.5px;
+    border: 1px solid #1a6b3c;
+  }
+  th.col-right { text-align: right; }
+  td { padding: 6px 10px; border: 1px solid #c8e6c9; vertical-align: middle; }
+  td.label-cell { background: #f1f8f4; font-weight: 600; color: #1a3d2b; white-space: nowrap; }
+  td.input-cell { background: #fffde7; min-width: 80px; text-align: center; }
+  td.note-cell { background: #f9f9f9; color: #888; font-size: 11px; }
+  tr:nth-child(even) td.label-cell { background: #e8f5e9; }
+
+  .level-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+  .level-1 { background: #ecf0f1; color: #555; }
+  .level-2 { background: #d5f5e3; color: #1a6b3c; }
+  .level-3 { background: #d6eaf8; color: #1a5276; }
+  .level-4 { background: #fdebd0; color: #784212; }
+
+  .sub-header td {
+    background: #d5f5e3 !important;
+    font-weight: 700;
+    color: #1a6b3c;
+    font-size: 11.5px;
+    padding-right: 14px;
+  }
+
+  .levels-legend {
+    display: flex;
+    gap: 12px;
+    padding: 8px 12px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+  .levels-legend span { display: flex; align-items: center; gap: 4px; }
+
+  .notes-area {
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    min-height: 55px;
+    background: #fafafa;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  .signature-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 20px;
+  }
+  .sig-box {
+    flex: 1;
+    border: 1.5px dashed #aaa;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    min-height: 75px;
+  }
+  .sig-box p { font-size: 11px; color: #888; margin-bottom: 6px; }
+  .sig-box strong { font-size: 12px; color: #333; display: block; margin-bottom: 4px; }
+
+  .footer {
+    margin-top: 16px;
+    border-top: 2px solid #1a6b3c;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #888;
+  }
+
+  .required { color: #e74c3c; font-size: 10px; }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; padding: 12mm 14mm; box-shadow: none; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-logo">Easy<span>Start</span> <span style="font-size:12px;color:#888;font-weight:400;">دراسات الجدوى</span></div>
+    <div class="header-meta">
+      <strong>استمارة بيانات مهندس التشطيبات</strong>
+      رقم المستند: FIN-2026-01 &nbsp;|&nbsp; الإصدار: 1.0
+    </div>
+  </div>
+
+  <div class="doc-title">
+    <h1>🎨 استمارة تكاليف أعمال التشطيبات</h1>
+    <p>خاصة بمهندسي ومقاولي التشطيبات — يُرجى التعبئة بناءً على أسعار السوق الفعلية الحالية</p>
+  </div>
+
+  <div class="notice">
+    <strong>⚠️ تنبيه:</strong> الأسعار المطلوبة تشمل <strong>المواد + العمالة + الإشراف</strong> للمتر المربع النهائي المُسلَّم.
+    العملة: <strong>جنيه مصري / م²</strong>. الأسعار ستُدرج مباشرة في حسابات دراسات الجدوى.
+    <span class="required">★</span> = مطلوب
+  </div>
+
+  <!-- Levels Legend -->
+  <div style="margin-bottom:14px; padding:10px 14px; background:#f4f4f4; border-radius:8px; font-size:11.5px;">
+    <strong>تعريف مستويات التشطيب:</strong>
+    <div style="display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;">
+      <span><span class="level-badge level-1">عادي</span> بلاط سيراميك اقتصادي، دهان عادي، سباكة وكهرباء أساسية</span>
+      <span><span class="level-badge level-2">متوسط</span> سيراميك متوسط، دهان جيد، تجهيزات صحية متوسطة</span>
+      <span><span class="level-badge level-3">راقي</span> بورسلان / رخام, دهان فاخر، تجهيزات متميزة</span>
+      <span><span class="level-badge level-4">فندقي</span> خامات استيراد، ديكور متكامل، سمارت هوم</span>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-field"><label>اسم المهندس / الشركة <span class="required">★</span></label><div class="line"></div></div>
+    <div class="info-field"><label>التخصص الرئيسي</label><div class="line"></div></div>
+    <div class="info-field"><label>المنطقة الجغرافية المرجعية <span class="required">★</span></label><div class="line"></div></div>
+    <div class="info-field"><label>تاريخ التعبئة <span class="required">★</span></label><div class="line"></div></div>
+    <div class="info-field"><label>سنوات الخبرة في التشطيبات</label><div class="line"></div></div>
+    <div class="info-field"><label>رقم التواصل / البريد</label><div class="line"></div></div>
+  </div>
+
+  <!-- Section 1: Residential Finishing -->
+  <div class="section">
+    <div class="section-title">🏠 القسم الأول — تشطيب وحدات سكنية (جنيه / م²)</div>
+    <div class="section-subtitle">تشطيب كامل تسليم مفتاح: أرضيات + حوائط + أسقف + سباكة ظاهرة + كهرباء ظاهرة + أبواب + نوافذ</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:28%">نوع الوحدة</th>
+        <th><span class="level-badge level-1">عادي</span></th>
+        <th><span class="level-badge level-2">متوسط</span></th>
+        <th><span class="level-badge level-3">راقي</span></th>
+        <th><span class="level-badge level-4">فندقي</span></th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">شقة سكنية عادية</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">فيلا / دوبلكس</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 2: Commercial Finishing -->
+  <div class="section">
+    <div class="section-title">🏢 القسم الثاني — تشطيب وحدات تجارية وإدارية (جنيه / م²)</div>
+    <div class="section-subtitle">تشطيب كامل: أرضيات + حوائط + أسقف معلقة + إضاءة + كهرباء ظاهرة</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:28%">نوع الوحدة</th>
+        <th><span class="level-badge level-1">عادي</span></th>
+        <th><span class="level-badge level-2">متوسط</span></th>
+        <th><span class="level-badge level-3">راقي</span></th>
+        <th><span class="level-badge level-4">فندقي</span></th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">محل تجاري</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">مكتب إداري</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">لوبي / ردهة مبنى</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">وحدة فندقية (غرفة)</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 3: Medical Finishing -->
+  <div class="section">
+    <div class="section-title">🏥 القسم الثالث — تشطيب طبي / عيادات (جنيه / م²)</div>
+    <div class="section-subtitle">تشطيب طبي معياري: بلاط مضاد للبكتيريا + حوائط دهان طبي + أسقف معلقة + كهرباء + تمديدات خاصة</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:35%">النوع</th>
+        <th>تشطيب طبي أساسي</th>
+        <th>تشطيب طبي متطور</th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">عيادة طبية</td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">مركز طبي / عيادات مجمعة</td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">غرفة عمليات / ICU</td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 4: Industrial Finishing -->
+  <div class="section">
+    <div class="section-title">🏭 القسم الرابع — تشطيب صناعي / مصانع (جنيه / م²)</div>
+    <div class="section-subtitle">بلاط صناعي + طلاء حوائط + إضاءة صناعية + تمديدات كهرباء صناعية</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:35%">النوع</th>
+        <th>تشطيب أساسي</th>
+        <th>تشطيب متطور</th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">مصنع / ورشة</td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">مخزن / هنجر</td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 5: Itemized Costs -->
+  <div class="section">
+    <div class="section-title">📋 القسم الخامس — تفصيل بنود التشطيب (جنيه / م²)</div>
+    <div class="section-subtitle">للمستوى المتوسط كمرجع للنسب — ضع السعر بالمتر المربع لكل بند منفرداً</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:35%">البند</th>
+        <th>سكني</th>
+        <th>تجاري</th>
+        <th>طبي</th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">أرضيات (بلاط / رخام)</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">حوائط (دهان / بلاط)</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">أسقف (دهان / ديكور)</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">تجهيزات صحية</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">أبواب داخلية (بما فيها العتب)</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">نوافذ ألومنيوم / PVC</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+      <tr><td class="label-cell">إضاءة وكهرباء ظاهرة</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="note-cell"></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 6: Ceiling Height -->
+  <div class="section">
+    <div class="section-title">📐 القسم السادس — تأثير ارتفاع السقف على التكلفة</div>
+    <table>
+      <tr>
+        <th class="col-right" style="width:35%">ارتفاع السقف</th>
+        <th>نسبة الزيادة على السعر القياسي (%)</th>
+        <th>ملاحظة</th>
+      </tr>
+      <tr><td class="label-cell">الارتفاع القياسي (3.0 – 3.6 م)</td><td class="input-cell" style="color:#27ae60;font-weight:700;">0% — مرجع</td><td class="note-cell">الكود المصري الموصى به</td></tr>
+      <tr><td class="label-cell">ارتفاع متوسط (3.6 – 4.5 م)</td><td class="input-cell"></td><td class="note-cell">% زيادة</td></tr>
+      <tr><td class="label-cell">ارتفاع عالٍ (4.5 – 6 م) — صناعي / فندقي</td><td class="input-cell"></td><td class="note-cell">% زيادة</td></tr>
+      <tr><td class="label-cell">ارتفاع كبير جداً (أكثر من 6 م)</td><td class="input-cell"></td><td class="note-cell">% زيادة</td></tr>
+    </table>
+  </div>
+
+  <!-- Notes -->
+  <div class="section">
+    <div class="section-title">📝 ملاحظات إضافية</div>
+    <div class="notes-area">أكتب هنا أي تفاصيل أو استثناءات أو عوامل تؤثر على الأسعار...</div>
+  </div>
+
+  <!-- Signature -->
+  <div class="signature-row">
+    <div class="sig-box">
+      <strong>توقيع المهندس / المقاول</strong>
+      <p>الاسم بالكامل + توقيع</p>
+    </div>
+    <div class="sig-box">
+      <strong>ختم الشركة</strong>
+      <p>اختياري</p>
+    </div>
+    <div class="sig-box">
+      <strong>تاريخ الاعتماد</strong>
+      <p>_____ / _____ / 2026</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>EasyStart — نظام دراسات الجدوى | استمارة FIN-2026-01</span>
+    <span>البيانات سرية ولأغراض البرنامج فقط</span>
+  </div>
+
+</div>
+</body>
+</html>

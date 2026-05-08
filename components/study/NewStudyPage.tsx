@@ -9,6 +9,139 @@ import { CommonFields } from './forms/CommonFields';
 import { RealEstateForm } from './forms/RealEstateForm';
 import { AgriculturalForm } from './forms/AgriculturalForm';
 
+/* ─── Data Entry Method Screen ─── */
+function DataEntryMethodScreen({
+  t,
+  onChoose,
+}: {
+  t: ReturnType<typeof import('next-intl').useTranslations>;
+  onChoose: (m: DataEntryMethod) => void;
+}) {
+  return (
+    <div style={{ marginBottom: '8px' }}>
+      <div className="easy-section-title" style={{ marginBottom: '14px', textAlign: 'center' }}>
+        {t('entryMethodTitle')}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+        {/* Upload documents card */}
+        <button
+          onClick={() => onChoose('documents')}
+          style={{
+            border: '2px solid #1e3a5f', borderRadius: '12px', padding: '20px 16px',
+            background: 'linear-gradient(135deg, #f0f5ff, #e8f0ff)',
+            cursor: 'pointer', textAlign: 'right', transition: 'all 0.2s',
+          }}
+        >
+          <div style={{ fontSize: '32px', marginBottom: '8px' }}>📎</div>
+          <div style={{ fontWeight: 700, fontSize: '15px', color: '#1e3a5f', marginBottom: '4px' }}>
+            {t('entryMethodDocs')}
+          </div>
+          <div style={{ fontSize: '12px', color: '#444', marginBottom: '12px' }}>
+            {t('entryMethodDocsDesc')}
+          </div>
+          <div style={{
+            background: '#1e3a5f', color: 'white', fontSize: '11px',
+            padding: '4px 10px', borderRadius: '20px', display: 'inline-block',
+          }}>
+            ✨ {t('entryMethodDocsHint')}
+          </div>
+          <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[
+              { key: 'entryDocDeed',   icon: '📜' },
+              { key: 'entryDocPermit', icon: '📋' },
+              { key: 'entryDocSurvey', icon: '📐' },
+            ].map(({ key, icon }) => (
+              <div key={key} style={{ background: 'white', borderRadius: '8px', padding: '8px 10px', textAlign: 'right' }}>
+                <div style={{ fontWeight: 600, fontSize: '12px', color: '#1e3a5f' }}>
+                  {icon} {t(key as never)}
+                </div>
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>
+                  {t(`${key}Desc` as never)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </button>
+
+        {/* Manual entry card */}
+        <button
+          onClick={() => onChoose('manual')}
+          style={{
+            border: '2px solid #27ae60', borderRadius: '12px', padding: '20px 16px',
+            background: 'linear-gradient(135deg, #f0fff4, #e8f5e9)',
+            cursor: 'pointer', textAlign: 'right', transition: 'all 0.2s',
+          }}
+        >
+          <div style={{ fontSize: '32px', marginBottom: '8px' }}>✏️</div>
+          <div style={{ fontWeight: 700, fontSize: '15px', color: '#1a6b3c', marginBottom: '4px' }}>
+            {t('entryMethodManual')}
+          </div>
+          <div style={{ fontSize: '12px', color: '#444', marginBottom: '16px' }}>
+            {t('entryMethodManualDesc')}
+          </div>
+          <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {['اسم المشروع', 'الموقع الجغرافي', 'المساحة والأبعاد', 'تفاصيل المشروع'].map(item => (
+              <div key={item} style={{
+                background: 'white', borderRadius: '8px', padding: '8px 10px',
+                display: 'flex', alignItems: 'center', gap: '8px',
+              }}>
+                <span style={{ color: '#27ae60', fontWeight: 700 }}>→</span>
+                <span style={{ fontSize: '12px', color: '#333' }}>{item}</span>
+              </div>
+            ))}
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Document Upload Section ─── */
+function DocumentUploadSection({
+  t,
+}: {
+  t: ReturnType<typeof import('next-intl').useTranslations>;
+}) {
+  return (
+    <div style={{ marginBottom: '8px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {[
+          { key: 'entryDocDeed',   icon: '📜', accept: '.pdf,.jpg,.jpeg,.png' },
+          { key: 'entryDocPermit', icon: '📋', accept: '.pdf,.jpg,.jpeg,.png' },
+          { key: 'entryDocSurvey', icon: '📐', accept: '.pdf,.jpg,.jpeg,.png,.dwg' },
+        ].map(({ key, icon, accept }) => (
+          <div key={key} style={{
+            border: '2px dashed #c0cfe8', borderRadius: '10px', padding: '16px',
+            background: '#f8faff', display: 'flex', alignItems: 'center', gap: '14px',
+          }}>
+            <div style={{ fontSize: '28px', flexShrink: 0 }}>{icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: '13px', color: '#1e3a5f', marginBottom: '2px' }}>
+                {t(key as never)}
+              </div>
+              <div style={{ fontSize: '11px', color: '#666' }}>
+                {t(`${key}Desc` as never)}
+              </div>
+            </div>
+            <label style={{
+              background: '#1e3a5f', color: 'white', padding: '7px 16px',
+              borderRadius: '8px', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+            }}>
+              {t('entryUploadFiles')}
+              <input type="file" accept={accept} style={{ display: 'none' }} />
+            </label>
+          </div>
+        ))}
+      </div>
+      <div className="easy-info-note" style={{ marginTop: '12px' }}>
+        <span className="easy-info-note-icon">ℹ️</span>
+        <span className="easy-info-note-text">{t('entryUploadNote')}</span>
+      </div>
+    </div>
+  );
+}
+
 export const DEFAULT_FORM_VALUES: Record<string, string> = {
   projectName: "Agricultural Reclamation Project",
   location: "Fayoum Governorate",
@@ -31,6 +164,7 @@ export const DEFAULT_FORM_VALUES: Record<string, string> = {
 type MainCategory = 'realEstate' | 'agricultural';
 type RealEstateSubType = 'integrated' | 'residential' | 'renovation' | 'efficiency' | 'finishing' | 'industrial';
 type MethodType = 'fast' | 'full';
+type DataEntryMethod = 'pending' | 'manual' | 'documents';
 
 interface NewStudyPageProps {
   showHeader?: boolean;
@@ -52,6 +186,7 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
   );
   const [activeTab, setActiveTab] = useState(0);
 
+  const [dataEntryMethod, setDataEntryMethod] = useState<DataEntryMethod>('pending');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
 
@@ -277,13 +412,47 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
             </span>
           </div>
 
-          <CommonFields formData={commonData} onChange={setCommonData} />
-          {renderCategoryForm()}
+          {/* ── Data entry method choice ── */}
+          {dataEntryMethod === 'pending' ? (
+            <DataEntryMethodScreen t={t} onChoose={setDataEntryMethod} />
+          ) : (
+            <>
+              {/* Method toggle bar */}
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                <button
+                  onClick={() => setDataEntryMethod('pending')}
+                  style={{
+                    padding: '5px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer',
+                    border: '1.5px solid #ddd', background: '#f8f9fa', color: '#666',
+                  }}
+                >
+                  ← {t('entryMethodTitle').split('؟')[0]}
+                </button>
+                <span style={{
+                  padding: '5px 12px', borderRadius: '6px', fontSize: '12px',
+                  background: dataEntryMethod === 'documents' ? '#1e3a5f' : '#e8f4e8',
+                  color: dataEntryMethod === 'documents' ? 'white' : '#2d7a2d',
+                  border: '1.5px solid transparent',
+                }}>
+                  {dataEntryMethod === 'documents' ? `📎 ${t('entryMethodDocs')}` : `✏️ ${t('entryMethodManual')}`}
+                </span>
+              </div>
 
-          <div className="easy-btn-row">
-            <button className="easy-btn-primary" onClick={handleNext}>{t('next')}</button>
-            <button className="easy-btn-secondary" onClick={handlePrevious}>{t('previous')}</button>
-          </div>
+              {dataEntryMethod === 'documents' ? (
+                <DocumentUploadSection t={t} />
+              ) : (
+                <>
+                  <CommonFields formData={commonData} onChange={setCommonData} />
+                  {renderCategoryForm()}
+                </>
+              )}
+
+              <div className="easy-btn-row">
+                <button className="easy-btn-primary" onClick={handleNext}>{t('next')}</button>
+                <button className="easy-btn-secondary" onClick={handlePrevious}>{t('previous')}</button>
+              </div>
+            </>
+          )}
         </div>
       )}
 
