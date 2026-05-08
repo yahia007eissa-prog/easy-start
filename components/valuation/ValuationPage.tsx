@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { generateValuation, type ValuationFormData } from '@/app/actions/valuation';
 import Link from 'next/link';
 
@@ -59,8 +59,23 @@ const NEEDS_CONDITION: PropType[] = ['apartment', 'commercial', 'fullEstate'];
 const NEEDS_LAND_REQS: PropType[] = ['agriLand', 'urbanLand'];
 const NEEDS_UTILITIES: PropType[] = ['agriLand', 'urbanLand', 'fullEstate'];
 
+function makeCertNo() {
+  const now = new Date();
+  const yy = now.getFullYear().toString().slice(-2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  return `CERT-${yy}${mm}-${rand}`;
+}
+
+function formatDate(locale: string) {
+  return new Date().toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+}
+
 export function ValuationPage() {
   const t = useTranslations('easyStart');
+  const locale = useLocale();
 
   const [propType,    setPropType]    = useState<PropType | null>(null);
   const [location,    setLocation]    = useState('');
@@ -86,6 +101,7 @@ export function ValuationPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [report,    setReport]    = useState<string | null>(null);
+  const [certNo,    setCertNo]    = useState('');
   const [error,     setError]     = useState<string | null>(null);
 
   const toggleUtility = (key: string) =>
@@ -134,8 +150,12 @@ export function ValuationPage() {
     };
 
     const res = await generateValuation(data);
-    if (res.success && res.reportText) setReport(res.reportText);
-    else setError(res.error ?? t('valuationError'));
+    if (res.success && res.reportText) {
+      setReport(res.reportText);
+      setCertNo(makeCertNo());
+    } else {
+      setError(res.error ?? t('valuationError'));
+    }
     setIsLoading(false);
   };
 
@@ -445,16 +465,122 @@ export function ValuationPage() {
               </div>
             ) : (
               <div className="easy-new-study-wrap">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#1e3a5f' }}>⚖️ {t('valuationResult')}</h2>
+                {/* Action bar */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                   <button className="easy-btn-secondary" style={{ fontSize: '12px', padding: '6px 14px' }}
                     onClick={() => { setReport(null); setError(null); }}>
-                    ← تقييم جديد
+                    ← {t('valuationCertNewEval')}
+                  </button>
+                  <button className="easy-btn-primary" style={{ fontSize: '12px', padding: '6px 16px' }}
+                    onClick={() => window.print()}>
+                    🖨️ {t('valuationCertPrint')}
                   </button>
                 </div>
-                <div className="easy-study-output"
-                  style={{ whiteSpace: 'pre-wrap', lineHeight: '1.8', fontSize: '14px', color: '#1a1a2e' }}>
-                  {report}
+
+                {/* Certificate */}
+                <div id="valuation-certificate" style={{
+                  background: 'white',
+                  border: '3px solid #1e3a5f',
+                  borderRadius: '12px',
+                  padding: '40px 48px',
+                  position: 'relative',
+                  fontFamily: 'inherit',
+                }}>
+                  {/* Watermark border */}
+                  <div style={{
+                    position: 'absolute', inset: '8px', border: '1px solid #c8d8ee',
+                    borderRadius: '8px', pointerEvents: 'none',
+                  }} />
+
+                  {/* Header */}
+                  <div style={{ textAlign: 'center', marginBottom: '28px', position: 'relative' }}>
+                    <div style={{ fontSize: '28px', marginBottom: '6px' }}>⚖️</div>
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#1e3a5f', letterSpacing: '0.5px' }}>
+                      {t('valuationCertTitle')}
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#4a7ab5', marginTop: '4px', fontWeight: 500 }}>
+                      {t('valuationCertSubtitle')}
+                    </div>
+                    <div style={{ width: '60px', height: '3px', background: '#1e3a5f', margin: '12px auto 0' }} />
+                  </div>
+
+                  {/* Cert meta */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '12px', color: '#666' }}>
+                    <div>
+                      <span style={{ fontWeight: 600, color: '#1e3a5f' }}>{t('valuationCertNo')}: </span>
+                      <span style={{ fontFamily: 'monospace', color: '#c0392b' }}>{certNo}</span>
+                    </div>
+                    <div>
+                      <span style={{ fontWeight: 600, color: '#1e3a5f' }}>{t('valuationCertDate')}: </span>
+                      <span>{formatDate(locale)}</span>
+                    </div>
+                  </div>
+
+                  {/* Property details box */}
+                  <div style={{
+                    background: '#f4f7fb', borderRadius: '8px', padding: '16px 20px',
+                    marginBottom: '24px', border: '1px solid #dde8f5',
+                  }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e3a5f', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      {t('valuationCertPropDetails')}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#888', marginBottom: '2px' }}>{t('valuationCertPropType')}</div>
+                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
+                          {propType ? t(`propType${propType.charAt(0).toUpperCase() + propType.slice(1)}` as never) : '—'}
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#888', marginBottom: '2px' }}>{t('valuationCertLocation')}</div>
+                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>{location || '—'}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#888', marginBottom: '2px' }}>{t('valuationCertArea')}</div>
+                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
+                          {area} {areaUnit === 'feddan' ? 'فدان' : 'م²'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Report body */}
+                  <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e3a5f', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      {t('valuationCertReport')}
+                    </div>
+                    <div style={{
+                      whiteSpace: 'pre-wrap', lineHeight: '1.9', fontSize: '14px', color: '#1a1a2e',
+                      borderRight: '3px solid #1e3a5f', paddingRight: '16px',
+                    }}>
+                      {report}
+                    </div>
+                  </div>
+
+                  {/* Signature area */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '32px', paddingTop: '20px', borderTop: '1px solid #ddd' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ width: '120px', borderBottom: '1px solid #1e3a5f', marginBottom: '6px', height: '32px' }} />
+                      <div style={{ fontSize: '11px', color: '#666' }}>توقيع المُقيِّم</div>
+                    </div>
+                    <div style={{
+                      width: '80px', height: '80px', border: '2px dashed #4a7ab5',
+                      borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <div style={{ fontSize: '10px', color: '#4a7ab5', textAlign: 'center', lineHeight: '1.3' }}>
+                        الختم<br />الرسمي
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ width: '120px', borderBottom: '1px solid #1e3a5f', marginBottom: '6px', height: '32px' }} />
+                      <div style={{ fontSize: '11px', color: '#666' }}>توقيع العميل</div>
+                    </div>
+                  </div>
+
+                  {/* Disclaimer */}
+                  <div style={{ marginTop: '20px', fontSize: '10px', color: '#999', textAlign: 'center', lineHeight: '1.6' }}>
+                    {t('valuationCertDisclaimer')}
+                  </div>
                 </div>
               </div>
             )}

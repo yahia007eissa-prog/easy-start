@@ -608,7 +608,19 @@
     "valuationAddPhoto": "إضافة صور",
     "valuationDocs": "مستندات الملكية (اختياري)",
     "valuationDocsDesc": "صك الملكية — رخصة البناء — الرسم المساحي",
-    "valuationAddDocs": "إضافة مستندات"
+    "valuationAddDocs": "إضافة مستندات",
+    "valuationCertTitle": "شهادة تقييم عقاري",
+    "valuationCertSubtitle": "معتمدة من منصة StudyBuilder",
+    "valuationCertNo": "رقم الشهادة",
+    "valuationCertDate": "تاريخ الإصدار",
+    "valuationCertPropDetails": "بيانات العقار",
+    "valuationCertPropType": "نوع العقار",
+    "valuationCertLocation": "الموقع",
+    "valuationCertArea": "المساحة",
+    "valuationCertReport": "تقرير التقييم",
+    "valuationCertDisclaimer": "هذه الشهادة صادرة بناءً على البيانات المُدخلة والأسعار السوقية المتاحة. التقييم استرشادي ولا يُغني عن الخبرة القانونية أو المعاينة الميدانية.",
+    "valuationCertPrint": "طباعة الشهادة",
+    "valuationCertNewEval": "تقييم جديد"
   },
   "admin": {
     "loginTitle": "لوحة الإدارة",

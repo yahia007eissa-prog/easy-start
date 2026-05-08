@@ -82,7 +82,7 @@ export function DashboardPage() {
         const egp = isAr ? 'جنيه' : 'EGP';
         setPrices([
           {
-            name: isAr ? `${d.buildingMaterials.steel.nameAr} (${d.buildingMaterials.steel.brand})` : `Steel (${d.buildingMaterials.steel.brand})`,
+            name: isAr ? `${d.buildingMaterials.steel.nameAr} (${d.buildingMaterials.steel.brand})` : `Steel (Ez)`,
             unit: isAr ? 'جنيه/طن' : `${egp}/ton`,
             value: fmt(d.buildingMaterials.steel.pricePerTon), change: 0,
           },
@@ -125,6 +125,12 @@ export function DashboardPage() {
           <button className="easy-btn-secondary" onClick={() => {}}>
             {t("exportPdf")}
           </button>
+          <Link
+            href="/valuation"
+            className="easy-btn-secondary flex items-center gap-2"
+          >
+            ⚖️ {t("navValuation")}
+          </Link>
           <Link
             href="/new-study"
             className="easy-btn-primary flex items-center gap-2"

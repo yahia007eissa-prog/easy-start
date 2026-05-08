@@ -609,7 +609,19 @@
     "valuationAddPhoto": "Add Photos",
     "valuationDocs": "Ownership Documents (optional)",
     "valuationDocsDesc": "Property deed — Building permit — Survey drawing",
-    "valuationAddDocs": "Add Documents"
+    "valuationAddDocs": "Add Documents",
+    "valuationCertTitle": "Property Valuation Certificate",
+    "valuationCertSubtitle": "Certified by StudyBuilder Platform",
+    "valuationCertNo": "Certificate No.",
+    "valuationCertDate": "Issue Date",
+    "valuationCertPropDetails": "Property Details",
+    "valuationCertPropType": "Property Type",
+    "valuationCertLocation": "Location",
+    "valuationCertArea": "Area",
+    "valuationCertReport": "Valuation Report",
+    "valuationCertDisclaimer": "This certificate is issued based on entered data and available market prices. The valuation is indicative and does not replace legal expertise or on-site inspection.",
+    "valuationCertPrint": "Print Certificate",
+    "valuationCertNewEval": "New Valuation"
   },
   "admin": {
     "loginTitle": "Admin Panel",
