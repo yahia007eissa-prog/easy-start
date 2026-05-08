@@ -1,4 +1,3 @@
-import { auth } from '@/auth';
 import createIntlMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
@@ -8,23 +7,8 @@ const intlMiddleware = createIntlMiddleware(routing);
 const PROTECTED_SEGMENT = '/settings/';
 const COOKIE_NAME = 'admin_session';
 
-// Pages that don't require login
-const PUBLIC_PATHS = ['/login', '/signup', '/ar/login', '/ar/signup'];
-
-export default async function middleware(request: NextRequest) {
+export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  // Allow public auth pages and API routes through
-  const isPublic = PUBLIC_PATHS.some(p => pathname.startsWith(p));
-  const isApi = pathname.startsWith('/api');
-
-  if (!isPublic && !isApi) {
-    const session = await auth();
-    if (!session) {
-      const loginUrl = new URL('/login', request.url);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
 
   // Admin protection
   if (pathname.includes(PROTECTED_SEGMENT)) {

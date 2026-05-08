@@ -5,6 +5,7 @@ import { usePathname } from '@/i18n/navigation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 
 // Icons as SVG components
 const DashboardIcon = () => (
@@ -122,6 +123,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const isRTL = locale === 'ar';
+  const { data: session } = useSession();
 
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -239,13 +241,43 @@ export function Sidebar({ className = '' }: SidebarProps) {
         <div className="mb-3">
           <LanguageSwitcher />
         </div>
-        <div className="easy-user-card">
-          <div className="easy-avatar">{isRTL ? 'م' : 'M'}</div>
-          <div>
-            <div className="easy-user-name">{t('userName')}</div>
-            <div className="easy-user-plan">{t('userPlan')}</div>
+        {session ? (
+          <div className="easy-user-card" style={{ justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+              <div className="easy-avatar">
+                {session.user?.name?.charAt(0).toUpperCase() ?? 'U'}
+              </div>
+              <div>
+                <div className="easy-user-name">{session.user?.name ?? 'User'}</div>
+                <div className="easy-user-plan">{session.user?.email}</div>
+              </div>
+            </div>
+            <button
+              onClick={() => signOut({ callbackUrl: '/' })}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', opacity: 0.5 }}
+              title="Sign out"
+            >↩</button>
           </div>
-        </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '4px 2px' }}>
+            <Link href="/login" style={{
+              display: 'block', textAlign: 'center', padding: '8px',
+              borderRadius: '8px', fontSize: '12px', fontWeight: 600,
+              background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)',
+              textDecoration: 'none', transition: 'all 0.15s',
+            }}>
+              Sign In
+            </Link>
+            <Link href="/signup" style={{
+              display: 'block', textAlign: 'center', padding: '8px',
+              borderRadius: '8px', fontSize: '12px', fontWeight: 700,
+              background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
+              color: 'white', textDecoration: 'none', transition: 'all 0.15s',
+            }}>
+              Create Account
+            </Link>
+          </div>
+        )}
       </div>
     </aside>
   );
