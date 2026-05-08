@@ -25,10 +25,9 @@ const CONDITIONS: { key: Condition; icon: string }[] = [
 
 const UTILITIES = ['الكهرباء', 'المياه', 'الغاز', 'مستندات موثقة'];
 const ROAD_TYPES = [
-  { key: 'main',    label: 'طريق رئيسي',  icon: '🛣️' },
-  { key: 'side',    label: 'طريق فرعي',   icon: '🛤️' },
+  { key: 'side',    label: 'طريق فرعي',        icon: '🛤️' },
   { key: 'unpaved', label: 'مدق (غير مسفلت)', icon: '🌿' },
-  { key: 'none',    label: 'لا يوجد طريق', icon: '❌' },
+  { key: 'none',    label: 'لا يوجد طريق',     icon: '❌' },
 ];
 
 export function ValuationPage() {
