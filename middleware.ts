@@ -1,22 +1,36 @@
-import createMiddleware from 'next-intl/middleware';
+import { auth } from '@/auth';
+import createIntlMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
 
-const intlMiddleware = createMiddleware(routing);
+const intlMiddleware = createIntlMiddleware(routing);
 
 const PROTECTED_SEGMENT = '/settings/';
 const COOKIE_NAME = 'admin_session';
 
-export default function middleware(request: NextRequest) {
+// Pages that don't require login
+const PUBLIC_PATHS = ['/login', '/signup', '/ar/login', '/ar/signup'];
+
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Allow public auth pages and API routes through
+  const isPublic = PUBLIC_PATHS.some(p => pathname.startsWith(p));
+  const isApi = pathname.startsWith('/api');
+
+  if (!isPublic && !isApi) {
+    const session = await auth();
+    if (!session) {
+      const loginUrl = new URL('/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // Admin protection
   if (pathname.includes(PROTECTED_SEGMENT)) {
     const secret  = process.env.ADMIN_SESSION_SECRET ?? '';
     const session = request.cookies.get(COOKIE_NAME)?.value ?? '';
-
     if (!secret || session !== secret) {
-      // With localePrefix:'as-needed', English URLs have no prefix (/settings/...)
-      // Arabic URLs have /ar/ prefix. Detect which is which.
       const localeMatch = pathname.match(/^\/([a-z]{2})\//);
       const detectedLocale = localeMatch?.[1];
       const KNOWN_LOCALES = ['ar', 'en'];
