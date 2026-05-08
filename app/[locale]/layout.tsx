@@ -9,6 +9,7 @@ import '../globals.css';
 import { ProjectsProvider } from '@/lib/hooks/useServerActions';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import { AppShell } from '@/components/layout/AppShell';
+import { SessionProvider } from '@/components/providers/SessionProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -43,28 +44,27 @@ export default async function LocaleLayout({ children, params }: Props) {
   // Check if current path is chat or /prompts (standalone full-screen layout)
   const headersList = await headers();
   const pathname = headersList.get('x-pathname') || '';
-  const isStandalonePage = pathname.includes('/chat') || pathname === `/${locale}/prompts` || pathname === `/${locale}/prompts/` || pathname === '/prompts' || pathname === '/prompts/';
+  const isStandalonePage =
+    pathname.includes('/chat') ||
+    pathname === `/${locale}/prompts` || pathname === `/${locale}/prompts/` ||
+    pathname === '/prompts' || pathname === '/prompts/' ||
+    pathname.includes('/login') || pathname.includes('/signup');
 
   return (
     <html lang={locale} dir={dir}>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-full flex flex-col antialiased`}>
         <NextIntlClientProvider messages={messages}>
+          <SessionProvider>
           <QueryProvider>
             <ProjectsProvider>
               {isStandalonePage ? (
                 children
               ) : (
-                <AppShell>
-                  <div
-                    className="min-h-screen bg-slate-100 flex items-center justify-center p-4"
-                    dir={dir}
-                  >
-                    {children}
-                  </div>
-                </AppShell>
+                <AppShell>{children}</AppShell>
               )}
             </ProjectsProvider>
           </QueryProvider>
+          </SessionProvider>
         </NextIntlClientProvider>
       </body>
     </html>
