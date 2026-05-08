@@ -38,9 +38,11 @@ export function PriceTicker({ prices }: PriceTickerProps) {
                   {item.unit ?? (item.unitKey ? t(item.unitKey) : '')}
                 </span>
               </span>
-              <span className={item.change > 0 ? 'easy-ticker-up' : item.change < 0 ? 'easy-ticker-down' : 'easy-ticker-neutral'}>
-                {item.change > 0 ? '▲' : item.change < 0 ? '▼' : '–'} {Math.abs(item.change)}%
-              </span>
+              {item.change !== 0 && (
+                <span className={item.change > 0 ? 'easy-ticker-up' : 'easy-ticker-down'}>
+                  {item.change > 0 ? '▲' : '▼'} {Math.abs(item.change)}%
+                </span>
+              )}
             </div>
           ))}
         </div>
