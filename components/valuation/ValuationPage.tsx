@@ -69,8 +69,11 @@ export function ValuationPage() {
   const [condition,   setCondition]   = useState<Condition | null>(null);
   const [utilities,   setUtilities]   = useState<string[]>([]);
   const [roadType,    setRoadType]    = useState('');
-  const [landReqs,    setLandReqs]    = useState('');
-  const [floor,       setFloor]       = useState('');
+  const [landReqs,       setLandReqs]       = useState('');
+  const [agriIndustrial, setAgriIndustrial] = useState('');
+  const [agriResidential,setAgriResidential]= useState('');
+  const [agriTourism,    setAgriTourism]    = useState('');
+  const [floor,          setFloor]          = useState('');
   const [buildingAge, setBuildingAge] = useState('');
   const [finishLevel, setFinishLevel] = useState('');
   const [notes,       setNotes]       = useState('');
@@ -117,6 +120,9 @@ export function ValuationPage() {
       if (r) utilityLabels.push(`نوع الطريق: ${r.ar}`);
     }
     if (landReqs.trim()) utilityLabels.push(`اشتراطات الأرض: ${landReqs.trim()}`);
+    if (agriIndustrial)  utilityLabels.push(`نسبة مباني صناعي: ${agriIndustrial}% من المساحة`);
+    if (agriResidential) utilityLabels.push(`نسبة مباني سكني: ${agriResidential}% من المساحة`);
+    if (agriTourism)     utilityLabels.push(`نسبة مباني سياحي/ترفيهي: ${agriTourism}% من المساحة`);
     if (photos.length)   utilityLabels.push(`صور العقار: ${photos.length} صورة مرفقة`);
     if (docFiles.length) utilityLabels.push(`مستندات مرفقة: ${docFiles.map(d => d.name).join('، ')}`);
 
@@ -226,14 +232,53 @@ export function ValuationPage() {
 
                 {/* Land building requirements */}
                 {needsLandReqs && (
-                  <div className="easy-form-group" style={{ marginTop: '14px' }}>
-                    <label className="easy-label">{t('valuationLandReqs')}</label>
-                    <input className="easy-input" value={landReqs} onChange={e => setLandReqs(e.target.value)}
-                      placeholder={propType === 'agriLand'
-                        ? t('valuationLandReqsAgriPh' as never)
-                        : t('valuationLandReqsPh' as never)
-                      }
-                    />
+                  <div style={{ marginTop: '14px' }}>
+                    <div className="easy-form-group">
+                      <label className="easy-label">{t('valuationLandReqs')}</label>
+                      <input className="easy-input" value={landReqs} onChange={e => setLandReqs(e.target.value)}
+                        placeholder={propType === 'agriLand'
+                          ? t('valuationLandReqsAgriPh' as never)
+                          : t('valuationLandReqsPh' as never)
+                        }
+                      />
+                    </div>
+
+                    {/* Agri land — building type ratios */}
+                    {propType === 'agriLand' && (
+                      <div style={{
+                        marginTop: '12px', padding: '14px', borderRadius: '10px',
+                        background: '#f9fbe7', border: '1.5px solid #c5e1a5',
+                      }}>
+                        <div style={{ fontSize: '12px', fontWeight: 700, color: '#4e7c2f', marginBottom: '10px' }}>
+                          📐 نسب المباني المسموح بها من إجمالي مساحة الأرض
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+                          {[
+                            { label: '🏭 صناعي',         val: agriIndustrial,  set: setAgriIndustrial  },
+                            { label: '🏠 سكني',           val: agriResidential, set: setAgriResidential },
+                            { label: '🌴 سياحي / ترفيهي', val: agriTourism,     set: setAgriTourism     },
+                          ].map(({ label, val, set }) => (
+                            <div key={label}>
+                              <label style={{ fontSize: '11px', fontWeight: 600, color: '#555', display: 'block', marginBottom: '4px' }}>
+                                {label}
+                              </label>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <input
+                                  className="easy-input"
+                                  type="number"
+                                  min="0" max="100"
+                                  value={val}
+                                  onChange={e => set(e.target.value)}
+                                  placeholder="0"
+                                  style={{ flex: 1, textAlign: 'center' }}
+                                />
+                                <span style={{ fontSize: '13px', color: '#4e7c2f', fontWeight: 700 }}>%</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
