@@ -42,7 +42,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   // Check if current path is chat or /prompts (standalone full-screen layout)
   const headersList = await headers();
-  const pathname = headersList.get('x-invoke-path') || headersList.get('referer') || '';
+  const pathname = headersList.get('x-pathname') || '';
   const isStandalonePage = pathname.includes('/chat') || pathname.includes('/admin/login') || pathname === `/${locale}/prompts` || pathname === `/${locale}/prompts/` || pathname === '/prompts' || pathname === '/prompts/';
 
   return (

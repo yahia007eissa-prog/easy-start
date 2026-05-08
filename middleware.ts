@@ -28,7 +28,9 @@ export default function middleware(request: NextRequest) {
     }
   }
 
-  return intlMiddleware(request);
+  const response = intlMiddleware(request);
+  response.headers.set('x-pathname', pathname);
+  return response;
 }
 
 export const config = {
