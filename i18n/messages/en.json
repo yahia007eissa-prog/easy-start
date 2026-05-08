@@ -569,7 +569,7 @@
     "valuationError": "An error occurred while preparing the valuation",
     "propTypeAgriLand": "Agricultural Land",
     "propTypeUrbanLand": "Vacant Land / For Building",
-    "propTypeApartment": "Residential Apartment",
+    "propTypeApartment": "Residential Unit",
     "propTypeCommercial": "Commercial Unit / Space",
     "propTypeFullEstate": "Full Property (Land + Building)",
     "conditionExcellent": "Excellent",
@@ -602,7 +602,14 @@
     "entryUploadNote": "Accepted formats: PDF, JPG, PNG — max 10MB per file",
     "utilityTransport": "Near Public Transport",
     "valuationLandReqs": "Land Building Requirements",
-    "valuationLandReqsPh": "e.g. 5 floors allowed, 3m front setback, 60% build ratio"
+    "valuationLandReqsPh": "e.g. 5 floors allowed, 3m front setback, 60% build ratio",
+    "valuationLandReqsAgriPh": "e.g. 2% building ratio allowed — or: industrial permit raises ratio to 10%",
+    "valuationPhotos": "Property Photos",
+    "valuationPhotosDesc": "Upload property photos to improve valuation accuracy",
+    "valuationAddPhoto": "Add Photos",
+    "valuationDocs": "Ownership Documents (optional)",
+    "valuationDocsDesc": "Property deed — Building permit — Survey drawing",
+    "valuationAddDocs": "Add Documents"
   },
   "admin": {
     "loginTitle": "Admin Panel",

@@ -568,7 +568,7 @@
     "valuationError": "حدث خطأ أثناء إعداد التقييم",
     "propTypeAgriLand": "أرض زراعية",
     "propTypeUrbanLand": "أرض فضاء / للبناء",
-    "propTypeApartment": "شقة سكنية",
+    "propTypeApartment": "وحدة سكنية",
     "propTypeCommercial": "محل / مسطح تجاري",
     "propTypeFullEstate": "عقار متكامل (أرض + مبنى)",
     "conditionExcellent": "ممتاز",
@@ -601,7 +601,14 @@
     "entryUploadNote": "صيغ مقبولة: PDF, JPG, PNG — حجم أقصى 10 ميجا للملف",
     "utilityTransport": "قرب من وسائل التنقل",
     "valuationLandReqs": "اشتراطات الأرض البنائية",
-    "valuationLandReqsPh": "مثال: يُسمح بـ 5 أدوار، ارتداد 3م أمامي، نسبة بناء 60%"
+    "valuationLandReqsPh": "مثال: يُسمح بـ 5 أدوار، ارتداد 3م أمامي، نسبة بناء 60%",
+    "valuationLandReqsAgriPh": "مثال: يُسمح بنسبة مباني 2% — أو: تصريح صناعي يرفع النسبة لـ 10%",
+    "valuationPhotos": "صور العقار",
+    "valuationPhotosDesc": "ارفع صور للعقار لزيادة دقة التقييم",
+    "valuationAddPhoto": "إضافة صور",
+    "valuationDocs": "مستندات الملكية (اختياري)",
+    "valuationDocsDesc": "صك الملكية — رخصة البناء — الرسم المساحي",
+    "valuationAddDocs": "إضافة مستندات"
   },
   "admin": {
     "loginTitle": "لوحة الإدارة",
