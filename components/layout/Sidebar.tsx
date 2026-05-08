@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from '@/i18n/navigation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { AuthDrawer } from '@/components/auth/AuthDrawer';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
@@ -127,6 +128,8 @@ export function Sidebar({ className = '' }: SidebarProps) {
 
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerTab, setDrawerTab] = useState<'login' | 'signup'>('login');
 
   useEffect(() => {
     const checkMobile = () => {
@@ -202,13 +205,43 @@ export function Sidebar({ className = '' }: SidebarProps) {
           <div className="mb-3">
             <LanguageSwitcher />
           </div>
-          <div className="easy-user-card">
-            <div className="easy-avatar">{isRTL ? 'م' : 'M'}</div>
-            <div>
-              <div className="easy-user-name">{t('userName')}</div>
-              <div className="easy-user-plan">{t('userPlan')}</div>
+          {session ? (
+            <div className="easy-user-card" style={{ justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+                <div className="easy-avatar">
+                  {session.user?.name?.charAt(0).toUpperCase() ?? 'U'}
+                </div>
+                <div>
+                  <div className="easy-user-name">{session.user?.name ?? 'User'}</div>
+                  <div className="easy-user-plan">{session.user?.email}</div>
+                </div>
+              </div>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', opacity: 0.5 }}
+                title="Sign out"
+              >↩</button>
             </div>
-          </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '4px 2px' }}>
+              <button onClick={() => { setSidebarOpen(false); setDrawerTab('login'); setDrawerOpen(true); }} style={{
+                display: 'block', width: '100%', textAlign: 'center', padding: '8px',
+                borderRadius: '8px', fontSize: '12px', fontWeight: 600, border: 'none',
+                background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)',
+                cursor: 'pointer',
+              }}>
+                Sign In
+              </button>
+              <button onClick={() => { setSidebarOpen(false); setDrawerTab('signup'); setDrawerOpen(true); }} style={{
+                display: 'block', width: '100%', textAlign: 'center', padding: '8px',
+                borderRadius: '8px', fontSize: '12px', fontWeight: 700, border: 'none',
+                background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
+                color: 'white', cursor: 'pointer',
+              }}>
+                Create Account
+              </button>
+            </div>
+          )}
         </div>
       </aside>
     </>
@@ -260,22 +293,22 @@ export function Sidebar({ className = '' }: SidebarProps) {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '4px 2px' }}>
-            <Link href="/login" style={{
-              display: 'block', textAlign: 'center', padding: '8px',
-              borderRadius: '8px', fontSize: '12px', fontWeight: 600,
+            <button onClick={() => { setDrawerTab('login'); setDrawerOpen(true); }} style={{
+              display: 'block', width: '100%', textAlign: 'center', padding: '8px',
+              borderRadius: '8px', fontSize: '12px', fontWeight: 600, border: 'none',
               background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)',
-              textDecoration: 'none', transition: 'all 0.15s',
+              cursor: 'pointer', transition: 'all 0.15s',
             }}>
               Sign In
-            </Link>
-            <Link href="/signup" style={{
-              display: 'block', textAlign: 'center', padding: '8px',
-              borderRadius: '8px', fontSize: '12px', fontWeight: 700,
+            </button>
+            <button onClick={() => { setDrawerTab('signup'); setDrawerOpen(true); }} style={{
+              display: 'block', width: '100%', textAlign: 'center', padding: '8px',
+              borderRadius: '8px', fontSize: '12px', fontWeight: 700, border: 'none',
               background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
-              color: 'white', textDecoration: 'none', transition: 'all 0.15s',
+              color: 'white', cursor: 'pointer', transition: 'all 0.15s',
             }}>
               Create Account
-            </Link>
+            </button>
           </div>
         )}
       </div>
@@ -296,6 +329,12 @@ export function Sidebar({ className = '' }: SidebarProps) {
           <MenuIcon />
         </button>
       )}
+
+      <AuthDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        defaultTab={drawerTab}
+      />
     </>
   );
 }
