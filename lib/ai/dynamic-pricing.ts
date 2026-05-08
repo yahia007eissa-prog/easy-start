@@ -4,7 +4,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export type PricingCategory = 'realEstate' | 'medical' | 'agricultural' | 'industrial' | 'global';
+export type PricingCategory = 'realEstate' | 'medical' | 'agricultural' | 'industrial' | 'global' | 'rawMaterials';
 
 export interface PricingSubType {
   constructionPerSqm?: Record<string, number>;
@@ -104,12 +104,12 @@ export function getPricingData(category: PricingCategory): PricingConfig | null 
 }
 
 export function getAllCategories(): PricingCategory[] {
-  return ['realEstate', 'medical', 'agricultural', 'industrial', 'global'];
+  return ['realEstate', 'medical', 'agricultural', 'industrial', 'global', 'rawMaterials'];
 }
 
 export function getPricingConfigList(): Array<{ category: PricingCategory; info: PricingConfig }> {
   const config = readPricingConfig();
-  const validCategories: PricingCategory[] = ['realEstate', 'medical', 'agricultural', 'industrial', 'global'];
+  const validCategories: PricingCategory[] = ['realEstate', 'medical', 'agricultural', 'industrial', 'global', 'rawMaterials'];
 
   return validCategories
     .map(category => {
@@ -183,6 +183,7 @@ function getCategoryName(category: PricingCategory): string {
     agricultural: 'Agricultural',
     industrial: 'Industrial',
     global: 'Global Settings',
+    rawMaterials: 'Raw Materials & Market Prices',
   };
   return names[category];
 }
@@ -194,6 +195,7 @@ function getCategoryNameAr(category: PricingCategory): string {
     agricultural: 'زراعي',
     industrial: 'صناعي',
     global: 'الإعدادات العامة',
+    rawMaterials: 'أسعار مواد البناء والمعادن والعملات',
   };
   return names[category];
 }

@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPricingData, updatePricing, type PricingCategory } from '@/lib/ai/dynamic-pricing';
 
-const VALID_CATEGORIES: PricingCategory[] = ['realEstate', 'medical', 'agricultural', 'industrial', 'global'];
+const VALID_CATEGORIES: PricingCategory[] = ['realEstate', 'medical', 'agricultural', 'industrial', 'global', 'rawMaterials'];
 
 interface Params {
   params: Promise<{ category: string }>;
