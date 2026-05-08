@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 import { KpiCards } from "./KpiCards";
 import { ProjectList } from "./ProjectList";
@@ -55,9 +55,6 @@ const sampleProjects: Project[] = [
   },
 ];
 
-function fmt(n: number) {
-  return n.toLocaleString('ar-EG');
-}
 
 const PlusIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -71,6 +68,8 @@ const PlusIcon = () => (
 
 export function DashboardPage() {
   const t = useTranslations("easyStart");
+  const locale = useLocale();
+  const isAr = locale === 'ar';
   const [prices, setPrices] = useState<PriceItem[]>([]);
 
   useEffect(() => {
@@ -79,15 +78,37 @@ export function DashboardPage() {
       .then(res => {
         if (!res.success || !res.data?.data) return;
         const d = res.data.data;
+        const fmt = (n: number) => n.toLocaleString(isAr ? 'ar-EG' : 'en-US');
+        const egp = isAr ? 'جنيه' : 'EGP';
         setPrices([
-          { name: `${d.buildingMaterials.steel.nameAr} (${d.buildingMaterials.steel.brand})`, unit: 'جنيه/طن',    value: fmt(d.buildingMaterials.steel.pricePerTon),              change: 0 },
-          { name: d.buildingMaterials.cement.nameAr,                                           unit: 'جنيه/طن',    value: fmt(d.buildingMaterials.cement.averagePricePerTon),       change: 0 },
-          { name: d.buildingMaterials.sand.fino.nameAr,                                        unit: 'جنيه/م³',   value: fmt(d.buildingMaterials.sand.fino.pricePerM3),             change: 0 },
-          { name: d.metals.gold.karat21.nameAr,                                                unit: 'جنيه/جرام', value: fmt(d.metals.gold.karat21.pricePerGram),                  change: 0 },
-          { name: d.currencies.USD.nameAr,                                                     unit: 'جنيه',       value: fmt(d.currencies.USD.sellRate),                           change: 0 },
+          {
+            name: isAr ? `${d.buildingMaterials.steel.nameAr} (${d.buildingMaterials.steel.brand})` : `Steel (${d.buildingMaterials.steel.brand})`,
+            unit: isAr ? 'جنيه/طن' : `${egp}/ton`,
+            value: fmt(d.buildingMaterials.steel.pricePerTon), change: 0,
+          },
+          {
+            name: isAr ? d.buildingMaterials.cement.nameAr : 'Cement',
+            unit: isAr ? 'جنيه/طن' : `${egp}/ton`,
+            value: fmt(d.buildingMaterials.cement.averagePricePerTon), change: 0,
+          },
+          {
+            name: isAr ? d.buildingMaterials.sand.fino.nameAr : 'Fine Sand',
+            unit: isAr ? 'جنيه/م³' : `${egp}/m³`,
+            value: fmt(d.buildingMaterials.sand.fino.pricePerM3), change: 0,
+          },
+          {
+            name: isAr ? d.metals.gold.karat21.nameAr : 'Gold 21K',
+            unit: isAr ? 'جنيه/جرام' : `${egp}/g`,
+            value: fmt(d.metals.gold.karat21.pricePerGram), change: 0,
+          },
+          {
+            name: isAr ? d.currencies.USD.nameAr : 'USD',
+            unit: isAr ? 'جنيه' : egp,
+            value: fmt(d.currencies.USD.sellRate), change: 0,
+          },
         ]);
       });
-  }, []);
+  }, [isAr]);
 
   return (
     <div className="flex flex-col">
