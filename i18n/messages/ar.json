@@ -598,7 +598,10 @@
     "entryDocSurveyDesc": "يستخرج منه: الأبعاد الدقيقة، الحدود، المساحة الصافية",
     "entryUploadFiles": "رفع الملفات",
     "entryOrManual": "أو أدخل البيانات يدوياً",
-    "entryUploadNote": "صيغ مقبولة: PDF, JPG, PNG — حجم أقصى 10 ميجا للملف"
+    "entryUploadNote": "صيغ مقبولة: PDF, JPG, PNG — حجم أقصى 10 ميجا للملف",
+    "utilityTransport": "قرب من وسائل التنقل",
+    "valuationLandReqs": "اشتراطات الأرض البنائية",
+    "valuationLandReqsPh": "مثال: يُسمح بـ 5 أدوار، ارتداد 3م أمامي، نسبة بناء 60%"
   },
   "admin": {
     "loginTitle": "لوحة الإدارة",

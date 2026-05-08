@@ -599,7 +599,10 @@
     "entryDocSurveyDesc": "Extracts: exact dimensions, boundaries, net area",
     "entryUploadFiles": "Upload Files",
     "entryOrManual": "Or enter data manually",
-    "entryUploadNote": "Accepted formats: PDF, JPG, PNG — max 10MB per file"
+    "entryUploadNote": "Accepted formats: PDF, JPG, PNG — max 10MB per file",
+    "utilityTransport": "Near Public Transport",
+    "valuationLandReqs": "Land Building Requirements",
+    "valuationLandReqsPh": "e.g. 5 floors allowed, 3m front setback, 60% build ratio"
   },
   "admin": {
     "loginTitle": "Admin Panel",

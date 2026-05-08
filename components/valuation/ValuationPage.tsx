@@ -23,12 +23,38 @@ const CONDITIONS: { key: Condition; icon: string }[] = [
   { key: 'needsMaint', icon: '🔧' },
 ];
 
-const UTILITIES = ['الكهرباء', 'المياه', 'الغاز', 'مستندات موثقة'];
-const ROAD_TYPES = [
-  { key: 'side',    label: 'طريق فرعي',        icon: '🛤️' },
-  { key: 'unpaved', label: 'مدق (غير مسفلت)', icon: '🌿' },
-  { key: 'none',    label: 'لا يوجد طريق',     icon: '❌' },
+// Utilities — keys map to translation keys and Arabic labels for the AI prompt
+const UTILITY_ITEMS = [
+  { key: 'elec',      labelKey: 'utilityElec',      ar: 'كهرباء'                  },
+  { key: 'water',     labelKey: 'utilityWater',     ar: 'مياه'                     },
+  { key: 'gas',       labelKey: 'utilityGas',       ar: 'غاز'                      },
+  { key: 'transport', labelKey: 'utilityTransport', ar: 'قرب من وسائل التنقل'      },
+  { key: 'docs',      labelKey: 'utilityDocs',      ar: 'مستندات موثقة'            },
 ];
+
+// Road types per property type
+const ROAD_AGRI: { key: string; ar: string; icon: string }[] = [
+  { key: 'main',    ar: 'طريق رئيسي',       icon: '🛣️' },
+  { key: 'side',    ar: 'طريق فرعي',        icon: '🛤️' },
+  { key: 'unpaved', ar: 'مدق (غير مسفلت)', icon: '🌿' },
+];
+const ROAD_URBAN: { key: string; ar: string; icon: string }[] = [
+  { key: 'main', ar: 'طريق رئيسي', icon: '🛣️' },
+  { key: 'side', ar: 'طريق فرعي',  icon: '🛤️' },
+];
+
+function getRoadTypes(p: PropType | null) {
+  if (p === 'agriLand')  return ROAD_AGRI;
+  if (p === 'urbanLand') return ROAD_URBAN;
+  return null;
+}
+
+// Whether property type needs condition field
+const NEEDS_CONDITION: PropType[] = ['apartment', 'commercial', 'fullEstate'];
+// Whether property type needs land building-requirements field
+const NEEDS_LAND_REQS: PropType[] = ['agriLand', 'urbanLand'];
+// Whether property type shows utilities + road
+const NEEDS_UTILITIES: PropType[] = ['agriLand', 'urbanLand', 'fullEstate'];
 
 export function ValuationPage() {
   const t = useTranslations('easyStart');
@@ -38,21 +64,31 @@ export function ValuationPage() {
   const [area,        setArea]        = useState('');
   const [areaUnit,    setAreaUnit]    = useState('sqm');
   const [condition,   setCondition]   = useState<Condition | null>(null);
-  const [utilities,   setUtilities]   = useState<string[]>([]);
+  const [utilities,   setUtilities]   = useState<string[]>([]);   // stores keys
   const [roadType,    setRoadType]    = useState<string>('');
+  const [landReqs,    setLandReqs]    = useState('');
   const [floor,       setFloor]       = useState('');
   const [buildingAge, setBuildingAge] = useState('');
   const [finishLevel, setFinishLevel] = useState('');
   const [notes,       setNotes]       = useState('');
 
-  const [isLoading,  setIsLoading]  = useState(false);
-  const [report,     setReport]     = useState<string | null>(null);
-  const [error,      setError]      = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [report,    setReport]    = useState<string | null>(null);
+  const [error,     setError]     = useState<string | null>(null);
 
-  const toggleUtility = (u: string) =>
-    setUtilities(prev => prev.includes(u) ? prev.filter(x => x !== u) : [...prev, u]);
+  const toggleUtility = (key: string) =>
+    setUtilities(prev => prev.includes(key) ? prev.filter(x => x !== key) : [...prev, key]);
 
-  const canGenerate = !!propType && location.trim() && area.trim() && !!condition;
+  const needsCondition = propType ? NEEDS_CONDITION.includes(propType) : false;
+  const needsLandReqs  = propType ? NEEDS_LAND_REQS.includes(propType)  : false;
+  const needsUtilities = propType ? NEEDS_UTILITIES.includes(propType)  : false;
+  const roadOptions    = getRoadTypes(propType);
+
+  const canGenerate =
+    !!propType &&
+    location.trim() !== '' &&
+    area.trim() !== '' &&
+    (!needsCondition || !!condition);
 
   const handleGenerate = async () => {
     if (!canGenerate || isLoading) return;
@@ -60,13 +96,26 @@ export function ValuationPage() {
     setError(null);
     setReport(null);
 
+    // Convert utility keys → Arabic labels for the prompt
+    const utilityLabels = UTILITY_ITEMS
+      .filter(u => utilities.includes(u.key))
+      .map(u => u.ar);
+
+    if (roadType) {
+      const roadLabel = [...ROAD_AGRI, ...ROAD_URBAN].find(r => r.key === roadType)?.ar ?? roadType;
+      utilityLabels.push(`نوع الطريق: ${roadLabel}`);
+    }
+    if (landReqs.trim()) {
+      utilityLabels.push(`اشتراطات البناء: ${landReqs.trim()}`);
+    }
+
     const data: ValuationFormData = {
       propType:    propType!,
       location,
       area,
       areaUnit,
-      condition:   condition!,
-      utilities: roadType ? [...utilities, `نوع الطريق: ${ROAD_TYPES.find(r => r.key === roadType)?.label ?? roadType}`] : utilities,
+      condition:   condition ?? 'good',
+      utilities:   utilityLabels,
       floor,
       buildingAge,
       finishLevel,
@@ -105,7 +154,7 @@ export function ValuationPage() {
             {!report ? (
               <div className="easy-new-study-wrap">
 
-                {/* Property Type */}
+                {/* ── Property Type ── */}
                 <div className="easy-section-title" style={{ marginBottom: '10px' }}>
                   {t('valuationPropType')}
                 </div>
@@ -114,15 +163,22 @@ export function ValuationPage() {
                     <button
                       key={key}
                       className={`easy-subtype-btn ${propType === key ? 'sel' : ''}`}
-                      onClick={() => setPropType(key)}
+                      onClick={() => {
+                        setPropType(key);
+                        setCondition(null);
+                        setRoadType('');
+                        setUtilities([]);
+                      }}
                     >
                       <span className="easy-subtype-icon">{icon}</span>
-                      <span className="easy-subtype-name" style={{ fontSize: '11px' }}>{t(`propType${key.charAt(0).toUpperCase() + key.slice(1)}` as never)}</span>
+                      <span className="easy-subtype-name" style={{ fontSize: '11px' }}>
+                        {t(`propType${key.charAt(0).toUpperCase() + key.slice(1)}` as never)}
+                      </span>
                     </button>
                   ))}
                 </div>
 
-                {/* Location + Area */}
+                {/* ── Location + Area ── */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
                   <div className="easy-form-group">
                     <label className="easy-label">{t('valuationLocation')} <span style={{ color: '#e74c3c' }}>*</span></label>
@@ -152,79 +208,44 @@ export function ValuationPage() {
                   </div>
                 </div>
 
-                {/* Condition */}
-                <div className="easy-section-title" style={{ marginTop: '18px', marginBottom: '10px' }}>
-                  {t('valuationCondition')}
-                </div>
-                <div className="easy-method-row">
-                  {CONDITIONS.map(({ key, icon }) => (
-                    <button
-                      key={key}
-                      className={`easy-method-card ${condition === key ? 'selected' : ''}`}
-                      onClick={() => setCondition(key)}
-                      style={{ padding: '12px 10px' }}
-                    >
-                      <div style={{ fontSize: '22px', marginBottom: '4px' }}>{icon}</div>
-                      <div className="easy-method-title" style={{ fontSize: '13px' }}>{t(`condition${key.charAt(0).toUpperCase() + key.slice(1)}` as never)}</div>
-                    </button>
-                  ))}
-                </div>
+                {/* ── Land building requirements (agriLand / urbanLand) ── */}
+                {needsLandReqs && (
+                  <div className="easy-form-group" style={{ marginTop: '14px' }}>
+                    <label className="easy-label">{t('valuationLandReqs')}</label>
+                    <input
+                      className="easy-input"
+                      value={landReqs}
+                      onChange={e => setLandReqs(e.target.value)}
+                      placeholder={t('valuationLandReqsPh')}
+                    />
+                  </div>
+                )}
 
-                {/* Utilities (for land types) */}
-                {(propType === 'agriLand' || propType === 'urbanLand' || propType === 'fullEstate') && (
+                {/* ── Condition (apartment / commercial / fullEstate) ── */}
+                {needsCondition && (
                   <>
                     <div className="easy-section-title" style={{ marginTop: '18px', marginBottom: '10px' }}>
-                      {t('valuationUtilities')}
+                      {t('valuationCondition')} <span style={{ color: '#e74c3c' }}>*</span>
                     </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-                      {UTILITIES.map(u => (
+                    <div className="easy-method-row">
+                      {CONDITIONS.map(({ key, icon }) => (
                         <button
-                          key={u}
-                          onClick={() => toggleUtility(u)}
-                          style={{
-                            padding: '6px 14px',
-                            borderRadius: '20px',
-                            border: `1.5px solid ${utilities.includes(u) ? '#1e3a5f' : '#ddd'}`,
-                            background: utilities.includes(u) ? '#1e3a5f' : 'white',
-                            color: utilities.includes(u) ? 'white' : '#555',
-                            fontSize: '13px',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s',
-                          }}
+                          key={key}
+                          className={`easy-method-card ${condition === key ? 'selected' : ''}`}
+                          onClick={() => setCondition(key)}
+                          style={{ padding: '12px 10px' }}
                         >
-                          {utilities.includes(u) ? '✓ ' : ''}{u}
-                        </button>
-                      ))}
-                    </div>
-                    {/* Road type */}
-                    <div style={{ fontSize: '12px', color: '#555', fontWeight: 600, marginBottom: '8px' }}>
-                      نوع الطريق المتاح
-                    </div>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      {ROAD_TYPES.map(r => (
-                        <button
-                          key={r.key}
-                          onClick={() => setRoadType(prev => prev === r.key ? '' : r.key)}
-                          style={{
-                            padding: '7px 14px',
-                            borderRadius: '8px',
-                            border: `1.5px solid ${roadType === r.key ? '#e67e22' : '#ddd'}`,
-                            background: roadType === r.key ? '#fef3e2' : 'white',
-                            color: roadType === r.key ? '#c0392b' : '#555',
-                            fontSize: '12px',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s',
-                            display: 'flex', alignItems: 'center', gap: '5px',
-                          }}
-                        >
-                          {r.icon} {r.label}
+                          <div style={{ fontSize: '22px', marginBottom: '4px' }}>{icon}</div>
+                          <div className="easy-method-title" style={{ fontSize: '13px' }}>
+                            {t(`condition${key.charAt(0).toUpperCase() + key.slice(1)}` as never)}
+                          </div>
                         </button>
                       ))}
                     </div>
                   </>
                 )}
 
-                {/* Apartment extras */}
+                {/* ── Apartment extras ── */}
                 {propType === 'apartment' && (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginTop: '16px' }}>
                     <div className="easy-form-group">
@@ -238,7 +259,7 @@ export function ValuationPage() {
                     <div className="easy-form-group">
                       <label className="easy-label">{t('valuationFinishLevel')}</label>
                       <select className="easy-input" value={finishLevel} onChange={e => setFinishLevel(e.target.value)}>
-                        <option value="">اختر المستوى</option>
+                        <option value="">—</option>
                         <option value="بدون تشطيب">بدون تشطيب</option>
                         <option value="تشطيب عادي">تشطيب عادي</option>
                         <option value="تشطيب متوسط">تشطيب متوسط</option>
@@ -249,7 +270,68 @@ export function ValuationPage() {
                   </div>
                 )}
 
-                {/* Notes */}
+                {/* ── Utilities + Road (agriLand / urbanLand / fullEstate) ── */}
+                {needsUtilities && (
+                  <>
+                    <div className="easy-section-title" style={{ marginTop: '18px', marginBottom: '10px' }}>
+                      {t('valuationUtilities')}
+                    </div>
+
+                    {/* Utility toggles */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                      {UTILITY_ITEMS.map(u => (
+                        <button
+                          key={u.key}
+                          onClick={() => toggleUtility(u.key)}
+                          style={{
+                            padding: '6px 14px',
+                            borderRadius: '20px',
+                            border: `1.5px solid ${utilities.includes(u.key) ? '#1e3a5f' : '#ddd'}`,
+                            background: utilities.includes(u.key) ? '#1e3a5f' : 'white',
+                            color: utilities.includes(u.key) ? 'white' : '#555',
+                            fontSize: '13px',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s',
+                          }}
+                        >
+                          {utilities.includes(u.key) ? '✓ ' : ''}{t(u.labelKey as never)}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Road type (only for land types, not fullEstate) */}
+                    {roadOptions && (
+                      <>
+                        <div style={{ fontSize: '12px', color: '#555', fontWeight: 600, marginBottom: '8px' }}>
+                          نوع الطريق المتاح
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                          {roadOptions.map(r => (
+                            <button
+                              key={r.key}
+                              onClick={() => setRoadType(prev => prev === r.key ? '' : r.key)}
+                              style={{
+                                padding: '7px 14px',
+                                borderRadius: '8px',
+                                border: `1.5px solid ${roadType === r.key ? '#e67e22' : '#ddd'}`,
+                                background: roadType === r.key ? '#fef3e2' : 'white',
+                                color: roadType === r.key ? '#c0392b' : '#555',
+                                fontSize: '12px',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s',
+                                display: 'flex', alignItems: 'center', gap: '5px',
+                              }}
+                            >
+                              {r.icon} {r.ar}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+
+                {/* ── Notes ── */}
                 <div className="easy-form-group" style={{ marginTop: '16px' }}>
                   <label className="easy-label">{t('valuationNotes')}</label>
                   <textarea
@@ -262,7 +344,7 @@ export function ValuationPage() {
                   />
                 </div>
 
-                {/* Generate button */}
+                {/* ── Generate ── */}
                 <div className="easy-btn-row">
                   <button
                     className="easy-btn-primary"
@@ -270,11 +352,10 @@ export function ValuationPage() {
                     disabled={!canGenerate || isLoading}
                     style={{ opacity: canGenerate && !isLoading ? 1 : 0.45 }}
                   >
-                    {isLoading ? (
-                      <><span className="easy-spinner" />{t('valuationGenerating')}</>
-                    ) : (
-                      `⚖️ ${t('valuationGenerate')}`
-                    )}
+                    {isLoading
+                      ? <><span className="easy-spinner" />{t('valuationGenerating')}</>
+                      : `⚖️ ${t('valuationGenerate')}`
+                    }
                   </button>
                 </div>
 
@@ -286,7 +367,7 @@ export function ValuationPage() {
                 )}
               </div>
             ) : (
-              /* Report view */
+              /* ── Report view ── */
               <div className="easy-new-study-wrap">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                   <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#1e3a5f' }}>
