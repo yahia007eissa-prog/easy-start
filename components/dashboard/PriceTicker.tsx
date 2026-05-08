@@ -2,9 +2,11 @@
 
 import { useTranslations } from 'next-intl';
 
-interface PriceItem {
-  nameKey: string;
-  unitKey: string;
+export interface PriceItem {
+  nameKey?: string;
+  unitKey?: string;
+  name?: string;   // direct label (overrides nameKey)
+  unit?: string;   // direct unit  (overrides unitKey)
   value: string;
   change: number;
 }
@@ -27,10 +29,17 @@ export function PriceTicker({ prices }: PriceTickerProps) {
         <div className="easy-ticker-row">
           {prices.map((item, index) => (
             <div key={index} className="easy-ticker-item">
-              <span className="easy-ticker-name">{t(item.nameKey)}</span>
-              <span className="easy-ticker-val">{item.value} {t(item.unitKey)}</span>
-              <span className={item.change > 0 ? 'easy-ticker-up' : 'easy-ticker-down'}>
-                {item.change > 0 ? '▲' : '▼'} {Math.abs(item.change)}%
+              <span className="easy-ticker-name">
+                {item.name ?? (item.nameKey ? t(item.nameKey) : '')}
+              </span>
+              <span className="easy-ticker-val">
+                {item.value}{' '}
+                <span style={{ fontSize: '10px', opacity: 0.7 }}>
+                  {item.unit ?? (item.unitKey ? t(item.unitKey) : '')}
+                </span>
+              </span>
+              <span className={item.change > 0 ? 'easy-ticker-up' : item.change < 0 ? 'easy-ticker-down' : 'easy-ticker-neutral'}>
+                {item.change > 0 ? '▲' : item.change < 0 ? '▼' : '–'} {Math.abs(item.change)}%
               </span>
             </div>
           ))}

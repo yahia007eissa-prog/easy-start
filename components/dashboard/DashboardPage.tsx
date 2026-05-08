@@ -1,9 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { KpiCards } from "./KpiCards";
 import { ProjectList } from "./ProjectList";
-import { PriceTicker } from "./PriceTicker";
+import { PriceTicker, type PriceItem } from "./PriceTicker";
 import Link from "next/link";
 
 type ProjectStatus = "done" | "prog" | "new";
@@ -16,13 +17,6 @@ interface Project {
   costKey: string;
   status: ProjectStatus;
   icon: ProjectIcon;
-}
-
-interface PriceItem {
-  nameKey: string;
-  unitKey: string;
-  value: string;
-  change: number;
 }
 
 // Sample data - these will eventually come from React Query
@@ -61,38 +55,9 @@ const sampleProjects: Project[] = [
   },
 ];
 
-const samplePrices: PriceItem[] = [
-  {
-    nameKey: "prices.rebar",
-    unitKey: "prices.rebarUnit",
-    value: "28,500",
-    change: 2.1,
-  },
-  {
-    nameKey: "prices.cement",
-    unitKey: "prices.cementUnit",
-    value: "3,200",
-    change: -0.5,
-  },
-  {
-    nameKey: "prices.brick",
-    unitKey: "prices.brickUnit",
-    value: "6,800",
-    change: 1.3,
-  },
-  {
-    nameKey: "prices.sand",
-    unitKey: "prices.sandUnit",
-    value: "420",
-    change: -0.2,
-  },
-  {
-    nameKey: "prices.dollar",
-    unitKey: "prices.dollarUnit",
-    value: "48.75",
-    change: 0.3,
-  },
-];
+function fmt(n: number) {
+  return n.toLocaleString('ar-EG');
+}
 
 const PlusIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -106,6 +71,23 @@ const PlusIcon = () => (
 
 export function DashboardPage() {
   const t = useTranslations("easyStart");
+  const [prices, setPrices] = useState<PriceItem[]>([]);
+
+  useEffect(() => {
+    fetch('/api/pricing/rawMaterials')
+      .then(r => r.json())
+      .then(res => {
+        if (!res.success || !res.data?.data) return;
+        const d = res.data.data;
+        setPrices([
+          { name: `${d.buildingMaterials.steel.nameAr} (${d.buildingMaterials.steel.brand})`, unit: 'جنيه/طن',    value: fmt(d.buildingMaterials.steel.pricePerTon),              change: 0 },
+          { name: d.buildingMaterials.cement.nameAr,                                           unit: 'جنيه/طن',    value: fmt(d.buildingMaterials.cement.averagePricePerTon),       change: 0 },
+          { name: d.buildingMaterials.sand.fino.nameAr,                                        unit: 'جنيه/م³',   value: fmt(d.buildingMaterials.sand.fino.pricePerM3),             change: 0 },
+          { name: d.metals.gold.karat21.nameAr,                                                unit: 'جنيه/جرام', value: fmt(d.metals.gold.karat21.pricePerGram),                  change: 0 },
+          { name: d.currencies.USD.nameAr,                                                     unit: 'جنيه',       value: fmt(d.currencies.USD.sellRate),                           change: 0 },
+        ]);
+      });
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -141,7 +123,7 @@ export function DashboardPage() {
           <ProjectList projects={sampleProjects} />
 
           {/* Material Prices */}
-          <PriceTicker prices={samplePrices} />
+          {prices.length > 0 && <PriceTicker prices={prices} />}
         </div>
       </div>
     </div>
