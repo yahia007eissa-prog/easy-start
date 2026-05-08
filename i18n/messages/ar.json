@@ -553,5 +553,17 @@
       "promptPlaceholder": "أدخل نص المطلب...",
       "failedToSave": "فشل في الحفظ"
     }
+  },
+  "admin": {
+    "loginTitle": "لوحة الإدارة",
+    "loginSub": "هذه الصفحة محمية — للمالك فقط",
+    "username": "اسم المستخدم",
+    "usernamePlaceholder": "أدخل اسم المستخدم",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "login": "دخول",
+    "loggingIn": "جاري التحقق...",
+    "adminMode": "وضع الأدمن",
+    "logout": "خروج"
   }
 }

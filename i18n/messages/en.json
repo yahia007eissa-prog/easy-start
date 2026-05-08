@@ -554,5 +554,17 @@
       "promptPlaceholder": "Enter prompt text...",
       "failedToSave": "Failed to save"
     }
+  },
+  "admin": {
+    "loginTitle": "Admin Panel",
+    "loginSub": "This page is protected — owner only",
+    "username": "Username",
+    "usernamePlaceholder": "Enter username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "login": "Login",
+    "loggingIn": "Verifying...",
+    "adminMode": "Admin Mode",
+    "logout": "Logout"
   }
 }

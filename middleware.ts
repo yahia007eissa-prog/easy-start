@@ -15,10 +15,14 @@ export default function middleware(request: NextRequest) {
     const session = request.cookies.get(COOKIE_NAME)?.value ?? '';
 
     if (!secret || session !== secret) {
-      // Extract locale prefix (e.g. /ar/settings/... → ar)
-      const localeMatch = pathname.match(/^\/([a-z]{2})(\/|$)/);
-      const locale = localeMatch?.[1] ?? 'ar';
-      const loginUrl = new URL(`/${locale}/admin/login`, request.url);
+      // With localePrefix:'as-needed', English URLs have no prefix (/settings/...)
+      // Arabic URLs have /ar/ prefix. Detect which is which.
+      const localeMatch = pathname.match(/^\/([a-z]{2})\//);
+      const detectedLocale = localeMatch?.[1];
+      const KNOWN_LOCALES = ['ar', 'en'];
+      const isArPrefix = detectedLocale && KNOWN_LOCALES.includes(detectedLocale) && detectedLocale !== 'en';
+      const loginPath = isArPrefix ? `/ar/admin/login` : `/admin/login`;
+      const loginUrl = new URL(loginPath, request.url);
       loginUrl.searchParams.set('from', pathname);
       return NextResponse.redirect(loginUrl);
     }

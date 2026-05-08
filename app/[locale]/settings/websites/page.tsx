@@ -2,15 +2,12 @@
 
 import { PageHeader } from '@/components/layout/PageHeader';
 import { WebsitesEditor } from '@/components/websites/WebsitesEditor';
-import { LogoutButton } from '@/components/admin/LogoutButton';
+import { AdminPageBar } from '@/components/admin/LogoutButton';
 
 export default function WebsitesPage() {
   return (
     <div className="w-full max-w-4xl">
-      <div className="admin-page-bar">
-        <span className="admin-page-badge">🔐 وضع الأدمن</span>
-        <LogoutButton />
-      </div>
+      <AdminPageBar />
       <PageHeader
         titleKey="navWebsiteRefs"
         subtitleKey="websiteRefsSub"

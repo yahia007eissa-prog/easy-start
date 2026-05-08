@@ -3,17 +3,14 @@
 import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { PricingEditor } from '@/components/pricing/PricingEditor';
-import { LogoutButton } from '@/components/admin/LogoutButton';
+import { AdminPageBar } from '@/components/admin/LogoutButton';
 
 export default function PricingPage() {
   const t = useTranslations('easyStart');
 
   return (
     <div className="w-full max-w-4xl">
-      <div className="admin-page-bar">
-        <span className="admin-page-badge">🔐 وضع الأدمن</span>
-        <LogoutButton />
-      </div>
+      <AdminPageBar />
       <PageHeader
         titleKey="pricingTitle"
         subtitleKey="pricingSubtitle"
