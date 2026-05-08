@@ -666,6 +666,88 @@
       }
     }
   },
+  "rawMaterials": {
+    "name": "Raw Materials & Market Prices",
+    "nameAr": "أسعار مواد البناء والمعادن والعملات",
+    "updatedAt": "2026-05-06T00:00:00.000Z",
+    "source": "https://www.elyom-eg.com/",
+    "data": {
+      "buildingMaterials": {
+        "steel": {
+          "nameAr": "حديد",
+          "brand": "عز",
+          "pricePerTon": 38993,
+          "unit": "جنيه / طن"
+        },
+        "cement": {
+          "nameAr": "أسمنت",
+          "averagePricePerTon": 3896,
+          "unit": "جنيه / طن"
+        },
+        "sand": {
+          "nameAr": "رمل",
+          "fino": {
+            "nameAr": "رمل فينو",
+            "pricePerM3": 670,
+            "unit": "جنيه / م³"
+          },
+          "mokhasses": {
+            "nameAr": "رمل مخصص",
+            "pricePerM3": 590,
+            "unit": "جنيه / م³"
+          }
+        }
+      },
+      "metals": {
+        "gold": {
+          "nameAr": "ذهب",
+          "karat24": {
+            "nameAr": "ذهب عيار 24",
+            "pricePerGram": 7965,
+            "unit": "جنيه / جرام"
+          },
+          "karat21": {
+            "nameAr": "ذهب عيار 21",
+            "pricePerGram": 6970,
+            "unit": "جنيه / جرام"
+          },
+          "karat18": {
+            "nameAr": "ذهب عيار 18",
+            "pricePerGram": 5974,
+            "unit": "جنيه / جرام"
+          }
+        },
+        "silver": {
+          "nameAr": "فضة",
+          "purity999": {
+            "nameAr": "فضة 999",
+            "pricePerGram": 123,
+            "unit": "جنيه / جرام"
+          }
+        }
+      },
+      "currencies": {
+        "USD": {
+          "nameAr": "دولار أمريكي",
+          "buyRate": 53.67,
+          "sellRate": 53.77,
+          "unit": "جنيه / دولار"
+        },
+        "EUR": {
+          "nameAr": "يورو",
+          "buyRate": 62.67,
+          "sellRate": 62.88,
+          "unit": "جنيه / يورو"
+        },
+        "SAR": {
+          "nameAr": "ريال سعودي",
+          "buyRate": 14.25,
+          "sellRate": 14.33,
+          "unit": "جنيه / ريال"
+        }
+      }
+    }
+  },
   "global": {
     "name": "Global Settings",
     "nameAr": "الإعدادات العامة",
