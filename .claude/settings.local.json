@@ -3,7 +3,14 @@
     "allow": [
       "Bash(npm run *)",
       "mcp__Claude_in_Chrome__tabs_context_mcp",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(gh pr create --title 'fix: resolve build errors blocking production build' --body ' *)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/PC/AppData/Local/Programs/**)",
+      "Read(//c/Users/PC/scoop/**)"
     ]
   }
 }
