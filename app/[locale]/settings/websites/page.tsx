@@ -1,13 +1,10 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { PricingEditor } from '@/components/pricing/PricingEditor';
+import { WebsitesEditor } from '@/components/websites/WebsitesEditor';
 import { LogoutButton } from '@/components/admin/LogoutButton';
 
-export default function PricingPage() {
-  const t = useTranslations('easyStart');
-
+export default function WebsitesPage() {
   return (
     <div className="w-full max-w-4xl">
       <div className="admin-page-bar">
@@ -15,20 +12,14 @@ export default function PricingPage() {
         <LogoutButton />
       </div>
       <PageHeader
-        titleKey="pricingTitle"
-        subtitleKey="pricingSubtitle"
+        titleKey="navWebsiteRefs"
+        subtitleKey="websiteRefsSub"
         backHref="/"
       />
-
       <div className="easy-content">
         <div className="easy-screen active">
           <div className="easy-card">
-            <div className="mb-4">
-              <p className="text-slate-600">
-                {t('pricingDescription')}
-              </p>
-            </div>
-            <PricingEditor className="h-[500px]" />
+            <WebsitesEditor />
           </div>
         </div>
       </div>

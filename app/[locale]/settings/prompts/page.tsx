@@ -3,12 +3,17 @@
 import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { PromptEditor } from '@/components/prompts/PromptEditor';
+import { LogoutButton } from '@/components/admin/LogoutButton';
 
 export default function PromptsPage() {
   const t = useTranslations('easyStart');
 
   return (
     <div className="w-full max-w-4xl">
+      <div className="admin-page-bar">
+        <span className="admin-page-badge">🔐 وضع الأدمن</span>
+        <LogoutButton />
+      </div>
       <PageHeader
         titleKey="navSystemPrompts"
         subtitleKey="promptsSub"

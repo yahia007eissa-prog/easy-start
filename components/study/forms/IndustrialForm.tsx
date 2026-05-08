@@ -7,90 +7,134 @@ interface IndustrialFormProps {
   onChange: (data: Record<string, string>) => void;
 }
 
+const RequiredBadge = ({ label }: { label: string }) => (
+  <span className="easy-field-badge easy-field-required">{label}</span>
+);
+const OptionalBadge = ({ label }: { label: string }) => (
+  <span className="easy-field-badge easy-field-optional">{label}</span>
+);
+
+const BASEMENT_OPTIONS = ['none', 'one', 'two', 'more'] as const;
+
 export function IndustrialForm({ formData, onChange }: IndustrialFormProps) {
   const t = useTranslations('easyStart');
 
-  const updateField = (field: string, value: string) => {
+  const update = (field: string, value: string) =>
     onChange({ ...formData, [field]: value });
-  };
 
   return (
     <>
+      {/* نشاط المصنع — الحقل المميز للصناعي */}
       <div className="easy-form-row">
-        <div className="easy-form-group">
-          <label className="easy-form-label">{t('projectTypeDetailed')}</label>
-          <select
+        <div className="easy-form-group" style={{ flex: 1 }}>
+          <label className="easy-form-label">
+            نشاط المصنع
+            <RequiredBadge label={t('fieldRequired')} />
+          </label>
+          <input
+            type="text"
             className="easy-form-input"
-            value={formData.projectType || 'factory'}
-            onChange={(e) => updateField('projectType', e.target.value)}
-          >
-            <option value="factory">{t('projectTypes.factory')}</option>
-            <option value="warehouse">{t('projectTypes.warehouse')}</option>
-            <option value="workshop">{t('projectTypes.workshop')}</option>
-            <option value="plant">{t('projectTypes.plant')}</option>
-            <option value="refinery">{t('projectTypes.refinery')}</option>
-          </select>
+            placeholder="مثال: تصنيع مواد غذائية — نسيج — بلاستيك — مواد بناء"
+            value={formData.factoryActivity || ''}
+            onChange={e => update('factoryActivity', e.target.value)}
+          />
         </div>
         <div className="easy-form-group">
-          <label className="easy-form-label">{t('industryType')}</label>
+          <label className="easy-form-label">
+            {t('finishingLevel')}
+            <RequiredBadge label={t('fieldRequired')} />
+          </label>
           <select
             className="easy-form-input"
-            value={formData.industryType || 'manufacturing'}
-            onChange={(e) => updateField('industryType', e.target.value)}
+            value={formData.finishingLevel || 'normal'}
+            onChange={e => update('finishingLevel', e.target.value)}
           >
-            <option value="manufacturing">{t('industryTypes.manufacturing')}</option>
-            <option value="foodProcessing">{t('industryTypes.foodProcessing')}</option>
-            <option value="textile">{t('industryTypes.textile')}</option>
-            <option value="chemical">{t('industryTypes.chemical')}</option>
-            <option value="automotive">{t('industryTypes.automotive')}</option>
+            <option value="none">{t('finishingNone')}</option>
+            <option value="normal">{t('finishingNormal')}</option>
+            <option value="medium">{t('finishingMedium')}</option>
+            <option value="premium">{t('finishingPremium')}</option>
           </select>
         </div>
       </div>
 
+      {/* مساحة الأرض + سعر المتر */}
       <div className="easy-form-row">
         <div className="easy-form-group">
-          <label className="easy-form-label">{t('landArea')}</label>
+          <label className="easy-form-label">
+            {t('landArea')}
+            <RequiredBadge label={t('fieldRequired')} />
+          </label>
           <input
             type="text"
             className="easy-form-input"
             placeholder={t('landAreaPlaceholder')}
             value={formData.landArea || ''}
-            onChange={(e) => updateField('landArea', e.target.value)}
+            onChange={e => update('landArea', e.target.value)}
           />
         </div>
         <div className="easy-form-group">
-          <label className="easy-form-label">{t('constructionArea')}</label>
+          <label className="easy-form-label">
+            سعر متر الأرض
+            <OptionalBadge label={t('fieldOptional')} />
+          </label>
+          <input
+            type="text"
+            className="easy-form-input"
+            placeholder="مثال: 800 ج.م/م²"
+            value={formData.landPrice || ''}
+            onChange={e => update('landPrice', e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* مساحة البناء + عدد الأدوار */}
+      <div className="easy-form-row">
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('constructionArea')}
+            <OptionalBadge label={t('fieldOptional')} />
+          </label>
           <input
             type="text"
             className="easy-form-input"
             placeholder={t('constructionAreaPlaceholder')}
             value={formData.constructionArea || ''}
-            onChange={(e) => updateField('constructionArea', e.target.value)}
+            onChange={e => update('constructionArea', e.target.value)}
+          />
+        </div>
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('floorsCount')}
+            <OptionalBadge label={t('fieldOptional')} />
+          </label>
+          <input
+            type="text"
+            className="easy-form-input"
+            placeholder={t('floorsPlaceholder')}
+            value={formData.floorsCount || ''}
+            onChange={e => update('floorsCount', e.target.value)}
           />
         </div>
       </div>
 
+      {/* البدروم */}
       <div className="easy-form-row">
         <div className="easy-form-group">
-          <label className="easy-form-label">{t('powerCapacity')}</label>
-          <input
-            type="text"
+          <label className="easy-form-label">
+            {t('basement')}
+            <OptionalBadge label={t('fieldOptional')} />
+          </label>
+          <select
             className="easy-form-input"
-            placeholder={t('powerCapacityPlaceholder')}
-            value={formData.powerCapacity || ''}
-            onChange={(e) => updateField('powerCapacity', e.target.value)}
-          />
+            value={formData.basement || 'none'}
+            onChange={e => update('basement', e.target.value)}
+          >
+            {BASEMENT_OPTIONS.map(v => (
+              <option key={v} value={v}>{t(v === 'none' ? 'noBasement' : v === 'one' ? 'oneBasement' : v === 'two' ? 'twoBasement' : 'moreBasement')}</option>
+            ))}
+          </select>
         </div>
-        <div className="easy-form-group">
-          <label className="easy-form-label">{t('employeeCount')}</label>
-          <input
-            type="text"
-            className="easy-form-input"
-            placeholder={t('employeeCountPlaceholder')}
-            value={formData.employeeCount || ''}
-            onChange={(e) => updateField('employeeCount', e.target.value)}
-          />
-        </div>
+        <div className="easy-form-group" />
       </div>
     </>
   );

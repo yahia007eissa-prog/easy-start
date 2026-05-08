@@ -56,12 +56,10 @@ const FIELD_LABELS: Record<string, { ar: string; en: string }> = {
   premium: { ar: "راقي", en: "Premium" },
   luxury: { ar: "فندقي فاخر", en: "Luxury Hotel" },
   // Basement
-  none: { ar: "لا يوجد", en: "None" },
+  noBasement: { ar: "لا يوجد بدروم", en: "None" },
   one: { ar: "بدروم واحد", en: "One basement" },
   two: { ar: "بدرومين", en: "Two basements" },
   more: { ar: "أكثر من بدرومين", en: "More than two" },
-  // Basement (alternative)
-  noBasement: { ar: "لا يوجد", en: "None" },
 };
 
 // Convert field key to human-readable label

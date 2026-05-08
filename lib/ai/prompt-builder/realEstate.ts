@@ -404,7 +404,7 @@ ${val(d.renovationDescription, 'لم يُذكر وصف')}
 const UNIT_TYPE_LABEL: Record<string, string> = {
   apartment: 'شقة سكنية', villa: 'فيلا', clinic: 'عيادة',
   medical: 'مبنى طبي', commercial: 'تجاري', admin: 'إداري',
-  hotel: 'فندقي', mixed: 'مختلط',
+  hotel: 'فندقي', factory: 'مصنع / صناعي', mixed: 'مختلط',
 };
 const FINISHING_LEVEL_LABEL: Record<string, string> = {
   normal: 'عادي', medium: 'متوسط', premium: 'راقي', luxury: 'فندقي فاخر',
@@ -568,24 +568,87 @@ function buildEfficiencyPrompt(d: StudyFormData): string {
 9. وضّح أن هذه تقديرات مبدئية قبل الكشف الميداني النهائي.`;
 }
 
+// ── Industrial prompt ─────────────────────────────────────────────────────────
+
+function buildIndustrialPrompt(d: StudyFormData): string {
+  const method   = d.method === 'fast' ? 'تقريبية (80%+)' : 'تفصيلية كاملة (BOQ)';
+  const basement = BASEMENT_LABEL[d.basement || 'none'] ?? 'لا يوجد';
+  const finishing = FINISHING_LABEL[d.finishingLevel || 'normal'] ?? 'عادي';
+
+  const partnershipLine = d.ownershipType === 'partnership'
+    ? `\n- نسبة مالك الأرض: ${val(d.ownerShare)}\n- نسبة المطور: ${val(d.developerShare)}`
+    : '';
+  const ownershipLabel = OWNERSHIP_LABEL[d.ownershipType || 'full'] ?? 'ملكية ثابتة';
+
+  const fields = [
+    `- نشاط المصنع: ${val(d.factoryActivity)}`,
+    labeled('مساحة الأرض', d.landArea),
+    labeled('سعر متر الأرض', d.landPrice),
+    labeled('مساحة البناء المقررة', d.constructionArea),
+    labeled('عدد الأدوار', d.floorsCount),
+    `- البدروم: ${basement}`,
+    `- مستوى التشطيب الصناعي: ${finishing}`,
+    `- نوع الملكية: ${ownershipLabel}${partnershipLine}`,
+    labeled('وصف إضافي', d.description),
+  ].filter(Boolean).join('\n');
+
+  const detailLevel = d.method === 'fast'
+    ? `3. تقدير تكلفة الإنشاء التقريبية (هيكل + تشطيب صناعي + أعمال خاصة) بالجنيه المصري
+4. جدول زمني أولي للتنفيذ
+5. تحليل مالي أولي (تكلفة الإنشاء الكلية، ROI تقريبي)`
+    : `3. BOQ تفصيلي بند بند (أعمال ترابية — هيكل — تشطيب صناعي — كهرباء صناعية — ميكانيكا — أنظمة خاصة)
+4. جدول زمني تفصيلي بالمراحل
+5. تحليل مالي شامل (تكلفة الإنشاء + تكلفة التشغيل الأولى + ROI + فترة الاسترداد)`;
+
+  return `أنت خبير متخصص في دراسات الجدوى الإنشائية والصناعية في مصر، لديك خبرة واسعة بتكاليف المنشآت الصناعية وأسعار السوق المصري الحالية.
+
+=== بيانات المشروع الصناعي ===
+- اسم المشروع: ${val(d.projectName)}
+- الموقع: ${val(d.location)}
+- دقة الدراسة: ${method}
+${fields}
+
+=== المطلوب ===
+أعد دراسة جدوى إنشائية صناعية شاملة باللغة العربية تشمل:
+
+1. ملخص تنفيذي (3-5 أسطر)
+2. تحليل الموقع ومتطلبات البنية التحتية الصناعية (كهرباء — مياه — صرف — طرق)
+${detailLevel}
+6. متطلبات التراخيص الصناعية والاشتراطات البيئية في مصر
+7. تقييم المخاطر والتوصيات
+
+=== قواعد الإخراج — HTML كامل (ألوان: أزرق + ذهبي + فضي) ===
+أخرج الدراسة كاملةً بصيغة HTML صالحة للعرض المباشر في المتصفح. اتبع هذه القواعد بدقة:
+
+1. ابدأ الرد بـ <!DOCTYPE html> وأنهه بـ </html> — لا تكتب أي نص خارج كتلة HTML.
+2. ضمّن الخطوط والأنماط داخل <style> في <head>:
+   @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+   :root { --blue:#1B3A6B; --gold:#C9A84C; --silver:#9BA8B8; --silver-l:#EEF2F7; --total-bg:#0F2347; --total-fg:#C9A84C; }
+   body { font-family:'Cairo',sans-serif; direction:rtl; background:#F5F6FA; color:#1a1a1a; line-height:1.7; }
+   .container { max-width:960px; margin:0 auto; padding:32px 24px; background:#fff; }
+3. العناوين الرئيسية h2: خلفية var(--blue)، لون أبيض، حد ذهبي يسار 5px بلون var(--gold)، حشو 14px 20px.
+4. العناوين الفرعية h3: لون var(--blue)، حد سفلي 2px بلون var(--gold)، حشو سفلي 6px.
+5. الجداول: border-collapse:collapse، عرض 100%، رأس الجدول bg:var(--blue) لون:var(--gold)، صفوف متناوبة var(--silver-l) / أبيض، حدود #d0d7e3.
+6. صف الإجمالي: خلفية var(--total-bg)، لون var(--total-fg)، خط عريض.
+7. بطاقة الملخص التنفيذي: خلفية var(--blue)، لون var(--gold)، حشو 20px، border-radius 8px.
+8. الأرقام المالية: لون var(--gold) وخط عريض، بفواصل.
+9. العملة: الجنيه المصري (ج.م) — قدّم نطاقاً (الحد الأدنى — الحد الأقصى).
+10. أضف هامش احتياطي 10% على التكاليف.
+11. استند على أسعار السوق المصري الحالية من خبرتك.
+12. وضّح أن هذه دراسة تقديرية وليست أسعاراً نهائية.`;
+}
+
 // ── Builder export ────────────────────────────────────────────────────────────
 
 export const realEstateBuilder: PromptBuilder = {
   getCategory() { return 'realEstate'; },
 
   buildPrompt(formData: StudyFormData): string {
-    if (formData.realEstateSubType === 'integrated') {
-      return buildIntegratedPrompt(formData);
-    }
-    if (formData.realEstateSubType === 'renovation') {
-      return buildRenovationPrompt(formData);
-    }
-    if (formData.realEstateSubType === 'efficiency') {
-      return buildEfficiencyPrompt(formData);
-    }
-    if (formData.realEstateSubType === 'finishing') {
-      return buildFinishingPrompt(formData);
-    }
+    if (formData.realEstateSubType === 'integrated')  return buildIntegratedPrompt(formData);
+    if (formData.realEstateSubType === 'renovation')  return buildRenovationPrompt(formData);
+    if (formData.realEstateSubType === 'efficiency')  return buildEfficiencyPrompt(formData);
+    if (formData.realEstateSubType === 'finishing')   return buildFinishingPrompt(formData);
+    if (formData.realEstateSubType === 'industrial')  return buildIndustrialPrompt(formData);
     return buildStandardPrompt(formData);
   },
 };

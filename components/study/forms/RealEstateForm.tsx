@@ -5,8 +5,9 @@ import { IntegratedForm }  from './IntegratedForm';
 import { RenovationForm }  from './RenovationForm';
 import { EfficiencyForm }  from './EfficiencyForm';
 import { FinishingForm }   from './FinishingForm';
+import { IndustrialForm }  from './IndustrialForm';
 
-type RealEstateSubType = 'integrated' | 'residential' | 'renovation' | 'efficiency' | 'finishing' | null;
+type RealEstateSubType = 'integrated' | 'residential' | 'renovation' | 'efficiency' | 'finishing' | 'industrial' | null;
 
 interface RealEstateFormProps {
   formData: Record<string, string>;
@@ -40,73 +41,54 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
     updateField(field, formData[field] === 'true' ? 'false' : 'true');
   };
 
-  // Integrated has its own full multi-tab form
-  if (subType === 'integrated') {
-    return <IntegratedForm formData={formData} onChange={onChange} />;
-  }
+  if (subType === 'integrated')  return <IntegratedForm  formData={formData} onChange={onChange} />;
+  if (subType === 'renovation')  return <RenovationForm  formData={formData} onChange={onChange} />;
+  if (subType === 'efficiency')  return <EfficiencyForm  formData={formData} onChange={onChange} />;
+  if (subType === 'finishing')   return <FinishingForm   formData={formData} onChange={onChange} />;
+  if (subType === 'industrial')  return <IndustrialForm  formData={formData} onChange={onChange} />;
 
-  // Renovation: description + photos only
-  if (subType === 'renovation') {
-    return <RenovationForm formData={formData} onChange={onChange} />;
-  }
-
-  // Efficiency upgrade: activity + area + current/target photos
-  if (subType === 'efficiency') {
-    return <EfficiencyForm formData={formData} onChange={onChange} />;
-  }
-
-  // Finishing: unit type + area fields + finishing level
-  if (subType === 'finishing') {
-    return <FinishingForm formData={formData} onChange={onChange} />;
-  }
-
-  const isRenovation = false;
-  const isFinishing  = subType === 'finishing';
-  const isEfficiency = subType === 'efficiency';
-  const isMixed      = formData.projectType === 'mixed';
+  const isMixed = formData.projectType === 'mixed';
 
   return (
     <>
-      {/* Project type selector — shown for residential/default subtypes */}
-      {!isRenovation && !isFinishing && !isEfficiency && (
-        <div className="easy-form-row">
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('projectTypeDetailed')}
-              <RequiredBadge label={t('fieldRequired')} />
-            </label>
-            <select
-              className="easy-form-input"
-              value={formData.projectType || 'residential'}
-              onChange={(e) => updateField('projectType', e.target.value)}
-            >
-              <option value="residential">{t('projectTypes.residential')}</option>
-              <option value="commercial">{t('projectTypes.commercial')}</option>
-              <option value="administrative">{t('projectTypes.administrative')}</option>
-              <option value="hotel">{t('projectTypes.hotel')}</option>
-              <option value="tourist">{t('projectTypes.tourist')}</option>
-              <option value="mixed">{t('projectTypes.mixed')}</option>
-            </select>
-          </div>
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('finishingLevel')}
-              <RequiredBadge label={t('fieldRequired')} />
-            </label>
-            <select
-              className="easy-form-input"
-              value={formData.finishingLevel || 'medium'}
-              onChange={(e) => updateField('finishingLevel', e.target.value)}
-            >
-              <option value="none">{t('finishingNone')}</option>
-              <option value="normal">{t('finishingNormal')}</option>
-              <option value="medium">{t('finishingMedium')}</option>
-              <option value="premium">{t('finishingPremium')}</option>
-              <option value="luxury">{t('finishingLuxury')}</option>
-            </select>
-          </div>
+      {/* Project type + finishing level */}
+      <div className="easy-form-row">
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('projectTypeDetailed')}
+            <RequiredBadge label={t('fieldRequired')} />
+          </label>
+          <select
+            className="easy-form-input"
+            value={formData.projectType || 'residential'}
+            onChange={(e) => updateField('projectType', e.target.value)}
+          >
+            <option value="residential">{t('projectTypes.residential')}</option>
+            <option value="commercial">{t('projectTypes.commercial')}</option>
+            <option value="administrative">{t('projectTypes.administrative')}</option>
+            <option value="hotel">{t('projectTypes.hotel')}</option>
+            <option value="tourist">{t('projectTypes.tourist')}</option>
+            <option value="mixed">{t('projectTypes.mixed')}</option>
+          </select>
         </div>
-      )}
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('finishingLevel')}
+            <RequiredBadge label={t('fieldRequired')} />
+          </label>
+          <select
+            className="easy-form-input"
+            value={formData.finishingLevel || 'medium'}
+            onChange={(e) => updateField('finishingLevel', e.target.value)}
+          >
+            <option value="none">{t('finishingNone')}</option>
+            <option value="normal">{t('finishingNormal')}</option>
+            <option value="medium">{t('finishingMedium')}</option>
+            <option value="premium">{t('finishingPremium')}</option>
+            <option value="luxury">{t('finishingLuxury')}</option>
+          </select>
+        </div>
+      </div>
 
       {/* Mixed-use: sector toggles + floor allocation */}
       {isMixed && (
@@ -115,13 +97,11 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
           <p className="easy-mixed-hint">السكني موجود دائماً — اختر القطاعات الإضافية</p>
 
           <div className="easy-mixed-sectors">
-            {/* Residential — always present, not toggleable */}
             <div className="easy-mixed-sector-card always">
               <span>🏠</span>
               <span>سكني</span>
               <span className="easy-mixed-fixed">ثابت</span>
             </div>
-
             {MIXED_SECTORS.map(s => {
               const active = formData[`mixedHas_${s.key}`] === 'true';
               return (
@@ -139,7 +119,6 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
             })}
           </div>
 
-          {/* Floor allocation per active sector */}
           <div className="easy-mixed-floors">
             <div className="easy-form-group">
               <label className="easy-form-label">
@@ -154,7 +133,6 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
                 onChange={e => updateField('mixedFloors_residential', e.target.value)}
               />
             </div>
-
             {MIXED_SECTORS.filter(s => formData[`mixedHas_${s.key}`] === 'true').map(s => (
               <div key={s.key} className="easy-form-group">
                 <label className="easy-form-label">
@@ -174,30 +152,7 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
         </div>
       )}
 
-      {/* Finishing-only: level + area */}
-      {isFinishing && (
-        <div className="easy-form-row">
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('finishingLevel')}
-              <RequiredBadge label={t('fieldRequired')} />
-            </label>
-            <select
-              className="easy-form-input"
-              value={formData.finishingLevel || 'medium'}
-              onChange={(e) => updateField('finishingLevel', e.target.value)}
-            >
-              <option value="none">{t('finishingNone')}</option>
-              <option value="normal">{t('finishingNormal')}</option>
-              <option value="medium">{t('finishingMedium')}</option>
-              <option value="premium">{t('finishingPremium')}</option>
-              <option value="luxury">{t('finishingLuxury')}</option>
-            </select>
-          </div>
-        </div>
-      )}
-
-      {/* Land + Construction area */}
+      {/* Land area + land price */}
       <div className="easy-form-row">
         <div className="easy-form-group">
           <label className="easy-form-label">
@@ -265,7 +220,7 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
         <div className="easy-form-group" />
       </div>
 
-      {/* Partnership shares — shown only when ownershipType === partnership */}
+      {/* Partnership shares */}
       {formData.ownershipType === 'partnership' && (
         <div className="easy-form-row easy-fade-in">
           <div className="easy-form-group">
@@ -297,40 +252,38 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
         </div>
       )}
 
-      {/* Floors + Basement — not for finishing-only */}
-      {!isFinishing && (
-        <div className="easy-form-row">
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('floorsCount')}
-              <RequiredBadge label={t('fieldRequired')} />
-            </label>
-            <input
-              type="text"
-              className="easy-form-input"
-              placeholder={t('floorsPlaceholder')}
-              value={formData.floorsCount || ''}
-              onChange={(e) => updateField('floorsCount', e.target.value)}
-            />
-          </div>
-          <div className="easy-form-group">
-            <label className="easy-form-label">
-              {t('basement')}
-              <OptionalBadge label={t('fieldOptional')} />
-            </label>
-            <select
-              className="easy-form-input"
-              value={formData.basement || 'none'}
-              onChange={(e) => updateField('basement', e.target.value)}
-            >
-              <option value="none">{t('noBasement')}</option>
-              <option value="one">{t('oneBasement')}</option>
-              <option value="two">{t('twoBasement')}</option>
-              <option value="more">{t('moreBasement')}</option>
-            </select>
-          </div>
+      {/* Floors + Basement */}
+      <div className="easy-form-row">
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('floorsCount')}
+            <RequiredBadge label={t('fieldRequired')} />
+          </label>
+          <input
+            type="text"
+            className="easy-form-input"
+            placeholder={t('floorsPlaceholder')}
+            value={formData.floorsCount || ''}
+            onChange={(e) => updateField('floorsCount', e.target.value)}
+          />
         </div>
-      )}
+        <div className="easy-form-group">
+          <label className="easy-form-label">
+            {t('basement')}
+            <OptionalBadge label={t('fieldOptional')} />
+          </label>
+          <select
+            className="easy-form-input"
+            value={formData.basement || 'none'}
+            onChange={(e) => updateField('basement', e.target.value)}
+          >
+            <option value="none">{t('noBasement')}</option>
+            <option value="one">{t('oneBasement')}</option>
+            <option value="two">{t('twoBasement')}</option>
+            <option value="more">{t('moreBasement')}</option>
+          </select>
+        </div>
+      </div>
     </>
   );
 }

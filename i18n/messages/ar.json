@@ -181,6 +181,8 @@
     "navSettings": "الإعدادات",
     "navSystemPrompts": "المطالبات النظامية",
     "navSystemPricing": "إعدادات الأسعار",
+    "navWebsiteRefs": "المواقع الموثوقة",
+    "websiteRefsSub": "مواقع الريفرانس لأسعار السوق",
     "userPlan": "Pro Plan",
     "dashboardTitle": "لوحة التحكم",
     "dashboardSub": "مرحباً — عندك {count} مشاريع نشطة",
@@ -226,7 +228,9 @@
       "efficiency": "رفع كفاءة",
       "efficiencyDesc": "تحسين الأداء الإنشائي والتقني",
       "finishing": "تشطيب",
-      "finishingDesc": "تشطيب وديكور داخلي وخارجي"
+      "finishingDesc": "تشطيب وديكور داخلي وخارجي",
+      "industrial": "صناعي",
+      "industrialDesc": "مصنع أو منشأة صناعية"
     },
     "selectSubCategory": "اختر نوع المشروع",
     "step1Title": "نوع المشروع ودقة الدراسة",

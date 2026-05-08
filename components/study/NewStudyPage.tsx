@@ -29,7 +29,7 @@ export const DEFAULT_FORM_VALUES: Record<string, string> = {
 };
 
 type MainCategory = 'realEstate' | 'agricultural';
-type RealEstateSubType = 'integrated' | 'residential' | 'renovation' | 'efficiency' | 'finishing';
+type RealEstateSubType = 'integrated' | 'residential' | 'renovation' | 'efficiency' | 'finishing' | 'industrial';
 type MethodType = 'fast' | 'full';
 
 interface NewStudyPageProps {
@@ -129,11 +129,12 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
   };
 
   const subTypeOptions: { key: RealEstateSubType; icon: string }[] = [
-    { key: 'integrated', icon: '🏙️' },
+    { key: 'integrated',  icon: '🏙️' },
     { key: 'residential', icon: '🏠' },
-    { key: 'renovation', icon: '🔧' },
-    { key: 'efficiency', icon: '⚡' },
-    { key: 'finishing', icon: '🎨' },
+    { key: 'industrial',  icon: '🏭' },
+    { key: 'renovation',  icon: '🔧' },
+    { key: 'efficiency',  icon: '⚡' },
+    { key: 'finishing',   icon: '🎨' },
   ];
 
   const header = showHeader ? (

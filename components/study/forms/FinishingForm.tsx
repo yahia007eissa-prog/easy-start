@@ -9,14 +9,15 @@ interface FinishingFormProps {
 }
 
 const UNIT_TYPES = [
-  { value: 'apartment', icon: '🏠', name: 'شقة سكنية' },
-  { value: 'villa',     icon: '🏡', name: 'فيلا' },
-  { value: 'clinic',    icon: '🩺', name: 'عيادة' },
-  { value: 'medical',   icon: '🏥', name: 'مبنى طبي' },
-  { value: 'commercial',icon: '🏬', name: 'تجاري' },
-  { value: 'admin',     icon: '🏢', name: 'إداري' },
-  { value: 'hotel',     icon: '🏨', name: 'فندقي' },
-  { value: 'mixed',     icon: '🏗️', name: 'مختلط' },
+  { value: 'apartment',  icon: '🏠',  name: 'شقة سكنية' },
+  { value: 'villa',      icon: '🏡',  name: 'فيلا' },
+  { value: 'clinic',     icon: '🩺',  name: 'عيادة' },
+  { value: 'medical',    icon: '🏥',  name: 'مبنى طبي' },
+  { value: 'commercial', icon: '🏬',  name: 'تجاري' },
+  { value: 'admin',      icon: '🏢',  name: 'إداري' },
+  { value: 'hotel',      icon: '🏨',  name: 'فندقي' },
+  { value: 'factory',    icon: '🏭',  name: 'مصنع / صناعي' },
+  { value: 'mixed',      icon: '🏗️', name: 'مختلط' },
 ];
 
 const FINISHING_LEVELS = [
@@ -52,7 +53,7 @@ export function FinishingForm({ formData, onChange }: FinishingFormProps) {
   const unitType     = formData.finishingUnitType || '';
   const isResidential = unitType === 'apartment' || unitType === 'villa';
   const isClinical    = unitType === 'clinic' || unitType === 'medical';
-  const isCommercial  = unitType === 'commercial' || unitType === 'admin' || unitType === 'hotel';
+  const isCommercial  = unitType === 'commercial' || unitType === 'admin' || unitType === 'hotel' || unitType === 'factory';
   const isMixed       = unitType === 'mixed';
   const isConstruction = unitType !== '' && unitType !== 'apartment'; // non-apartment need ceiling height
 

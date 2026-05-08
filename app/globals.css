@@ -60,6 +60,223 @@
 .easy-btn-primary:hover { background: #1f2937; }
 .easy-logo-text { color: var(--silver-bright); }
 
+/* ── Admin Login Page ── */
+.admin-login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 24px;
+}
+.admin-login-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 400px;
+}
+.admin-login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.admin-login-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
+}
+.admin-login-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.admin-login-sub {
+  font-size: 13px;
+  color: var(--text-2);
+  margin: 0;
+}
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.admin-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.admin-login-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.admin-login-input {
+  padding: 10px 14px;
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.admin-login-input:focus { border-color: var(--silver); }
+.admin-login-error {
+  font-size: 13px;
+  color: var(--red-dark);
+  background: var(--red-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin: 0;
+}
+.admin-login-btn {
+  padding: 11px;
+  background: var(--silver-bright);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.admin-login-btn:hover:not(:disabled) { background: #1f2937; }
+.admin-login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Admin Page Bar (shown on protected pages) ── */
+.admin-page-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  margin-bottom: 12px;
+}
+.admin-page-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #166534;
+}
+.admin-logout-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red-dark);
+  background: none;
+  border: 1px solid var(--red-dark);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.admin-logout-btn:hover {
+  background: var(--red-dark);
+  color: #fff;
+}
+
+/* ── Trusted Websites Editor ── */
+.websites-wrap { display: flex; flex-direction: column; gap: 20px; }
+.websites-loading { text-align: center; padding: 32px; color: var(--text-2); }
+
+.websites-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.websites-desc { font-size: 13px; color: var(--text-2); margin: 0; flex: 1; }
+.websites-add-btn {
+  padding: 8px 16px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.websites-add-btn:hover { opacity: 0.88; }
+
+.websites-form-card {
+  background: var(--blue-light);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.websites-form-title { font-size: 15px; font-weight: 700; color: var(--blue); margin: 0; }
+.websites-error {
+  font-size: 13px; color: var(--red-dark);
+  background: var(--red-light); border-radius: var(--radius-sm); padding: 8px 12px; margin: 0;
+}
+.websites-form-actions { display: flex; gap: 10px; }
+.websites-save-btn {
+  padding: 8px 20px; background: var(--blue); color: #fff;
+  border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.websites-save-btn:hover:not(:disabled) { opacity: 0.88; }
+.websites-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.websites-cancel-btn {
+  padding: 8px 16px; background: none; border: 1px solid var(--border-dark);
+  border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; color: var(--text-2);
+}
+.websites-cancel-btn:hover { background: var(--silver-light); }
+
+.websites-empty {
+  text-align: center; padding: 48px 24px; color: var(--text-2);
+}
+.websites-empty-icon { font-size: 36px; display: block; margin-bottom: 12px; }
+.websites-empty p { margin: 0 0 6px; font-size: 15px; font-weight: 600; color: var(--text); }
+.websites-empty-sub { font-size: 13px !important; font-weight: 400 !important; color: var(--text-2) !important; }
+
+.websites-list { display: flex; flex-direction: column; gap: 12px; }
+.websites-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.15s;
+}
+.websites-card:hover { border-color: var(--blue); }
+.websites-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.websites-card-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.websites-card-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.websites-card-cat {
+  font-size: 11px; font-weight: 600; color: var(--blue);
+  background: var(--blue-light); border-radius: 20px; padding: 2px 8px;
+}
+.websites-card-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.websites-edit-btn {
+  font-size: 12px; padding: 3px 10px; border: 1px solid var(--border-dark);
+  border-radius: var(--radius-sm); background: none; cursor: pointer; color: var(--text-2);
+}
+.websites-edit-btn:hover { background: var(--silver-light); }
+.websites-del-btn {
+  font-size: 12px; padding: 3px 10px; border: 1px solid var(--red-dark);
+  border-radius: var(--radius-sm); background: none; cursor: pointer; color: var(--red-dark);
+}
+.websites-del-btn:hover { background: var(--red-dark); color: #fff; }
+.websites-card-url {
+  font-size: 12px; color: var(--blue); text-decoration: none;
+  direction: ltr; display: inline-block;
+}
+.websites-card-url:hover { text-decoration: underline; }
+.websites-card-desc { font-size: 13px; color: var(--text); margin: 0; }
+.websites-card-notes { font-size: 12px; color: var(--text-2); margin: 0; }
+
 body {
   background: var(--background);
   color: var(--foreground);

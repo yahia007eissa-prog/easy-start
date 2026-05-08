@@ -181,6 +181,8 @@
     "navSettings": "Settings",
     "navSystemPrompts": "System Prompts",
     "navSystemPricing": "Pricing Settings",
+    "navWebsiteRefs": "Trusted Websites",
+    "websiteRefsSub": "Reference websites for market prices",
     "userPlan": "Pro Plan",
     "dashboardTitle": "Dashboard",
     "dashboardSub": "You have {count} active projects",
@@ -226,7 +228,9 @@
       "efficiency": "Efficiency Upgrade",
       "efficiencyDesc": "Structural & technical performance improvement",
       "finishing": "Finishing",
-      "finishingDesc": "Interior & exterior finishing and decor"
+      "finishingDesc": "Interior & exterior finishing and decor",
+      "industrial": "Industrial",
+      "industrialDesc": "Factory or industrial facility"
     },
     "selectSubCategory": "Select Project Type",
     "step1Title": "Project Type & Study Accuracy",
