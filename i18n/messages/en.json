@@ -647,7 +647,8 @@
     "authSkip": "Skip and create account",
     "startStudy": "Start Study ✓",
     "startStudyHintName": "Please enter the project name to start the study.",
-    "startStudyHintComponents": "Please select at least one project component (residential, commercial, etc.) to start the study."
+    "startStudyHintComponents": "Please select at least one project component (residential, commercial, etc.) to start the study.",
+    "entryReplace": "Replace"
   },
   "admin": {
     "loginTitle": "Admin Panel",

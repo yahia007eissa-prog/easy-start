@@ -100,39 +100,60 @@ function DataEntryMethodScreen({
 /* ─── Document Upload Section ─── */
 function DocumentUploadSection({
   t,
+  onUploadChange,
 }: {
   t: ReturnType<typeof import('next-intl').useTranslations>;
+  onUploadChange: (uploadedCount: number) => void;
 }) {
+  const [uploaded, setUploaded] = useState<Record<string, string>>({});
+
+  const handleFile = (key: string, file: File | null) => {
+    const next = { ...uploaded };
+    if (file) next[key] = file.name;
+    else delete next[key];
+    setUploaded(next);
+    onUploadChange(Object.keys(next).length);
+  };
+
+  const docs = [
+    { key: 'entryDocDeed',   icon: '📜', accept: '.pdf,.jpg,.jpeg,.png' },
+    { key: 'entryDocPermit', icon: '📋', accept: '.pdf,.jpg,.jpeg,.png' },
+    { key: 'entryDocSurvey', icon: '📐', accept: '.pdf,.jpg,.jpeg,.png,.dwg' },
+  ];
+
   return (
     <div style={{ marginBottom: '8px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        {[
-          { key: 'entryDocDeed',   icon: '📜', accept: '.pdf,.jpg,.jpeg,.png' },
-          { key: 'entryDocPermit', icon: '📋', accept: '.pdf,.jpg,.jpeg,.png' },
-          { key: 'entryDocSurvey', icon: '📐', accept: '.pdf,.jpg,.jpeg,.png,.dwg' },
-        ].map(({ key, icon, accept }) => (
-          <div key={key} style={{
-            border: '2px dashed #c0cfe8', borderRadius: '10px', padding: '16px',
-            background: '#f8faff', display: 'flex', alignItems: 'center', gap: '14px',
-          }}>
-            <div style={{ fontSize: '28px', flexShrink: 0 }}>{icon}</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700, fontSize: '13px', color: '#1e3a5f', marginBottom: '2px' }}>
-                {t(key as never)}
-              </div>
-              <div style={{ fontSize: '11px', color: '#666' }}>
-                {t(`${key}Desc` as never)}
-              </div>
-            </div>
-            <label style={{
-              background: '#1e3a5f', color: 'white', padding: '7px 16px',
-              borderRadius: '8px', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+        {docs.map(({ key, icon, accept }) => {
+          const fileName = uploaded[key];
+          return (
+            <div key={key} style={{
+              border: `2px ${fileName ? 'solid #27ae60' : 'dashed #c0cfe8'}`,
+              borderRadius: '10px', padding: '16px',
+              background: fileName ? '#f0fff4' : '#f8faff',
+              display: 'flex', alignItems: 'center', gap: '14px',
+              transition: 'all 0.2s',
             }}>
-              {t('entryUploadFiles')}
-              <input type="file" accept={accept} style={{ display: 'none' }} />
-            </label>
-          </div>
-        ))}
+              <div style={{ fontSize: '28px', flexShrink: 0 }}>{fileName ? '✅' : icon}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: '13px', color: fileName ? '#1a6b3c' : '#1e3a5f', marginBottom: '2px' }}>
+                  {t(key as never)}
+                </div>
+                <div style={{ fontSize: '11px', color: '#666' }}>
+                  {fileName ? fileName : t(`${key}Desc` as never)}
+                </div>
+              </div>
+              <label style={{
+                background: fileName ? '#27ae60' : '#1e3a5f', color: 'white', padding: '7px 16px',
+                borderRadius: '8px', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+              }}>
+                {fileName ? t('entryReplace') : t('entryUploadFiles')}
+                <input type="file" accept={accept} style={{ display: 'none' }}
+                  onChange={e => handleFile(key, e.target.files?.[0] ?? null)} />
+              </label>
+            </div>
+          );
+        })}
       </div>
       <div className="easy-info-note" style={{ marginTop: '12px' }}>
         <span className="easy-info-note-icon">ℹ️</span>
@@ -187,6 +208,7 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
   const [activeTab, setActiveTab] = useState(0);
 
   const [dataEntryMethod, setDataEntryMethod] = useState<DataEntryMethod>('pending');
+  const [uploadedDocsCount, setUploadedDocsCount] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
 
@@ -214,9 +236,10 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
   const hasSelectedComponents = COMPONENT_KEYS.some(k => categoryData[k] === 'true');
 
   const canStartStudy =
-    dataEntryMethod === 'manual' &&
-    commonData.projectName.trim() !== '' &&
-    (selectedSubType !== 'integrated' || hasSelectedComponents);
+    (dataEntryMethod === 'documents' && uploadedDocsCount > 0) ||
+    (dataEntryMethod === 'manual' &&
+      commonData.projectName.trim() !== '' &&
+      (selectedSubType !== 'integrated' || hasSelectedComponents));
 
   const handleNext = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
@@ -446,7 +469,7 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
               </div>
 
               {dataEntryMethod === 'documents' ? (
-                <DocumentUploadSection t={t} />
+                <DocumentUploadSection t={t} onUploadChange={setUploadedDocsCount} />
               ) : (
                 <>
                   <CommonFields formData={commonData} onChange={setCommonData} />
