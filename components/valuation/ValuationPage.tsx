@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { generateValuation, type ValuationFormData } from '@/app/actions/valuation';
+import { LocationPicker } from '@/components/study/forms/LocationPicker';
 import Link from 'next/link';
 
 type PropType = 'agriLand' | 'urbanLand' | 'apartment' | 'commercial' | 'fullEstate';
@@ -79,6 +80,8 @@ export function ValuationPage() {
 
   const [propType,    setPropType]    = useState<PropType | null>(null);
   const [location,    setLocation]    = useState('');
+  const [locationLat, setLocationLat] = useState('');
+  const [locationLng, setLocationLng] = useState('');
   const [area,        setArea]        = useState('');
   const [areaUnit,    setAreaUnit]    = useState('sqm');
   const [condition,   setCondition]   = useState<Condition | null>(null);
@@ -235,8 +238,13 @@ export function ValuationPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
                   <div className="easy-form-group">
                     <label className="easy-label">{t('valuationLocation')} <span style={{ color: '#e74c3c' }}>*</span></label>
-                    <input className="easy-input" value={location} onChange={e => setLocation(e.target.value)}
-                      placeholder="مثال: القاهرة الجديدة، التجمع الخامس" />
+                    <LocationPicker
+                      value={location}
+                      onChange={setLocation}
+                      lat={locationLat}
+                      lng={locationLng}
+                      onLatLngChange={(lat, lng) => { setLocationLat(lat); setLocationLng(lng); }}
+                    />
                   </div>
                   <div className="easy-form-group">
                     <label className="easy-label">{t('valuationArea')} <span style={{ color: '#e74c3c' }}>*</span></label>

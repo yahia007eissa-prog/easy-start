@@ -39,6 +39,7 @@ export const EGYPT_GOVERNORATES: Governorate[] = [
       { id: 'imbaba-cairo',    name: 'Imbaba (Cairo)',     nameAr: 'إمبابة (القاهرة)' },
       { id: 'shorouk',         name: 'El Shorouk',        nameAr: 'الشروق' },
       { id: 'badr',            name: 'Badr City',         nameAr: 'مدينة بدر' },
+      { id: 'new-admin-cap',   name: 'New Administrative Capital', nameAr: 'العاصمة الإدارية الجديدة' },
     ],
   },
   {
