@@ -2,27 +2,11 @@
 
 import { useTranslations } from 'next-intl';
 import { ImageUploadZone } from './renovation/ImageUploadZone';
-import { LocationPicker } from './LocationPicker';
 
 interface EfficiencyFormProps {
   formData: Record<string, string>;
   onChange: (data: Record<string, string>) => void;
 }
-
-const ACTIVITY_OPTIONS = [
-  { value: 'bank',        label: '🏦 بنك / فرع بنكي' },
-  { value: 'hypermarket', label: '🛒 هايبر ماركت / سوبر ماركت' },
-  { value: 'fashion',     label: '👗 محل ملابس / فاشون' },
-  { value: 'pharmacy',    label: '💊 صيدلية / سلسلة صيدليات' },
-  { value: 'restaurant',  label: '🍽️ مطعم / سلسلة مطاعم' },
-  { value: 'cafe',        label: '☕ كافيه / سلسلة كافيهات' },
-  { value: 'clinic',      label: '🏥 عيادة / مركز طبي' },
-  { value: 'gym',         label: '💪 جيم / نادي رياضي' },
-  { value: 'office',      label: '🏢 مكاتب إدارية' },
-  { value: 'showroom',    label: '🚗 معرض سيارات / شوروم' },
-  { value: 'hotel',       label: '🏨 فندق / شقق فندقية' },
-  { value: 'other',       label: '📋 نشاط آخر' },
-];
 
 const RequiredBadge = ({ label }: { label: string }) => (
   <span className="easy-field-badge easy-field-required">{label}</span>
@@ -37,6 +21,21 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
   const update = (field: string, value: string) =>
     onChange({ ...formData, [field]: value });
 
+  const ACTIVITY_OPTIONS = [
+    { value: 'bank',        label: t('effActBank') },
+    { value: 'hypermarket', label: t('effActHypermarket') },
+    { value: 'fashion',     label: t('effActFashion') },
+    { value: 'pharmacy',    label: t('effActPharmacy') },
+    { value: 'restaurant',  label: t('effActRestaurant') },
+    { value: 'cafe',        label: t('effActCafe') },
+    { value: 'clinic',      label: t('effActClinic') },
+    { value: 'gym',         label: t('effActGym') },
+    { value: 'office',      label: t('effActOffice') },
+    { value: 'showroom',    label: t('effActShowroom') },
+    { value: 'hotel',       label: t('effActHotel') },
+    { value: 'other',       label: t('effActOther') },
+  ];
+
   const currentImages: string[] = formData.currentStateImages
     ? JSON.parse(formData.currentStateImages) : [];
   const targetImages: string[] = formData.targetStateImages
@@ -49,7 +48,7 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
       <div className="easy-form-row">
         <div className="easy-form-group">
           <label className="easy-form-label">
-            نوع النشاط التجاري
+            {t('effActivityType')}
             <RequiredBadge label={t('fieldRequired')} />
           </label>
           <select
@@ -57,24 +56,23 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
             value={formData.activityType || ''}
             onChange={e => update('activityType', e.target.value)}
           >
-            <option value="">اختر نوع النشاط</option>
+            <option value="">{t('effActivitySelect')}</option>
             {ACTIVITY_OPTIONS.map(o => (
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
         </div>
 
-        {/* Custom activity name if "other" */}
         {formData.activityType === 'other' && (
           <div className="easy-form-group easy-fade-in">
             <label className="easy-form-label">
-              اسم النشاط
+              {t('effActivityName')}
               <RequiredBadge label={t('fieldRequired')} />
             </label>
             <input
               type="text"
               className="easy-form-input"
-              placeholder="مثال: محل إلكترونيات"
+              placeholder={t('effActivityNamePh')}
               value={formData.activityCustomName || ''}
               onChange={e => update('activityCustomName', e.target.value)}
             />
@@ -84,13 +82,13 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
         {formData.activityType !== 'other' && (
           <div className="easy-form-group">
             <label className="easy-form-label">
-              اسم البراند / الشركة
+              {t('effBrandName')}
               <OptionalBadge label={t('fieldOptional')} />
             </label>
             <input
               type="text"
               className="easy-form-input"
-              placeholder="مثال: Banque Misr — Zara — Carrefour"
+              placeholder={t('effBrandNamePh')}
               value={formData.brandName || ''}
               onChange={e => update('brandName', e.target.value)}
             />
@@ -98,30 +96,17 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
         )}
       </div>
 
-      {/* Location + Area + Floors */}
+      {/* Area + Floors */}
       <div className="easy-form-row">
         <div className="easy-form-group">
           <label className="easy-form-label">
-            الموقع
-            <RequiredBadge label={t('fieldRequired')} />
-          </label>
-          <LocationPicker
-            value={formData.location || ''}
-            onChange={v => update('location', v)}
-            lat={formData.locationLat}
-            lng={formData.locationLng}
-            onLatLngChange={(lat, lng) => onChange({ ...formData, locationLat: lat, locationLng: lng })}
-          />
-        </div>
-        <div className="easy-form-group">
-          <label className="easy-form-label">
-            المساحة الإجمالية (م²)
+            {t('effTotalArea')}
             <RequiredBadge label={t('fieldRequired')} />
           </label>
           <input
             type="text"
             className="easy-form-input"
-            placeholder="مثال: 1,200"
+            placeholder={t('effTotalAreaPh')}
             value={formData.totalArea || ''}
             onChange={e => update('totalArea', e.target.value)}
           />
@@ -131,7 +116,7 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
       <div className="easy-form-row">
         <div className="easy-form-group">
           <label className="easy-form-label">
-            عدد الأدوار
+            {t('effFloorsCount')}
             <RequiredBadge label={t('fieldRequired')} />
           </label>
           <select
@@ -140,14 +125,14 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
             onChange={e => update('floorsCount', e.target.value)}
           >
             {['1','2','3','4','5','6'].map(n => (
-              <option key={n} value={n}>{n} {n === '1' ? 'دور' : 'أدوار'}</option>
+              <option key={n} value={n}>{n} {n === '1' ? t('effFloor') : t('effFloors')}</option>
             ))}
-            <option value="more">أكثر من 6</option>
+            <option value="more">{t('effMoreFloors')}</option>
           </select>
         </div>
         <div className="easy-form-group">
           <label className="easy-form-label">
-            مستوى التشطيب المستهدف
+            {t('effTargetFinishing')}
             <OptionalBadge label={t('fieldOptional')} />
           </label>
           <select
@@ -155,11 +140,11 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
             value={formData.targetFinishing || ''}
             onChange={e => update('targetFinishing', e.target.value)}
           >
-            <option value="">غير محدد</option>
-            <option value="normal">عادي</option>
-            <option value="medium">متوسط</option>
-            <option value="premium">راقي</option>
-            <option value="luxury">فندقي فاخر</option>
+            <option value="">{t('effFinishingUnset')}</option>
+            <option value="normal">{t('finishingNormal')}</option>
+            <option value="medium">{t('finishingMedium')}</option>
+            <option value="premium">{t('finishingPremium')}</option>
+            <option value="luxury">{t('finishingLuxury')}</option>
           </select>
         </div>
       </div>
@@ -167,12 +152,12 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
       {/* Current state description */}
       <div className="easy-form-group" style={{ width: '100%' }}>
         <label className="easy-form-label">
-          وصف الحالة الراهنة للمكان
+          {t('effCurrentStateDesc')}
           <OptionalBadge label={t('fieldOptional')} />
         </label>
         <textarea
           className="easy-form-input easy-renovation-desc"
-          placeholder="مثال: المكان حالياً خام بالكامل — أو: يحتاج إزالة تشطيب قديم وإعادة تصميم — أو: يعمل حالياً ويحتاج تطوير بدون إيقاف النشاط"
+          placeholder={t('effCurrentStatePh')}
           rows={3}
           value={formData.currentStateDesc || ''}
           onChange={e => update('currentStateDesc', e.target.value)}
@@ -182,34 +167,32 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
       {/* Current state photos */}
       <div className="easy-form-group" style={{ width: '100%' }}>
         <label className="easy-form-label">
-          صور الواقع الحالي
+          {t('effCurrentPhotos')}
           <RequiredBadge label={t('fieldRequired')} />
         </label>
         <ImageUploadZone
           images={currentImages}
           onImagesChange={imgs => update('currentStateImages', JSON.stringify(imgs))}
         />
-        <p className="easy-field-hint">صور واضحة للمكان كما هو الآن — الأرضيات، الأسقف، الجدران، التمديدات</p>
+        <p className="easy-field-hint">{t('effCurrentPhotosHint')}</p>
       </div>
 
-      {/* Target: photos OR description */}
+      {/* Target */}
       <div className="easy-efficiency-target-wrap">
-        <p className="easy-efficiency-target-title">المطلوب تنفيذه — صور مرجعية أو وصف</p>
-        <p className="easy-efficiency-target-hint">ارفع صور مرجعية للتصميم المطلوب (brand guidelines / مثال مشابه) أو اكتب وصفاً للمطلوب</p>
-
+        <p className="easy-efficiency-target-title">{t('effTargetTitle')}</p>
+        <p className="easy-efficiency-target-hint">{t('effTargetHint')}</p>
         <ImageUploadZone
           images={targetImages}
           onImagesChange={imgs => update('targetStateImages', JSON.stringify(imgs))}
         />
-
         <div className="easy-form-group" style={{ width: '100%', marginTop: '12px' }}>
           <label className="easy-form-label">
-            أو: وصف المطلوب تنفيذه
+            {t('effTargetDesc')}
             <OptionalBadge label={t('fieldOptional')} />
           </label>
           <textarea
             className="easy-form-input easy-renovation-desc"
-            placeholder="مثال: تطبيق هوية البراند الجديدة — استبدال الإضاءة بـ LED — تركيب أرضيات بورسلان 80×80 — تنفيذ كاونتر استقبال زجاجي"
+            placeholder={t('effTargetDescPh')}
             rows={4}
             value={formData.targetStateDesc || ''}
             onChange={e => update('targetStateDesc', e.target.value)}

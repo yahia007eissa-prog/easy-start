@@ -22,15 +22,15 @@ const OptionalBadge = ({ label }: { label: string }) => (
   <span className="easy-field-badge easy-field-optional">{label}</span>
 );
 
-const MIXED_SECTORS = [
-  { key: 'commercial',     icon: '🏬', label: 'تجاري' },
-  { key: 'administrative', icon: '🏢', label: 'إداري' },
-  { key: 'medical',        icon: '🏥', label: 'طبي' },
-  { key: 'hotel',          icon: '🏨', label: 'فندقي' },
-];
-
 export function RealEstateForm({ formData, onChange, subType }: RealEstateFormProps) {
   const t = useTranslations('easyStart');
+
+  const MIXED_SECTORS = [
+    { key: 'commercial',     icon: '🏬', label: t('reSectorCommercial') },
+    { key: 'administrative', icon: '🏢', label: t('reSectorAdmin') },
+    { key: 'medical',        icon: '🏥', label: t('reSectorMedical') },
+    { key: 'hotel',          icon: '🏨', label: t('reSectorHotel') },
+  ];
 
   const updateField = (field: string, value: string) => {
     onChange({ ...formData, [field]: value });
@@ -93,14 +93,14 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
       {/* Mixed-use: sector toggles + floor allocation */}
       {isMixed && (
         <div className="easy-mixed-wrap easy-fade-in">
-          <p className="easy-mixed-title">القطاعات في المبنى المختلط</p>
-          <p className="easy-mixed-hint">السكني موجود دائماً — اختر القطاعات الإضافية</p>
+          <p className="easy-mixed-title">{t('reMixedTitle')}</p>
+          <p className="easy-mixed-hint">{t('reMixedHint')}</p>
 
           <div className="easy-mixed-sectors">
             <div className="easy-mixed-sector-card always">
               <span>🏠</span>
-              <span>سكني</span>
-              <span className="easy-mixed-fixed">ثابت</span>
+              <span>{t('reResidential')}</span>
+              <span className="easy-mixed-fixed">{t('reFixed')}</span>
             </div>
             {MIXED_SECTORS.map(s => {
               const active = formData[`mixedHas_${s.key}`] === 'true';
@@ -122,13 +122,13 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
           <div className="easy-mixed-floors">
             <div className="easy-form-group">
               <label className="easy-form-label">
-                أدوار السكني
+                {t('reResidentialFloors')}
                 <OptionalBadge label={t('fieldOptional')} />
               </label>
               <input
                 type="text"
                 className="easy-form-input"
-                placeholder="مثال: من الدور 3 إلى 10"
+                placeholder={t('reResidentialFloorsPh')}
                 value={formData.mixedFloors_residential || ''}
                 onChange={e => updateField('mixedFloors_residential', e.target.value)}
               />
@@ -136,13 +136,13 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
             {MIXED_SECTORS.filter(s => formData[`mixedHas_${s.key}`] === 'true').map(s => (
               <div key={s.key} className="easy-form-group">
                 <label className="easy-form-label">
-                  أدوار {s.label}
+                  {s.label} {t('finFloors')}
                   <OptionalBadge label={t('fieldOptional')} />
                 </label>
                 <input
                   type="text"
                   className="easy-form-input"
-                  placeholder="مثال: الدور الأرضي والأول"
+                  placeholder={t('reSectorFloorsPh')}
                   value={formData[`mixedFloors_${s.key}`] || ''}
                   onChange={e => updateField(`mixedFloors_${s.key}`, e.target.value)}
                 />
@@ -169,13 +169,13 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
         </div>
         <div className="easy-form-group">
           <label className="easy-form-label">
-            سعر متر الأرض
+            {t('reLandPrice')}
             <OptionalBadge label={t('fieldOptional')} />
           </label>
           <input
             type="text"
             className="easy-form-input"
-            placeholder="مثال: 12,000 ج.م/م²"
+            placeholder={t('reLandPricePh')}
             value={formData.landPrice || ''}
             onChange={(e) => updateField('landPrice', e.target.value)}
           />
@@ -204,7 +204,7 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
       <div className="easy-form-row">
         <div className="easy-form-group">
           <label className="easy-form-label">
-            نوع الملكية
+            {t('reOwnershipType')}
             <OptionalBadge label={t('fieldOptional')} />
           </label>
           <select
@@ -212,9 +212,9 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
             value={formData.ownershipType || 'full'}
             onChange={(e) => updateField('ownershipType', e.target.value)}
           >
-            <option value="full">ملكية ثابتة</option>
-            <option value="usufruct">حق انتفاع</option>
-            <option value="partnership">مشاركة (مالك الأرض + مطور)</option>
+            <option value="full">{t('reOwnershipFull')}</option>
+            <option value="usufruct">{t('reOwnershipUsufruct')}</option>
+            <option value="partnership">{t('reOwnershipPartnership')}</option>
           </select>
         </div>
         <div className="easy-form-group" />
@@ -225,26 +225,26 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
         <div className="easy-form-row easy-fade-in">
           <div className="easy-form-group">
             <label className="easy-form-label">
-              نسبة مالك الأرض
+              {t('reOwnerShare')}
               <RequiredBadge label={t('fieldRequired')} />
             </label>
             <input
               type="text"
               className="easy-form-input"
-              placeholder="مثال: 40%"
+              placeholder={t('reOwnerSharePh')}
               value={formData.ownerShare || ''}
               onChange={(e) => updateField('ownerShare', e.target.value)}
             />
           </div>
           <div className="easy-form-group">
             <label className="easy-form-label">
-              نسبة المطور
+              {t('reDeveloperShare')}
               <RequiredBadge label={t('fieldRequired')} />
             </label>
             <input
               type="text"
               className="easy-form-input"
-              placeholder="مثال: 60%"
+              placeholder={t('reDeveloperSharePh')}
               value={formData.developerShare || ''}
               onChange={(e) => updateField('developerShare', e.target.value)}
             />

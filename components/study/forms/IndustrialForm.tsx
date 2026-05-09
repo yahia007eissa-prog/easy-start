@@ -28,13 +28,13 @@ export function IndustrialForm({ formData, onChange }: IndustrialFormProps) {
       <div className="easy-form-row">
         <div className="easy-form-group" style={{ flex: 1 }}>
           <label className="easy-form-label">
-            نشاط المصنع
+            {t('indFactoryActivity')}
             <RequiredBadge label={t('fieldRequired')} />
           </label>
           <input
             type="text"
             className="easy-form-input"
-            placeholder="مثال: تصنيع مواد غذائية — نسيج — بلاستيك — مواد بناء"
+            placeholder={t('indFactoryActivityPh')}
             value={formData.factoryActivity || ''}
             onChange={e => update('factoryActivity', e.target.value)}
           />
@@ -74,13 +74,13 @@ export function IndustrialForm({ formData, onChange }: IndustrialFormProps) {
         </div>
         <div className="easy-form-group">
           <label className="easy-form-label">
-            سعر متر الأرض
+            {t('indLandPrice')}
             <OptionalBadge label={t('fieldOptional')} />
           </label>
           <input
             type="text"
             className="easy-form-input"
-            placeholder="مثال: 800 ج.م/م²"
+            placeholder={t('indLandPricePh')}
             value={formData.landPrice || ''}
             onChange={e => update('landPrice', e.target.value)}
           />

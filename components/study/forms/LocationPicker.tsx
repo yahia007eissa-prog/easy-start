@@ -159,21 +159,19 @@ export function LocationPicker({
           {manualMode ? t('locationUseDropdown') : t('locationTypeManually')}
         </button>
 
-        {mapsApiKey ? (
-          <button
-            type="button"
-            onClick={() => setShowMap(m => !m)}
-            style={{
-              fontSize: '11px', color: '#fff',
-              background: showMap ? '#e74c3c' : '#1A1A2E',
-              border: 'none', borderRadius: '6px',
-              padding: '4px 10px', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '4px',
-            }}
-          >
-            📍 {showMap ? t('locationHideMap') : t('locationShowMap')}
-          </button>
-        ) : null}
+        <button
+          type="button"
+          onClick={() => setShowMap(m => !m)}
+          style={{
+            fontSize: '11px', color: '#fff',
+            background: showMap ? '#e74c3c' : '#1A1A2E',
+            border: 'none', borderRadius: '6px',
+            padding: '4px 10px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: '4px',
+          }}
+        >
+          📍 {showMap ? t('locationHideMap') : t('locationShowMap')}
+        </button>
 
         {lat && lng && (
           <span style={{ fontSize: '11px', color: '#27ae60', marginRight: 'auto' }}>
