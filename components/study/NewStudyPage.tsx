@@ -401,6 +401,18 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
             </button>
           </div>
 
+          {!canProceedFromStep1 && selectedCategory === 'realEstate' && (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              background: '#FFF8E1', border: '1px solid #FFD54F',
+              borderRadius: '8px', padding: '10px 14px', marginBottom: '10px',
+              fontSize: '12px', color: '#795548',
+            }}>
+              <span style={{ fontSize: '16px' }}>💡</span>
+              <span>{t('step1HintSubType')}</span>
+            </div>
+          )}
+
           <div className="easy-btn-row">
             <button
               className="easy-btn-primary"
@@ -477,7 +489,7 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
                 </>
               )}
 
-              {!canStartStudy && dataEntryMethod === 'manual' && (
+              {!canStartStudy && (
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
                   background: '#FFF8E1', border: '1px solid #FFD54F',
@@ -486,9 +498,11 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
                 }}>
                   <span style={{ fontSize: '16px' }}>💡</span>
                   <span>
-                    {commonData.projectName.trim() === ''
-                      ? t('startStudyHintName')
-                      : t('startStudyHintComponents')}
+                    {dataEntryMethod === 'documents'
+                      ? t('step2HintDocs')
+                      : commonData.projectName.trim() === ''
+                        ? t('startStudyHintName')
+                        : t('startStudyHintComponents')}
                   </span>
                 </div>
               )}

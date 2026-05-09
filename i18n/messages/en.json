@@ -648,6 +648,8 @@
     "startStudy": "Start Study ✓",
     "startStudyHintName": "Please enter the project name to start the study.",
     "startStudyHintComponents": "Please select at least one project component (residential, commercial, etc.) to start the study.",
+    "step1HintSubType": "Please select a real estate project type to continue.",
+    "step2HintDocs": "Please upload at least one document to start generating the study.",
     "entryReplace": "Replace",
     "locationPickGov": "Select Governorate",
     "locationPickDistrict": "Select District",
