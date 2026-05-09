@@ -247,6 +247,7 @@ export function ValuationPage() {
                       lat={locationLat}
                       lng={locationLng}
                       onLatLngChange={(lat, lng) => { setLocationLat(lat); setLocationLng(lng); }}
+                      hideDistrict={propType === 'agriLand'}
                     />
                   </div>
                   <div className="easy-form-group">
@@ -434,7 +435,7 @@ export function ValuationPage() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div>
                       <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                        📎 {t('valuationDocs')}
+                        📎 {t('valuationDocs')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>{locale === 'ar' ? '(اختياري)' : '(optional)'}</span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationDocsDesc')}</div>
                     </div>
@@ -452,8 +453,23 @@ export function ValuationPage() {
                   </>
                 )}
 
+                {/* Hint when button disabled */}
+                {!canGenerate && (
+                  <div style={{
+                    marginTop: '14px', padding: '10px 14px', borderRadius: '8px',
+                    background: '#FFFDE7', border: '1.5px solid #F9A825',
+                    fontSize: '12px', color: '#7c6100',
+                  }}>
+                    ⚠️ {!location.trim()
+                      ? (locale === 'ar' ? 'برجاء اختيار الموقع أولاً' : 'Please select a location first')
+                      : !area.trim()
+                        ? (locale === 'ar' ? 'برجاء إدخال المساحة' : 'Please enter the area')
+                        : (locale === 'ar' ? 'برجاء اختيار حالة العقار' : 'Please select the property condition')}
+                  </div>
+                )}
+
                 {/* Generate */}
-                <div className="easy-btn-row" style={{ marginTop: '20px' }}>
+                <div className="easy-btn-row" style={{ marginTop: '12px' }}>
                   <button className="easy-btn-primary" onClick={handleGenerate}
                     disabled={!canGenerate || isLoading}
                     style={{ opacity: canGenerate && !isLoading ? 1 : 0.45 }}

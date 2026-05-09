@@ -12,11 +12,13 @@ interface LocationPickerProps {
   lat?: string;
   lng?: string;
   onLatLngChange?: (lat: string, lng: string) => void;
+  hideDistrict?: boolean;
 }
 
 export function LocationPicker({
   value, onChange,
   lat, lng, onLatLngChange,
+  hideDistrict = false,
 }: LocationPickerProps) {
   const t = useTranslations('easyStart');
   const locale = useLocale();
@@ -113,7 +115,7 @@ export function LocationPicker({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {!manualMode ? (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: hideDistrict ? '1fr' : '1fr 1fr', gap: '8px' }}>
           {/* Governorate */}
           <select style={sel} value={govId} onChange={e => { setGovId(e.target.value); setDistrictId(''); }}>
             <option value="">{t('locationPickGov')}</option>
@@ -122,18 +124,20 @@ export function LocationPicker({
             ))}
           </select>
 
-          {/* District */}
-          <select
-            style={{ ...sel, opacity: govId ? 1 : 0.5 }}
-            value={districtId}
-            onChange={e => setDistrictId(e.target.value)}
-            disabled={!govId}
-          >
-            <option value="">{t('locationPickDistrict')}</option>
-            {governorate?.districts.map(d => (
-              <option key={d.id} value={d.id}>{isAr ? d.nameAr : d.name}</option>
-            ))}
-          </select>
+          {/* District — hidden when hideDistrict=true */}
+          {!hideDistrict && (
+            <select
+              style={{ ...sel, opacity: govId ? 1 : 0.5 }}
+              value={districtId}
+              onChange={e => setDistrictId(e.target.value)}
+              disabled={!govId}
+            >
+              <option value="">{t('locationPickDistrict')}</option>
+              {governorate?.districts.map(d => (
+                <option key={d.id} value={d.id}>{isAr ? d.nameAr : d.name}</option>
+              ))}
+            </select>
+          )}
         </div>
       ) : (
         <input
