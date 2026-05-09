@@ -644,7 +644,9 @@
     "authCreating": "جارٍ الإنشاء...",
     "authCreateAccountBtn": "إنشاء الحساب ✓",
     "authSkip": "تخطّ وأنشئ الحساب",
-    "startStudy": "ابدأ الدراسة ✓"
+    "startStudy": "ابدأ الدراسة ✓",
+    "startStudyHintName": "برجاء إدخال اسم المشروع أولاً لبدء الدراسة.",
+    "startStudyHintComponents": "برجاء اختيار مكوّن واحد على الأقل من مكونات المشروع (سكني، تجاري...) لبدء الدراسة."
   },
   "admin": {
     "loginTitle": "لوحة الإدارة",

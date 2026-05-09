@@ -454,12 +454,28 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
                 </>
               )}
 
+              {!canStartStudy && dataEntryMethod === 'manual' && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                  background: '#FFF8E1', border: '1px solid #FFD54F',
+                  borderRadius: '8px', padding: '10px 14px', marginBottom: '10px',
+                  fontSize: '12px', color: '#795548',
+                }}>
+                  <span style={{ fontSize: '16px' }}>💡</span>
+                  <span>
+                    {commonData.projectName.trim() === ''
+                      ? t('startStudyHintName')
+                      : t('startStudyHintComponents')}
+                  </span>
+                </div>
+              )}
+
               <div className="easy-btn-row">
                 <button
                   className="easy-btn-primary"
                   onClick={handleNext}
                   disabled={!canStartStudy}
-                  style={{ opacity: canStartStudy ? 1 : 0.45 }}
+                  style={{ opacity: canStartStudy ? 1 : 0.45, cursor: canStartStudy ? 'pointer' : 'not-allowed' }}
                 >
                   {t('startStudy')}
                 </button>
