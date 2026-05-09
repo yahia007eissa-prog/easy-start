@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { LocationPicker } from './LocationPicker';
 
 interface CommonFieldsProps {
   formData: Record<string, string>;
@@ -32,12 +33,12 @@ export function CommonFields({ formData, onChange }: CommonFieldsProps) {
       <div className="easy-form-row">
         <div className="easy-form-group">
           <label className="easy-form-label">{t('location')}</label>
-          <input
-            type="text"
-            className="easy-form-input"
-            placeholder={t('locationPlaceholder')}
+          <LocationPicker
             value={formData.location || ''}
-            onChange={(e) => updateField('location', e.target.value)}
+            onChange={(v) => updateField('location', v)}
+            lat={formData.locationLat}
+            lng={formData.locationLng}
+            onLatLngChange={(lat, lng) => onChange({ ...formData, locationLat: lat, locationLng: lng })}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { LocationPicker } from '../LocationPicker';
 
 interface LandTabProps {
   formData: Record<string, string>;
@@ -31,12 +32,12 @@ export function LandTab({ formData, onChange }: LandTabProps) {
           <label className="easy-form-label">
             {ti('landLocation')} <Req t={t} />
           </label>
-          <input
-            type="text"
-            className="easy-form-input"
-            placeholder={ti('landLocationPlaceholder')}
+          <LocationPicker
             value={formData.landLocation || ''}
-            onChange={(e) => set('landLocation', e.target.value)}
+            onChange={v => set('landLocation', v)}
+            lat={formData.locationLat}
+            lng={formData.locationLng}
+            onLatLngChange={(lat, lng) => onChange({ ...formData, locationLat: lat, locationLng: lng })}
           />
         </div>
         <div className="easy-form-group">

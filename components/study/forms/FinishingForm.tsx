@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { ImageUploadZone } from './renovation/ImageUploadZone';
+import { LocationPicker } from './LocationPicker';
 
 interface FinishingFormProps {
   formData: Record<string, string>;
@@ -376,10 +377,13 @@ export function FinishingForm({ formData, onChange }: FinishingFormProps) {
                 الموقع
                 <OptionalBadge label={t('fieldOptional')} />
               </label>
-              <input type="text" className="easy-form-input"
-                placeholder="مثال: مدينة نصر — القاهرة"
+              <LocationPicker
                 value={formData.location || ''}
-                onChange={e => update('location', e.target.value)} />
+                onChange={v => update('location', v)}
+                lat={formData.locationLat}
+                lng={formData.locationLng}
+                onLatLngChange={(lat, lng) => onChange({ ...formData, locationLat: lat, locationLng: lng })}
+              />
             </div>
             <div className="easy-form-group">
               <label className="easy-form-label">

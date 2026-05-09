@@ -647,7 +647,16 @@
     "startStudy": "ابدأ الدراسة ✓",
     "startStudyHintName": "برجاء إدخال اسم المشروع أولاً لبدء الدراسة.",
     "startStudyHintComponents": "برجاء اختيار مكوّن واحد على الأقل من مكونات المشروع (سكني، تجاري...) لبدء الدراسة.",
-    "entryReplace": "استبدال"
+    "entryReplace": "استبدال",
+    "locationPickGov": "اختر المحافظة",
+    "locationPickDistrict": "اختر الحي / المركز",
+    "locationTypeManually": "اكتب يدوياً",
+    "locationUseDropdown": "استخدم القائمة",
+    "locationShowMap": "حدد على الخريطة",
+    "locationHideMap": "إخفاء الخريطة",
+    "locationPinned": "تم التحديد",
+    "locationMapHint": "انقر على الخريطة أو اسحب الدبوس لتحديد الموقع",
+    "locationMapNoKey": "مفتاح Google Maps غير مضاف. أضف NEXT_PUBLIC_GOOGLE_MAPS_API_KEY في ملف البيئة."
   },
   "admin": {
     "loginTitle": "لوحة الإدارة",

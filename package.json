@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
-    "@prisma/client": "^5.22.0",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^5.22.0",
     "@tanstack/ai": "^0.14.0",
     "@tanstack/ai-openai": "^0.8.2",
     "@tanstack/ai-react": "^0.8.0",
@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/google.maps": "^3.64.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

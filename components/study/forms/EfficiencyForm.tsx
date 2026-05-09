@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { ImageUploadZone } from './renovation/ImageUploadZone';
+import { LocationPicker } from './LocationPicker';
 
 interface EfficiencyFormProps {
   formData: Record<string, string>;
@@ -104,12 +105,12 @@ export function EfficiencyForm({ formData, onChange }: EfficiencyFormProps) {
             الموقع
             <RequiredBadge label={t('fieldRequired')} />
           </label>
-          <input
-            type="text"
-            className="easy-form-input"
-            placeholder="مثال: مول مصر — التجمع الخامس"
+          <LocationPicker
             value={formData.location || ''}
-            onChange={e => update('location', e.target.value)}
+            onChange={v => update('location', v)}
+            lat={formData.locationLat}
+            lng={formData.locationLng}
+            onLatLngChange={(lat, lng) => onChange({ ...formData, locationLat: lat, locationLng: lng })}
           />
         </div>
         <div className="easy-form-group">
