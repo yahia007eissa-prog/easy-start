@@ -220,7 +220,7 @@ export function ValuationPage() {
 
                 {/* Property Type */}
                 <div className="easy-section-title" style={{ marginBottom: '10px' }}>{t('valuationPropType')}</div>
-                <div className="easy-subtype-grid" style={{ gridTemplateColumns: 'repeat(5,1fr)' }}>
+                <div className="easy-subtype-grid">
                   {PROP_TYPES.map(({ key, icon }) => (
                     <button key={key}
                       className={`easy-subtype-btn ${propType === key ? 'sel' : ''}`}
@@ -234,8 +234,11 @@ export function ValuationPage() {
                   ))}
                 </div>
 
+                {/* All fields — shown only after selecting property type */}
+                {propType && (
+                  <>
                 {/* Location + Area */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px' }}>
+                <div className="easy-form-row" style={{ marginTop: '16px' }}>
                   <div className="easy-form-group">
                     <label className="easy-label">{t('valuationLocation')} <span style={{ color: '#e74c3c' }}>*</span></label>
                     <LocationPicker
@@ -405,50 +408,48 @@ export function ValuationPage() {
                     style={{ resize: 'vertical' }} />
                 </div>
 
-                {/* ── Photos (optional — all types) ── */}
-                {propType && (
-                  <div style={{ marginTop: '18px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                          📸 {t('valuationPhotos')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>(اختياري)</span>
-                        </div>
-                        <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationPhotosDesc')}</div>
+                {/* ── Photos (optional) ── */}
+                <div style={{ marginTop: '18px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div>
+                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
+                        📸 {t('valuationPhotos')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>(اختياري)</span>
                       </div>
-                      <button onClick={() => photoRef.current?.click()} style={{
-                        padding: '7px 14px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer',
-                        border: '1.5px solid #1e3a5f', background: 'white', color: '#1e3a5f',
-                      }}>
-                        + {t('valuationAddPhoto')}
-                      </button>
-                      <input ref={photoRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
-                        onChange={e => addFiles(e.target.files, setPhotos)} />
+                      <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationPhotosDesc')}</div>
                     </div>
-                    <FileStrip files={photos} onRemove={i => setPhotos(prev => prev.filter((_, idx) => idx !== i))} isImage={true} />
+                    <button onClick={() => photoRef.current?.click()} style={{
+                      padding: '7px 14px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer',
+                      border: '1.5px solid #1e3a5f', background: 'white', color: '#1e3a5f',
+                    }}>
+                      + {t('valuationAddPhoto')}
+                    </button>
+                    <input ref={photoRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+                      onChange={e => addFiles(e.target.files, setPhotos)} />
                   </div>
-                )}
+                  <FileStrip files={photos} onRemove={i => setPhotos(prev => prev.filter((_, idx) => idx !== i))} isImage={true} />
+                </div>
 
-                {/* ── Documents (optional — all types) ── */}
-                {propType && (
-                  <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid #eee' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                          📎 {t('valuationDocs')}
-                        </div>
-                        <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationDocsDesc')}</div>
+                {/* ── Documents (optional) ── */}
+                <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid #eee' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div>
+                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
+                        📎 {t('valuationDocs')}
                       </div>
-                      <button onClick={() => docRef.current?.click()} style={{
-                        padding: '7px 14px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer',
-                        border: '1.5px solid #27ae60', background: 'white', color: '#27ae60',
-                      }}>
-                        + {t('valuationAddDocs')}
-                      </button>
-                      <input ref={docRef} type="file" accept=".pdf,.jpg,.jpeg,.png" multiple style={{ display: 'none' }}
-                        onChange={e => addFiles(e.target.files, setDocFiles)} />
+                      <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationDocsDesc')}</div>
                     </div>
-                    <FileStrip files={docFiles} onRemove={i => setDocFiles(prev => prev.filter((_, idx) => idx !== i))} isImage={false} />
+                    <button onClick={() => docRef.current?.click()} style={{
+                      padding: '7px 14px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer',
+                      border: '1.5px solid #27ae60', background: 'white', color: '#27ae60',
+                    }}>
+                      + {t('valuationAddDocs')}
+                    </button>
+                    <input ref={docRef} type="file" accept=".pdf,.jpg,.jpeg,.png" multiple style={{ display: 'none' }}
+                      onChange={e => addFiles(e.target.files, setDocFiles)} />
                   </div>
+                  <FileStrip files={docFiles} onRemove={i => setDocFiles(prev => prev.filter((_, idx) => idx !== i))} isImage={false} />
+                </div>
+                  </>
                 )}
 
                 {/* Generate */}
