@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { LocationPicker } from '../LocationPicker';
 
 interface LandTabProps {
   formData: Record<string, string>;
@@ -26,20 +25,8 @@ export function LandTab({ formData, onChange }: LandTabProps) {
 
   return (
     <div className="easy-tab-content">
-      {/* Location */}
+      {/* Land Area */}
       <div className="easy-form-row">
-        <div className="easy-form-group">
-          <label className="easy-form-label">
-            {ti('landLocation')} <Req t={t} />
-          </label>
-          <LocationPicker
-            value={formData.landLocation || ''}
-            onChange={v => set('landLocation', v)}
-            lat={formData.locationLat}
-            lng={formData.locationLng}
-            onLatLngChange={(lat, lng) => onChange({ ...formData, locationLat: lat, locationLng: lng })}
-          />
-        </div>
         <div className="easy-form-group">
           <label className="easy-form-label">
             {ti('totalLandArea')} <Req t={t} />
@@ -53,6 +40,7 @@ export function LandTab({ formData, onChange }: LandTabProps) {
             onChange={(e) => set('totalLandArea', e.target.value)}
           />
         </div>
+        <div className="easy-form-group" />
       </div>
 
       {/* Price + Ownership */}

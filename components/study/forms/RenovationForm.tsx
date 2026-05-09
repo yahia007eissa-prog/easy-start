@@ -46,21 +46,6 @@ export function RenovationForm({ formData, onChange }: RenovationFormProps) {
         </p>
       </div>
 
-      {/* Location */}
-      <div className="easy-form-group" style={{ width: '100%' }}>
-        <label className="easy-form-label">
-          موقع المبنى
-          <RequiredBadge label={t('fieldRequired')} />
-        </label>
-        <input
-          type="text"
-          className="easy-form-input"
-          placeholder="مثال: مدينة نصر — القاهرة"
-          value={formData.location || ''}
-          onChange={e => update('location', e.target.value)}
-        />
-      </div>
-
       {/* Image upload */}
       <div className="easy-form-group" style={{ width: '100%' }}>
         <label className="easy-form-label">
