@@ -221,7 +221,7 @@
     "realEstateSubTypes": {
       "integrated": "تطوير عمراني متكامل",
       "integratedDesc": "مشاريع مختلطة — سكني + تجاري + فندقي + إداري",
-      "residential": "منزل سكني",
+      "residential": "مبنى منفرد",
       "residentialDesc": "فيلا، عمارة، شقة أو منزل خاص",
       "renovation": "ترميم",
       "renovationDesc": "ترميم وصيانة مباني قائمة",

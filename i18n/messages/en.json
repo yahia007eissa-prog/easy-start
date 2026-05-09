@@ -221,7 +221,7 @@
     "realEstateSubTypes": {
       "integrated": "Integrated Urban Development",
       "integratedDesc": "Mixed-use — residential + commercial + hotel + admin",
-      "residential": "Residential Building",
+      "residential": "Standalone Building",
       "residentialDesc": "Villa, apartment building, or private house",
       "renovation": "Renovation",
       "renovationDesc": "Renovation & maintenance of existing buildings",
