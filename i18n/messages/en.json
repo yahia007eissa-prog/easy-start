@@ -563,7 +563,7 @@
     "valuationArea": "Area",
     "valuationCondition": "Property Condition",
     "valuationNotes": "Additional Notes",
-    "valuationGenerate": "Calculate Valuation",
+    "valuationGenerate": "Start Valuation ✓",
     "valuationGenerating": "Preparing valuation...",
     "valuationResult": "Valuation Report",
     "valuationError": "An error occurred while preparing the valuation",
@@ -644,7 +644,8 @@
     "authSelectRole": "Select role",
     "authCreating": "Creating...",
     "authCreateAccountBtn": "Create Account ✓",
-    "authSkip": "Skip and create account"
+    "authSkip": "Skip and create account",
+    "startStudy": "Start Study ✓"
   },
   "admin": {
     "loginTitle": "Admin Panel",

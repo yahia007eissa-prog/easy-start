@@ -562,7 +562,7 @@
     "valuationArea": "المساحة",
     "valuationCondition": "حالة العقار",
     "valuationNotes": "ملاحظات إضافية",
-    "valuationGenerate": "احسب التقييم",
+    "valuationGenerate": "ابدأ التقييم ✓",
     "valuationGenerating": "جار إعداد التقييم...",
     "valuationResult": "تقرير التقييم",
     "valuationError": "حدث خطأ أثناء إعداد التقييم",
@@ -643,7 +643,8 @@
     "authSelectRole": "اختر الدور",
     "authCreating": "جارٍ الإنشاء...",
     "authCreateAccountBtn": "إنشاء الحساب ✓",
-    "authSkip": "تخطّ وأنشئ الحساب"
+    "authSkip": "تخطّ وأنشئ الحساب",
+    "startStudy": "ابدأ الدراسة ✓"
   },
   "admin": {
     "loginTitle": "لوحة الإدارة",

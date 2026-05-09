@@ -162,7 +162,7 @@ export const DEFAULT_FORM_VALUES: Record<string, string> = {
 };
 
 type MainCategory = 'realEstate' | 'agricultural';
-type RealEstateSubType = 'integrated' | 'residential' | 'renovation' | 'efficiency' | 'finishing' | 'industrial';
+type RealEstateSubType = 'integrated' | 'residential' | 'efficiency' | 'finishing' | 'industrial';
 type MethodType = 'fast' | 'full';
 type DataEntryMethod = 'pending' | 'manual' | 'documents';
 
@@ -209,6 +209,14 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
   const canProceedFromStep1 =
     selectedCategory === 'agricultural' ||
     (selectedCategory === 'realEstate' && selectedSubType !== null);
+
+  const COMPONENT_KEYS = ['hasResidential', 'hasCommercial', 'hasAdministrative', 'hasMedical', 'hasHotel', 'hasEntertainment'];
+  const hasSelectedComponents = COMPONENT_KEYS.some(k => categoryData[k] === 'true');
+
+  const canStartStudy =
+    dataEntryMethod === 'manual' &&
+    commonData.projectName.trim() !== '' &&
+    (selectedSubType !== 'integrated' || hasSelectedComponents);
 
   const handleNext = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
@@ -267,7 +275,6 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
     { key: 'integrated',  icon: '🏙️' },
     { key: 'residential', icon: '🏠' },
     { key: 'industrial',  icon: '🏭' },
-    { key: 'renovation',  icon: '🔧' },
     { key: 'efficiency',  icon: '⚡' },
     { key: 'finishing',   icon: '🎨' },
   ];
@@ -448,7 +455,14 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
               )}
 
               <div className="easy-btn-row">
-                <button className="easy-btn-primary" onClick={handleNext}>{t('next')}</button>
+                <button
+                  className="easy-btn-primary"
+                  onClick={handleNext}
+                  disabled={!canStartStudy}
+                  style={{ opacity: canStartStudy ? 1 : 0.45 }}
+                >
+                  {t('startStudy')}
+                </button>
                 <button className="easy-btn-secondary" onClick={handlePrevious}>{t('previous')}</button>
               </div>
             </>
@@ -505,7 +519,7 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
               {isGenerating ? (
                 <><span className="easy-spinner" />{t('generatingStudy')}</>
               ) : (
-                t('generateStudy')
+                t('startStudy')
               )}
             </button>
             <button className="easy-btn-secondary" onClick={handlePrevious}>{t('previous')}</button>
