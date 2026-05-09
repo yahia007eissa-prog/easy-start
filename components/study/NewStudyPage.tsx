@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { generateStudy, type StudyFormData } from '@/app/actions/study';
 import { downloadStudyHtml } from '@/lib/html/studyDownload';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { CommonFields } from './forms/CommonFields';
 import { RealEstateForm } from './forms/RealEstateForm';
 import { AgriculturalForm } from './forms/AgriculturalForm';

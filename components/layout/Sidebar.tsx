@@ -1,10 +1,9 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { usePathname } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { AuthDrawer } from '@/components/auth/AuthDrawer';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 

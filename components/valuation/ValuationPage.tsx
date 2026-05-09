@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { generateValuation, type ValuationFormData } from '@/app/actions/valuation';
 import { LocationPicker } from '@/components/study/forms/LocationPicker';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 type PropType = 'agriLand' | 'urbanLand' | 'apartment' | 'commercial' | 'fullEstate';
 type Condition = 'excellent' | 'good' | 'average' | 'needsMaint';
