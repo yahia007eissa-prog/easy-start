@@ -81,13 +81,13 @@ function DataEntryMethodScreen({
             {t('entryMethodManualDesc')}
           </div>
           <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {['اسم المشروع', 'الموقع الجغرافي', 'المساحة والأبعاد', 'تفاصيل المشروع'].map(item => (
-              <div key={item} style={{
+            {(['manualItemName', 'manualItemLocation', 'manualItemArea', 'manualItemDetails'] as const).map(key => (
+              <div key={key} style={{
                 background: 'white', borderRadius: '8px', padding: '8px 10px',
                 display: 'flex', alignItems: 'center', gap: '8px',
               }}>
                 <span style={{ color: '#27ae60', fontWeight: 700 }}>→</span>
-                <span style={{ fontSize: '12px', color: '#333' }}>{item}</span>
+                <span style={{ fontSize: '12px', color: '#333' }}>{t(key)}</span>
               </div>
             ))}
           </div>

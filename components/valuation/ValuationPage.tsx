@@ -35,13 +35,13 @@ const UTILITY_ITEMS = [
 ];
 
 const ROAD_AGRI = [
-  { key: 'main',    ar: 'طريق رئيسي',       icon: '🛣️' },
-  { key: 'side',    ar: 'طريق فرعي',        icon: '🛤️' },
-  { key: 'unpaved', ar: 'مدق (غير مسفلت)', icon: '🌿' },
+  { key: 'main',    ar: 'طريق رئيسي',       labelKey: 'valuationRoadMain',    icon: '🛣️' },
+  { key: 'side',    ar: 'طريق فرعي',        labelKey: 'valuationRoadSide',    icon: '🛤️' },
+  { key: 'unpaved', ar: 'مدق (غير مسفلت)', labelKey: 'valuationRoadUnpaved', icon: '🌿' },
 ];
 const ROAD_URBAN = [
-  { key: 'main', ar: 'طريق رئيسي', icon: '🛣️' },
-  { key: 'side', ar: 'طريق فرعي',  icon: '🛤️' },
+  { key: 'main', ar: 'طريق رئيسي', labelKey: 'valuationRoadMain', icon: '🛣️' },
+  { key: 'side', ar: 'طريق فرعي',  labelKey: 'valuationRoadSide', icon: '🛤️' },
 ];
 
 function getRoadOptions(p: PropType | null) {
@@ -282,17 +282,17 @@ export function ValuationPage() {
                         background: '#f9fbe7', border: '1.5px solid #c5e1a5',
                       }}>
                         <div style={{ fontSize: '12px', fontWeight: 700, color: '#4e7c2f', marginBottom: '10px' }}>
-                          📐 نسب المباني المسموح بها من إجمالي مساحة الأرض
+                          📐 {t('valuationAgriRatiosTitle')}
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
                           {[
-                            { label: '🏭 صناعي',         val: agriIndustrial,  set: setAgriIndustrial  },
-                            { label: '🏠 سكني',           val: agriResidential, set: setAgriResidential },
-                            { label: '🌴 سياحي / ترفيهي', val: agriTourism,     set: setAgriTourism     },
-                          ].map(({ label, val, set }) => (
-                            <div key={label}>
+                            { labelKey: 'valuationAgriIndustrial',  icon: '🏭', val: agriIndustrial,  set: setAgriIndustrial  },
+                            { labelKey: 'valuationAgriResidential', icon: '🏠', val: agriResidential, set: setAgriResidential },
+                            { labelKey: 'valuationAgriTourism',     icon: '🌴', val: agriTourism,     set: setAgriTourism     },
+                          ].map(({ labelKey, icon, val, set }) => (
+                            <div key={labelKey}>
                               <label style={{ fontSize: '11px', fontWeight: 600, color: '#555', display: 'block', marginBottom: '4px' }}>
-                                {label}
+                                {icon} {t(labelKey as never)}
                               </label>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <input
@@ -351,11 +351,11 @@ export function ValuationPage() {
                       <label className="easy-label">{t('valuationFinishLevel')}</label>
                       <select className="easy-input" value={finishLevel} onChange={e => setFinishLevel(e.target.value)}>
                         <option value="">—</option>
-                        <option value="بدون تشطيب">بدون تشطيب</option>
-                        <option value="تشطيب عادي">تشطيب عادي</option>
-                        <option value="تشطيب متوسط">تشطيب متوسط</option>
-                        <option value="تشطيب راقي">تشطيب راقي</option>
-                        <option value="تشطيب فندقي">تشطيب فندقي</option>
+                        <option value="بدون تشطيب">{t('valuationFinishNone')}</option>
+                        <option value="تشطيب عادي">{t('valuationFinishNormal')}</option>
+                        <option value="تشطيب متوسط">{t('valuationFinishMedium')}</option>
+                        <option value="تشطيب راقي">{t('valuationFinishPremium')}</option>
+                        <option value="تشطيب فندقي">{t('valuationFinishLuxury')}</option>
                       </select>
                     </div>
                   </div>
@@ -382,7 +382,7 @@ export function ValuationPage() {
                     </div>
                     {roadOptions && (
                       <>
-                        <div style={{ fontSize: '12px', color: '#555', fontWeight: 600, marginBottom: '8px' }}>نوع الطريق المتاح</div>
+                        <div style={{ fontSize: '12px', color: '#555', fontWeight: 600, marginBottom: '8px' }}>{t('valuationRoadType')}</div>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                           {roadOptions.map(r => (
                             <button key={r.key} onClick={() => setRoadType(prev => prev === r.key ? '' : r.key)} style={{
@@ -392,7 +392,7 @@ export function ValuationPage() {
                               color: roadType === r.key ? '#c0392b' : '#555',
                               transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: '5px',
                             }}>
-                              {r.icon} {r.ar}
+                              {r.icon} {t(r.labelKey as never)}
                             </button>
                           ))}
                         </div>
@@ -405,7 +405,7 @@ export function ValuationPage() {
                 <div className="easy-form-group" style={{ marginTop: '16px' }}>
                   <label className="easy-label">{t('valuationNotes')}</label>
                   <textarea className="easy-input" rows={3} value={notes} onChange={e => setNotes(e.target.value)}
-                    placeholder="أي تفاصيل إضافية تساعد في دقة التقييم (مجاورة لمشاريع، قرب من خدمات، مشاكل قانونية، إلخ)"
+                    placeholder={t('valuationNotesPlaceholder')}
                     style={{ resize: 'vertical' }} />
                 </div>
 
@@ -414,7 +414,7 @@ export function ValuationPage() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div>
                       <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                        📸 {t('valuationPhotos')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>(اختياري)</span>
+                        📸 {t('valuationPhotos')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>{t('optionalLabel')}</span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationPhotosDesc')}</div>
                     </div>
@@ -435,7 +435,7 @@ export function ValuationPage() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div>
                       <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                        📎 {t('valuationDocs')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>{locale === 'ar' ? '(اختياري)' : '(optional)'}</span>
+                        📎 {t('valuationDocs')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>{t('optionalLabel')}</span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationDocsDesc')}</div>
                     </div>
@@ -461,10 +461,10 @@ export function ValuationPage() {
                     fontSize: '12px', color: '#7c6100',
                   }}>
                     ⚠️ {!location.trim()
-                      ? (locale === 'ar' ? 'برجاء اختيار الموقع أولاً' : 'Please select a location first')
+                      ? t('valuationHintLocation')
                       : !area.trim()
-                        ? (locale === 'ar' ? 'برجاء إدخال المساحة' : 'Please enter the area')
-                        : (locale === 'ar' ? 'برجاء اختيار حالة العقار' : 'Please select the property condition')}
+                        ? t('valuationHintArea')
+                        : t('valuationHintCondition')}
                   </div>
                 )}
 
