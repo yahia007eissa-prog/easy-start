@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/components/layout/PageHeader';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 export default function ProjectsPage() {
   const t = useTranslations('easyStart');

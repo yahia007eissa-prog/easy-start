@@ -10,14 +10,12 @@ import { AdminTab }         from './integrated/AdminTab';
 import { MedicalTab }       from './integrated/MedicalTab';
 import { HotelTab }         from './integrated/HotelTab';
 import { EntertainmentTab } from './integrated/EntertainmentTab';
-import { SalesPlanTab }     from './integrated/SalesPlanTab';
-
 interface IntegratedFormProps {
   formData: Record<string, string>;
   onChange: (data: Record<string, string>) => void;
 }
 
-type TabId = 'land' | 'components' | 'residential' | 'commercial' | 'administrative' | 'medical' | 'hotel' | 'entertainment' | 'salesPlan';
+type TabId = 'land' | 'components' | 'residential' | 'commercial' | 'administrative' | 'medical' | 'hotel' | 'entertainment';
 
 interface TabDef {
   id: TabId;
@@ -35,7 +33,6 @@ const ALL_TABS: TabDef[] = [
   { id: 'medical',        icon: '🏥', labelKey: 'medicalTab',        conditionKey: 'hasMedical' },
   { id: 'hotel',          icon: '🏨', labelKey: 'hotelTab',          conditionKey: 'hasHotel' },
   { id: 'entertainment',  icon: '🎭', labelKey: 'entertainmentTab',  conditionKey: 'hasEntertainment' },
-  { id: 'salesPlan',      icon: '💰', labelKey: 'salesPlanTab' },
 ];
 
 export function IntegratedForm({ formData, onChange }: IntegratedFormProps) {
@@ -61,7 +58,6 @@ export function IntegratedForm({ formData, onChange }: IntegratedFormProps) {
       case 'medical':        return <MedicalTab       formData={formData} onChange={onChange} />;
       case 'hotel':          return <HotelTab         formData={formData} onChange={onChange} />;
       case 'entertainment':  return <EntertainmentTab formData={formData} onChange={onChange} />;
-      case 'salesPlan':      return <SalesPlanTab     formData={formData} onChange={onChange} />;
       default:               return null;
     }
   };

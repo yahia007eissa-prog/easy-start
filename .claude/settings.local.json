@@ -35,7 +35,29 @@
       "Bash(node -e \"const f=require\\('./i18n/messages/ar.json'\\); console.log\\(Object.keys\\(f.easyStart\\).filter\\(k=>k.startsWith\\('nav'\\)\\).join\\('\\\\n'\\)\\)\")",
       "Bash(node -e \"const f=require\\('./i18n/messages/ar.json'\\); const keys=Object.keys\\(f.easyStart\\); console.log\\(keys.slice\\(-20\\).join\\('\\\\n'\\)\\)\")",
       "Bash(node -e ' *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(git commit -m 'fix valuation labels: أرض فضاء/للبناء + وصول لطريق أسفلت *)",
+      "Bash(git commit -m 'replace road toggle with 4-option road type selector \\(رئيسي/فرعي/مدق/لا يوجد\\) *)",
+      "Bash(git commit -m 'remove طريق رئيسي from road type options *)",
+      "Bash(git commit -m 'add agri land building ratio fields: صناعي / سكني / سياحي ترفيهي with % inputs *)",
+      "Bash(git commit -m 'dashboard: fetch live prices from rawMaterials API instead of hardcoded values *)",
+      "Bash(git commit -m 'hide 0% change indicator in price ticker *)",
+      "Bash(git commit -m 'fix dashboard prices: switch names and number format with app locale *)",
+      "Bash(npm list *)",
+      "Bash(mkdir -p \"C:/Users/PC/Desktop/stydy-builder-main/app/[locale]/login\")",
+      "Bash(mkdir -p \"C:/Users/PC/Desktop/stydy-builder-main/app/[locale]/signup\")",
+      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('hex'\\)\\)\")",
+      "Bash(npx prisma *)",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./i18n/messages/ar.json'\\); console.log\\(Object.keys\\(d\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./i18n/messages/ar.json'\\); console.log\\(JSON.stringify\\(d.easyStart, null, 2\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./i18n/messages/en.json'\\); const es=d.easyStart; const keys=Object.keys\\(es\\).filter\\(k=>k.startsWith\\('valuation'\\)\\); console.log\\(keys.slice\\(-5\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./i18n/messages/en.json'\\); console.log\\(d.easyStart.generateStudy, d.easyStart.generatingStudy\\)\")",
+      "Bash(node -e \"const d=require\\('./i18n/messages/en.json'\\); console.log\\(d.easyStart.valuationGenerate\\)\")",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(p.devDependencies['@types/google.maps']\\)\")",
+      "Bash(node scripts/add-translations.js)",
+      "Bash(git commit *)",
+      "Bash(node scripts/add-translations2.js)"
     ]
   }
 }

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { KpiCards } from "./KpiCards";
 import { ProjectList } from "./ProjectList";
 import { PriceTicker, type PriceItem } from "./PriceTicker";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 type ProjectStatus = "done" | "prog" | "new";
 type ProjectIcon = "hosp" | "res" | "com" | "agr";
@@ -125,12 +125,6 @@ export function DashboardPage() {
           <button className="easy-btn-secondary" onClick={() => {}}>
             {t("exportPdf")}
           </button>
-          <Link
-            href="/valuation"
-            className="easy-btn-secondary flex items-center gap-2"
-          >
-            ⚖️ {t("navValuation")}
-          </Link>
           <Link
             href="/new-study"
             className="easy-btn-primary flex items-center gap-2"

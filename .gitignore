@@ -44,4 +44,4 @@ next-env.d.ts
 
 .playwright-mcp
 
-git commit --amend -m"build"  --author="Your Name <omarkhaled1900@hotmail.com>"
+git commit --amend -m"build"  --author="Your Name <omarkhaled1900@hotmail.com>".env

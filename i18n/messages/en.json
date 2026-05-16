@@ -555,6 +555,9 @@
       "failedToSave": "Failed to save"
     },
     "navValuation": "Property Valuation",
+    "navSalesStudy": "Sales Study",
+    "salesStudyTitle": "Sales Study",
+    "salesStudySub": "Analyze sales plan and revenue projections",
     "valuationSub": "Professional property valuation report",
     "valuationTitle": "Property Valuation",
     "valuationDescription": "Get a professional valuation report for your land, apartment, or property",
