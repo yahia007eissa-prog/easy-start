@@ -21,9 +21,9 @@ function ServiceSelectionScreen({
 
   const services = [
     {
-      icon: '📊',
-      titleAr: 'دراسة الجدوى',
-      titleEn: 'Feasibility Study',
+      icon: '🏗️',
+      titleAr: 'دراسات التطوير والتعمير',
+      titleEn: 'Urban Development Studies',
       descAr: 'دراسة جدوى اقتصادية شاملة للمشروعات العقارية والزراعية',
       descEn: 'Full economic feasibility study for real estate and agricultural projects',
       action: onChooseFeasibility,
@@ -33,7 +33,7 @@ function ServiceSelectionScreen({
     },
     {
       icon: '⚖️',
-      titleAr: 'تقييم الملكية',
+      titleAr: 'تقييم عقاري',
       titleEn: 'Property Valuation',
       descAr: 'تقرير تقييم احترافي للأراضي والشقق والعقارات التجارية',
       descEn: 'Professional valuation report for land, apartments, and commercial properties',
@@ -44,7 +44,7 @@ function ServiceSelectionScreen({
     },
     {
       icon: '📈',
-      titleAr: 'الدراسة البيعية',
+      titleAr: 'دراسة بيعية',
       titleEn: 'Sales Study',
       descAr: 'تحليل خطة البيع وتوقعات الإيرادات للمباني التجارية والسكنية',
       descEn: 'Sales plan analysis and revenue projections for residential and commercial buildings',
@@ -73,27 +73,6 @@ function ServiceSelectionScreen({
 
       <div className="easy-content">
         <div style={{ maxWidth: '680px', margin: '0 auto' }}>
-
-          {/* ── Category header ── */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '12px',
-            marginBottom: '14px', padding: '14px 18px',
-            background: 'linear-gradient(135deg, var(--gray-800), var(--gray-900))',
-            borderRadius: '12px',
-            color: '#fff',
-          }}>
-            <span style={{ fontSize: '28px' }}>🏗️</span>
-            <div>
-              <div style={{ fontWeight: 800, fontSize: '16px', fontFamily: 'Cairo, sans-serif' }}>
-                {isAr ? 'دراسات التطوير والتعمير' : 'Urban Development Studies'}
-              </div>
-              <div style={{ fontSize: '12px', opacity: 0.7, marginTop: '2px', fontFamily: 'Cairo, sans-serif' }}>
-                {isAr ? 'اختر الدراسة المناسبة لمشروعك' : 'Choose the right study for your project'}
-              </div>
-            </div>
-          </div>
-
-          {/* ── 3 service cards ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {services.map((svc, i) => (
               <button

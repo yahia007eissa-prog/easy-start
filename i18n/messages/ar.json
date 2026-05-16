@@ -174,7 +174,7 @@
     "navServices": "خدماتنا",
     "navInfo": "المعلومات",
     "navDashboard": "لوحة التحكم",
-    "navNewStudy": "دراسة جديدة",
+    "navNewStudy": "دراسات التطوير والتعمير",
     "navMyProjects": "مشاريعي",
     "navMaterialPrices": "أسعار المواد",
     "navSuppliers": "الموردون والمنفذون",
@@ -554,7 +554,7 @@
       "promptPlaceholder": "أدخل نص المطلب...",
       "failedToSave": "فشل في الحفظ"
     },
-    "navValuation": "تقييم الملكية",
+    "navValuation": "تقييم عقاري",
     "navSalesStudy": "دراسة بيعية",
     "salesStudyTitle": "دراسة بيعية",
     "salesStudySub": "تحليل خطة المبيعات وتوقعات الإيرادات",
