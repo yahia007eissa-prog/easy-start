@@ -15,7 +15,6 @@ function ServiceSelectionScreen({
 }: {
   onChooseFeasibility: () => void;
 }) {
-  const t = useTranslations('easyStart');
   const locale = useLocale();
   const isAr = locale === 'ar';
   const router = useRouter();
@@ -28,9 +27,9 @@ function ServiceSelectionScreen({
       descAr: 'دراسة جدوى اقتصادية شاملة للمشروعات العقارية والزراعية',
       descEn: 'Full economic feasibility study for real estate and agricultural projects',
       action: onChooseFeasibility,
-      color: '#1e3a5f',
-      bg: 'linear-gradient(135deg, #f0f5ff, #e8f0ff)',
-      border: '#1e3a5f',
+      accent: 'var(--gray-800)',
+      border: 'var(--gray-300)',
+      bg: 'var(--gray-50)',
     },
     {
       icon: '⚖️',
@@ -39,9 +38,9 @@ function ServiceSelectionScreen({
       descAr: 'تقرير تقييم احترافي للأراضي والشقق والعقارات التجارية',
       descEn: 'Professional valuation report for land, apartments, and commercial properties',
       action: () => router.push('/valuation'),
-      color: '#5B21B6',
-      bg: 'linear-gradient(135deg, #f5f0ff, #ede8ff)',
-      border: '#7C3AED',
+      accent: 'var(--purple-dark)',
+      border: 'var(--purple-border)',
+      bg: 'var(--purple-faint)',
     },
     {
       icon: '📈',
@@ -50,9 +49,9 @@ function ServiceSelectionScreen({
       descAr: 'تحليل خطة البيع وتوقعات الإيرادات للمباني التجارية والسكنية',
       descEn: 'Sales plan analysis and revenue projections for residential and commercial buildings',
       action: () => router.push('/sales-study'),
-      color: '#065f46',
-      bg: 'linear-gradient(135deg, #f0fdf4, #e8f5e9)',
-      border: '#059669',
+      accent: 'var(--purple)',
+      border: 'var(--purple-border)',
+      bg: 'var(--purple-light)',
     },
   ];
 
@@ -73,46 +72,70 @@ function ServiceSelectionScreen({
       </div>
 
       <div className="easy-content">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '680px', margin: '0 auto' }}>
-          {services.map((svc, i) => (
-            <button
-              key={i}
-              onClick={svc.action}
-              style={{
-                border: `2px solid ${svc.border}`,
-                borderRadius: '14px',
-                padding: '22px 24px',
-                background: svc.bg,
-                cursor: 'pointer',
-                textAlign: isAr ? 'right' : 'left',
-                transition: 'all 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '18px',
-                width: '100%',
-              }}
-            >
-              <div style={{
-                fontSize: '40px', flexShrink: 0,
-                width: '64px', height: '64px', borderRadius: '14px',
-                background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-              }}>
-                {svc.icon}
+        <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+
+          {/* ── Category header ── */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '12px',
+            marginBottom: '14px', padding: '14px 18px',
+            background: 'linear-gradient(135deg, var(--gray-800), var(--gray-900))',
+            borderRadius: '12px',
+            color: '#fff',
+          }}>
+            <span style={{ fontSize: '28px' }}>🏗️</span>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: '16px', fontFamily: 'Cairo, sans-serif' }}>
+                {isAr ? 'دراسات التطوير والتعمير' : 'Urban Development Studies'}
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 800, fontSize: '17px', color: svc.color, marginBottom: '6px', fontFamily: 'Cairo, sans-serif' }}>
-                  {isAr ? svc.titleAr : svc.titleEn}
+              <div style={{ fontSize: '12px', opacity: 0.7, marginTop: '2px', fontFamily: 'Cairo, sans-serif' }}>
+                {isAr ? 'اختر الدراسة المناسبة لمشروعك' : 'Choose the right study for your project'}
+              </div>
+            </div>
+          </div>
+
+          {/* ── 3 service cards ── */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {services.map((svc, i) => (
+              <button
+                key={i}
+                onClick={svc.action}
+                style={{
+                  border: `1.5px solid ${svc.border}`,
+                  borderRadius: '12px',
+                  padding: '18px 20px',
+                  background: svc.bg,
+                  cursor: 'pointer',
+                  textAlign: isAr ? 'right' : 'left',
+                  transition: 'all 0.18s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '16px',
+                  width: '100%',
+                }}
+              >
+                <div style={{
+                  fontSize: '28px', flexShrink: 0,
+                  width: '52px', height: '52px', borderRadius: '12px',
+                  background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.07)',
+                }}>
+                  {svc.icon}
                 </div>
-                <div style={{ fontSize: '13px', color: '#555', lineHeight: 1.6, fontFamily: 'Cairo, sans-serif' }}>
-                  {isAr ? svc.descAr : svc.descEn}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, fontSize: '15px', color: svc.accent, marginBottom: '4px', fontFamily: 'Cairo, sans-serif' }}>
+                    {isAr ? svc.titleAr : svc.titleEn}
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-2)', lineHeight: 1.6, fontFamily: 'Cairo, sans-serif' }}>
+                    {isAr ? svc.descAr : svc.descEn}
+                  </div>
                 </div>
-              </div>
-              <div style={{ fontSize: '22px', color: svc.color, flexShrink: 0, opacity: 0.6 }}>
-                {isAr ? '←' : '→'}
-              </div>
-            </button>
-          ))}
+                <div style={{ fontSize: '18px', color: svc.accent, flexShrink: 0, opacity: 0.5 }}>
+                  {isAr ? '←' : '→'}
+                </div>
+              </button>
+            ))}
+          </div>
+
         </div>
       </div>
     </div>
