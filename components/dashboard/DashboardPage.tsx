@@ -122,15 +122,12 @@ export function DashboardPage() {
           </div>
         </div>
         <div className="easy-topbar-actions">
-          <button className="easy-btn-secondary" onClick={() => {}}>
-            {t("exportPdf")}
-          </button>
           <Link
             href="/new-study"
             className="easy-btn-primary flex items-center gap-2"
           >
             <PlusIcon />
-            {t("navNewStudy")}
+            {t("navNewStudy")} · PDF
           </Link>
         </div>
       </div>
