@@ -125,7 +125,8 @@ export function ValuationPage() {
 
   const canGenerate =
     !!propType && location.trim() !== '' && area.trim() !== '' &&
-    (!needsCondition || !!condition);
+    (!needsCondition || !!condition) &&
+    photos.length > 0 && docFiles.length > 0;
 
   const handleGenerate = async () => {
     if (!canGenerate || isLoading) return;
@@ -409,12 +410,12 @@ export function ValuationPage() {
                     style={{ resize: 'vertical' }} />
                 </div>
 
-                {/* ── Photos (optional) ── */}
+                {/* ── Photos (required) ── */}
                 <div style={{ marginTop: '18px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div>
                       <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                        📸 {t('valuationPhotos')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>{t('optionalLabel')}</span>
+                        📸 {t('valuationPhotos')} <span style={{ color: '#e74c3c' }}>*</span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationPhotosDesc')}</div>
                     </div>
@@ -430,12 +431,12 @@ export function ValuationPage() {
                   <FileStrip files={photos} onRemove={i => setPhotos(prev => prev.filter((_, idx) => idx !== i))} isImage={true} />
                 </div>
 
-                {/* ── Documents (optional) ── */}
+                {/* ── Documents (required) ── */}
                 <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid #eee' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div>
                       <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
-                        📎 {t('valuationDocs')} <span style={{ color: '#aaa', fontWeight: 400, fontSize: '12px' }}>{t('optionalLabel')}</span>
+                        📎 {t('valuationDocs')} <span style={{ color: '#e74c3c' }}>*</span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#888' }}>{t('valuationDocsDesc')}</div>
                     </div>
@@ -464,7 +465,11 @@ export function ValuationPage() {
                       ? t('valuationHintLocation')
                       : !area.trim()
                         ? t('valuationHintArea')
-                        : t('valuationHintCondition')}
+                        : (needsCondition && !condition)
+                          ? t('valuationHintCondition')
+                          : photos.length === 0
+                            ? t('valuationHintPhotos')
+                            : t('valuationHintDocs')}
                   </div>
                 )}
 

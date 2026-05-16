@@ -85,10 +85,13 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '/', icon: <DashboardIcon />, labelKey: 'navDashboard', section: 'navMain' },
-  { href: '/new-study', icon: <PlusIcon />, labelKey: 'navNewStudy', section: 'navMain' },
-  { href: '/valuation', icon: <ValuationIcon />, labelKey: 'navValuation', section: 'navMain' },
-  { href: '/sales-study', icon: <SalesStudyIcon />, labelKey: 'navSalesStudy', section: 'navMain' },
   { href: '/projects', icon: <ProjectsIcon />, labelKey: 'navMyProjects', section: 'navMain' },
+];
+
+const serviceItems: NavItem[] = [
+  { href: '/new-study', icon: <PlusIcon />, labelKey: 'navNewStudy' },
+  { href: '/valuation', icon: <ValuationIcon />, labelKey: 'navValuation' },
+  { href: '/sales-study', icon: <SalesStudyIcon />, labelKey: 'navSalesStudy' },
 ];
 
 const infoItems: NavItem[] = [
@@ -169,6 +172,20 @@ export function Sidebar({ className = '' }: SidebarProps) {
     </Link>
   );
 
+  const renderServiceItem = (item: NavItem, index: number) => {
+    const active = isActive(item.href);
+    return (
+      <Link
+        key={item.href + index}
+        href={item.href}
+        className={`easy-nav-item easy-nav-service ${active ? 'active' : ''}`}
+      >
+        {item.icon}
+        {t(item.labelKey)}
+      </Link>
+    );
+  };
+
   // Mobile sidebar
   const mobileSidebar = isMobile && (
     <>
@@ -195,6 +212,13 @@ export function Sidebar({ className = '' }: SidebarProps) {
         <nav className="easy-nav">
           <div className="easy-nav-section">{t('navMain')}</div>
           {navItems.map(renderNavItem)}
+
+          <div className="easy-nav-section easy-nav-section-services" style={{ marginTop: '10px' }}>
+            {t('navServices')}
+          </div>
+          <div className="easy-nav-services-wrap">
+            {serviceItems.map(renderServiceItem)}
+          </div>
 
           <div className="easy-nav-section" style={{ marginTop: '6px' }}>
             {t('navInfo')}

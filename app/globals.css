@@ -441,6 +441,32 @@ body {
   box-shadow: inset 3px 0 0 #a78bfa;
 }
 
+/* ── Services section highlight ── */
+.easy-nav-section-services {
+  color: #c4b5fd !important;
+  letter-spacing: 0.5px;
+}
+.easy-nav-services-wrap {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: 4px;
+}
+.easy-nav-service {
+  border-radius: 6px !important;
+  margin-bottom: 2px !important;
+}
+.easy-nav-service:last-child { margin-bottom: 0 !important; }
+.easy-nav-service:hover:not(.active) {
+  background: rgba(139, 92, 246, 0.15) !important;
+  color: #ddd6fe !important;
+}
+.easy-nav-service.active {
+  background: rgba(139, 92, 246, 0.3) !important;
+  box-shadow: inset 3px 0 0 #a78bfa !important;
+}
+
 .easy-nav-icon {
   width: 17px;
   height: 17px;

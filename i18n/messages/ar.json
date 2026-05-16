@@ -171,6 +171,7 @@
     "logo": "Easy Start",
     "logoSub": "منصة دراسات الجدوى",
     "navMain": "القائمة الرئيسية",
+    "navServices": "خدماتنا",
     "navInfo": "المعلومات",
     "navDashboard": "لوحة التحكم",
     "navNewStudy": "دراسة جديدة",
@@ -800,6 +801,8 @@
     "valuationHintLocation": "برجاء اختيار الموقع أولاً.",
     "valuationHintArea": "برجاء إدخال مساحة العقار.",
     "valuationHintCondition": "برجاء اختيار حالة العقار.",
+    "valuationHintPhotos": "برجاء رفع صورة واحدة على الأقل للعقار.",
+    "valuationHintDocs": "برجاء رفع مستندات الملكية.",
     "optionalLabel": "(اختياري)"
   },
   "admin": {

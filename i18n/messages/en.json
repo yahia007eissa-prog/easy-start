@@ -171,6 +171,7 @@
     "logo": "Easy Start",
     "logoSub": "Feasibility Study Platform",
     "navMain": "Main Menu",
+    "navServices": "Our Services",
     "navInfo": "Information",
     "navDashboard": "Dashboard",
     "navNewStudy": "New Study",
@@ -801,6 +802,8 @@
     "valuationHintLocation": "Please select a location first.",
     "valuationHintArea": "Please enter the property area.",
     "valuationHintCondition": "Please select the property condition.",
+    "valuationHintPhotos": "Please upload at least one photo of the property.",
+    "valuationHintDocs": "Please upload the ownership documents.",
     "optionalLabel": "(optional)"
   },
   "admin": {

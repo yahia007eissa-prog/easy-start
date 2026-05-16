@@ -1,82 +1,141 @@
 'use client';
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useState, useRef } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
-const SECTORS = [
-  { key: 'residential',    icon: '🏠' },
-  { key: 'commercial',     icon: '🏬' },
-  { key: 'administrative', icon: '🏢' },
-  { key: 'medical',        icon: '🏥' },
-  { key: 'hotel',          icon: '🏨' },
-  { key: 'entertainment',  icon: '🎭' },
-] as const;
+/* ─── Types ─── */
+type BuildingType = 'residential' | 'commercial' | 'administrative' | 'mixed';
+type LicenseType  = 'residential' | 'commercial' | 'administrative' | 'industrial' | 'tourism';
 
-type SectorKey = typeof SECTORS[number]['key'];
+interface FilePreview { name: string; url: string; size: string; }
 
-const ORDINALS_AR = ['الأولى', 'الثانية', 'الثالثة', 'الرابعة', 'الخامسة', 'السادسة'];
-const ORDINALS_EN = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
+function fmtSize(bytes: number) {
+  return bytes < 1024 * 1024
+    ? `${(bytes / 1024).toFixed(0)} KB`
+    : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
-const SECTOR_LABELS: Record<string, { ar: string; en: string }> = {
-  residential:    { ar: 'سكني',   en: 'Residential' },
-  commercial:     { ar: 'تجاري',  en: 'Commercial' },
-  administrative: { ar: 'إداري',  en: 'Administrative' },
-  medical:        { ar: 'طبي',    en: 'Medical' },
-  hotel:          { ar: 'فندقي',  en: 'Hotel' },
-  entertainment:  { ar: 'ترفيهي', en: 'Entertainment' },
-};
+const BUILDING_TYPES: { key: BuildingType; icon: string; labelAr: string; labelEn: string }[] = [
+  { key: 'residential',    icon: '🏠', labelAr: 'سكني',          labelEn: 'Residential'    },
+  { key: 'commercial',     icon: '🏪', labelAr: 'تجاري',         labelEn: 'Commercial'     },
+  { key: 'administrative', icon: '🏢', labelAr: 'إداري',         labelEn: 'Administrative' },
+  { key: 'mixed',          icon: '🏙️', labelAr: 'متعدد الأنشطة', labelEn: 'Mixed-Use'      },
+];
 
-interface PhaseData {
-  sectors: SectorKey[];
-  pricePerSqm: string;
-  percentOfTotal: string;
-  durationMonths: string;
+const LICENSE_TYPES: { key: LicenseType; labelAr: string; labelEn: string }[] = [
+  { key: 'residential',    labelAr: 'سكني',   labelEn: 'Residential'    },
+  { key: 'commercial',     labelAr: 'تجاري',  labelEn: 'Commercial'     },
+  { key: 'administrative', labelAr: 'إداري',  labelEn: 'Administrative' },
+  { key: 'industrial',     labelAr: 'صناعي',  labelEn: 'Industrial'     },
+  { key: 'tourism',        labelAr: 'سياحي',  labelEn: 'Tourism'        },
+];
+
+const Req = ({ isAr }: { isAr: boolean }) => (
+  <span style={{ color: '#e74c3c', marginInlineStart: '4px' }}>*</span>
+);
+
+function FileStrip({ files, onRemove, isImage }: { files: FilePreview[]; onRemove: (i: number) => void; isImage: boolean }) {
+  if (!files.length) return null;
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+      {files.map((f, i) => (
+        <div key={i} style={{
+          position: 'relative', border: '1.5px solid #dde3ea', borderRadius: '8px',
+          overflow: 'hidden', width: isImage ? '80px' : 'auto', maxWidth: isImage ? '80px' : '180px',
+        }}>
+          {isImage ? (
+            <img src={f.url} alt={f.name} style={{ width: '80px', height: '64px', objectFit: 'cover', display: 'block' }} />
+          ) : (
+            <div style={{ padding: '6px 10px', background: '#f4f7fb', fontSize: '11px' }}>
+              <div style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#1e3a5f' }}>{f.name}</div>
+              <div style={{ color: '#888', marginTop: '2px' }}>{f.size}</div>
+            </div>
+          )}
+          <button onClick={() => onRemove(i)} style={{
+            position: 'absolute', top: 2, left: 2, width: '18px', height: '18px',
+            borderRadius: '50%', background: 'rgba(0,0,0,0.55)', color: 'white',
+            border: 'none', cursor: 'pointer', fontSize: '10px', lineHeight: '18px', textAlign: 'center',
+          }}>✕</button>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export function SalesStudyPage() {
   const t = useTranslations('easyStart');
-  const isAr = t('logo') === 'ستيدي بيلدر';
+  const locale = useLocale();
+  const isAr = locale === 'ar';
 
-  const [projectName, setProjectName]       = useState('');
-  const [location, setLocation]             = useState('');
-  const [totalArea, setTotalArea]           = useState('');
-  const [selectedSectors, setSelectedSectors] = useState<SectorKey[]>([]);
-  const [phaseCount, setPhaseCount]         = useState(0);
-  const [phases, setPhases]                 = useState<PhaseData[]>([]);
-  const [totalDuration, setTotalDuration]   = useState('');
-  const [notes, setNotes]                   = useState('');
+  /* ── form state ── */
+  const [buildingType,  setBuildingType]  = useState<BuildingType | null>(null);
+  const [licenseType,   setLicenseType]   = useState<LicenseType | ''>('');
+  const [governorate,   setGovernorate]   = useState('');
+  const [district,      setDistrict]      = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [totalArea,     setTotalArea]     = useState('');
+  const [sellableArea,  setSellableArea]  = useState('');
+  const [floorCount,    setFloorCount]    = useState('');
+  const [areaPerFloor,  setAreaPerFloor]  = useState('');
+  const [unitCount,     setUnitCount]     = useState('');
+  const [buildingAge,   setBuildingAge]   = useState('');
+  const [finishLevel,   setFinishLevel]   = useState('');
+  const [targetPrice,   setTargetPrice]   = useState('');
+  const [paymentTerms,  setPaymentTerms]  = useState('');
+  const [notes,         setNotes]         = useState('');
 
-  const toggleSector = (key: SectorKey) => {
-    setSelectedSectors(prev =>
-      prev.includes(key) ? prev.filter(s => s !== key) : [...prev, key]
-    );
-  };
+  const [photos,   setPhotos]   = useState<FilePreview[]>([]);
+  const [docFiles, setDocFiles] = useState<FilePreview[]>([]);
 
-  const handlePhaseCountChange = (n: number) => {
-    setPhaseCount(n);
-    setPhases(prev => {
-      const next = [...prev];
-      while (next.length < n) next.push({ sectors: [], pricePerSqm: '', percentOfTotal: '', durationMonths: '' });
-      return next.slice(0, n);
+  const photoRef = useRef<HTMLInputElement>(null);
+  const docRef   = useRef<HTMLInputElement>(null);
+
+  function addFiles(files: FileList | null, setter: React.Dispatch<React.SetStateAction<FilePreview[]>>) {
+    if (!files) return;
+    Array.from(files).forEach(f => {
+      setter(prev => [...prev, { name: f.name, url: URL.createObjectURL(f), size: fmtSize(f.size) }]);
     });
-  };
+  }
 
-  const updatePhase = (idx: number, field: keyof PhaseData, value: string | SectorKey[]) => {
-    setPhases(prev => prev.map((p, i) => i === idx ? { ...p, [field]: value } : p));
-  };
+  /* ── validation ── */
+  const canGenerate =
+    !!buildingType &&
+    !!licenseType &&
+    governorate.trim() !== '' &&
+    totalArea.trim() !== '' &&
+    sellableArea.trim() !== '' &&
+    floorCount.trim() !== '' &&
+    unitCount.trim() !== '' &&
+    photos.length > 0 &&
+    docFiles.length > 0;
 
-  const togglePhaseSector = (idx: number, key: SectorKey) => {
-    const current = phases[idx]?.sectors ?? [];
-    const next: SectorKey[] = current.includes(key)
-      ? current.filter(s => s !== key)
-      : [...current, key];
-    updatePhase(idx, 'sectors', next);
-  };
+  const hint = !buildingType
+    ? (isAr ? 'اختر نوع المبنى أولاً' : 'Select the building type first')
+    : !licenseType
+    ? (isAr ? 'اختر نوع الترخيص' : 'Select the license type')
+    : !governorate.trim()
+    ? (isAr ? 'أدخل المحافظة' : 'Enter the governorate')
+    : !totalArea.trim()
+    ? (isAr ? 'أدخل إجمالي مساحة المبنى' : 'Enter the total building area')
+    : !sellableArea.trim()
+    ? (isAr ? 'أدخل المساحة القابلة للبيع' : 'Enter the sellable area')
+    : !floorCount.trim()
+    ? (isAr ? 'أدخل عدد الأدوار' : 'Enter the number of floors')
+    : !unitCount.trim()
+    ? (isAr ? 'أدخل عدد الوحدات / المحلات' : 'Enter the unit / shop count')
+    : photos.length === 0
+    ? (isAr ? 'أرفع صور المبنى (مطلوب)' : 'Upload building photos (required)')
+    : (isAr ? 'أرفع مستندات الملكية (مطلوب)' : 'Upload ownership documents (required)');
 
-  const canGenerate = projectName.trim() !== '' && selectedSectors.length > 0 && phaseCount > 0;
+  /* ── section header ── */
+  const SectionTitle = ({ label }: { label: string }) => (
+    <div className="easy-section-title" style={{ marginBottom: '10px', marginTop: '20px' }}>
+      {label}
+    </div>
+  );
 
-  const label = (key: string) => isAr ? SECTOR_LABELS[key]?.ar : SECTOR_LABELS[key]?.en;
+  const lbl = (ar: string, en: string) => isAr ? ar : en;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -98,258 +157,243 @@ export function SalesStudyPage() {
       <div className="easy-content">
         <div className="easy-new-study-wrap">
 
-          {/* Basic Info */}
-          <div className="easy-section-title" style={{ marginBottom: '10px' }}>
-            {isAr ? 'بيانات المشروع' : 'Project Information'}
-          </div>
-          <div className="easy-form-row" style={{ marginBottom: '10px' }}>
-            <div className="easy-form-group">
-              <label className="easy-form-label">
-                {isAr ? 'اسم المشروع' : 'Project Name'}
-                <span className="easy-field-badge easy-field-required">{t('fieldRequired')}</span>
-              </label>
-              <input
-                className="easy-form-input"
-                placeholder={isAr ? 'مثال: مشروع الواجهة التجارية' : 'e.g. Commercial Front Project'}
-                value={projectName}
-                onChange={e => setProjectName(e.target.value)}
-              />
-            </div>
-            <div className="easy-form-group">
-              <label className="easy-form-label">
-                {isAr ? 'الموقع' : 'Location'}
-                <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
-              </label>
-              <input
-                className="easy-form-input"
-                placeholder={isAr ? 'المحافظة / المنطقة' : 'Governorate / District'}
-                value={location}
-                onChange={e => setLocation(e.target.value)}
-              />
-            </div>
+          {/* ── Building Type ── */}
+          <SectionTitle label={lbl('نوع المبنى', 'Building Type')} />
+          <div className="easy-subtype-grid">
+            {BUILDING_TYPES.map(({ key, icon, labelAr, labelEn }) => (
+              <button
+                key={key}
+                className={`easy-subtype-btn ${buildingType === key ? 'sel' : ''}`}
+                onClick={() => setBuildingType(key)}
+              >
+                <span className="easy-subtype-icon">{icon}</span>
+                <span className="easy-subtype-name">{isAr ? labelAr : labelEn}</span>
+              </button>
+            ))}
           </div>
 
-          <div className="easy-form-row" style={{ marginBottom: '20px' }}>
-            <div className="easy-form-group">
-              <label className="easy-form-label">
-                {isAr ? 'إجمالي المساحة القابلة للبيع (م²)' : 'Total Sellable Area (m²)'}
-                <span className="easy-field-badge easy-field-required">{t('fieldRequired')}</span>
-              </label>
-              <input
-                type="number"
-                className="easy-form-input"
-                placeholder="0"
-                value={totalArea}
-                onChange={e => setTotalArea(e.target.value)}
-              />
-            </div>
-            <div className="easy-form-group">
-              <label className="easy-form-label">
-                {isAr ? 'مدة البيع الإجمالية' : 'Total Sales Duration'}
-                <span className="easy-field-badge easy-field-required">{t('fieldRequired')}</span>
-              </label>
-              <input
-                className="easy-form-input"
-                placeholder={isAr ? 'مثال: 3 سنوات' : 'e.g. 3 years'}
-                value={totalDuration}
-                onChange={e => setTotalDuration(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Sector Selection */}
-          <div className="easy-section-title" style={{ marginBottom: '10px' }}>
-            {isAr ? 'مكونات المشروع' : 'Project Components'}
-            <span className="easy-field-badge easy-field-required" style={{ marginRight: '6px' }}>{t('fieldRequired')}</span>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
-            {SECTORS.map(({ key, icon }) => {
-              const sel = selectedSectors.includes(key);
+          {/* ── License Type ── */}
+          <SectionTitle label={lbl('نوع الترخيص', 'License Type')} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '4px' }}>
+            {LICENSE_TYPES.map(({ key, labelAr, labelEn }) => {
+              const sel = licenseType === key;
               return (
-                <button
-                  key={key}
-                  type="button"
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '6px',
-                    padding: '8px 16px',
-                    border: `1.5px solid ${sel ? 'var(--purple)' : 'var(--border-dark)'}`,
-                    borderRadius: '20px',
-                    background: sel ? 'var(--purple-light)' : '#fff',
-                    color: sel ? 'var(--purple-dark)' : 'var(--text)',
-                    fontWeight: sel ? 700 : 500,
-                    fontSize: '13px', cursor: 'pointer', transition: 'all 0.15s',
-                    fontFamily: 'Cairo, sans-serif',
-                  }}
-                  onClick={() => toggleSector(key)}
-                >
-                  <span>{icon}</span>
-                  <span>{label(key)}</span>
-                  {sel && <span style={{ color: 'var(--purple)', fontWeight: 800 }}>✓</span>}
+                <button key={key} onClick={() => setLicenseType(key)} style={{
+                  padding: '7px 16px', borderRadius: '20px', fontSize: '13px', cursor: 'pointer',
+                  border: `1.5px solid ${sel ? 'var(--purple)' : 'var(--border-dark)'}`,
+                  background: sel ? 'var(--purple-light)' : '#fff',
+                  color: sel ? 'var(--purple-dark)' : 'var(--text)',
+                  fontWeight: sel ? 700 : 500, transition: 'all 0.15s',
+                  fontFamily: 'Cairo, sans-serif',
+                }}>
+                  {isAr ? labelAr : labelEn}
+                  {sel && ' ✓'}
                 </button>
               );
             })}
           </div>
 
-          {/* Phase Count */}
-          <div className="easy-section-title" style={{ marginBottom: '10px' }}>
-            {isAr ? 'مراحل البيع' : 'Sales Phases'}
-            <span className="easy-field-badge easy-field-required" style={{ marginRight: '6px' }}>{t('fieldRequired')}</span>
-          </div>
-          <div className="easy-form-group" style={{ maxWidth: '200px', marginBottom: '20px' }}>
-            <select
-              className="easy-form-input"
-              value={phaseCount}
-              onChange={e => handlePhaseCountChange(Number(e.target.value))}
-            >
-              <option value={0}>{isAr ? 'اختر عدد المراحل' : 'Choose phase count'}</option>
-              {[1,2,3,4,5,6].map(n => (
-                <option key={n} value={n}>
-                  {n} {isAr ? (n === 1 ? 'مرحلة' : 'مراحل') : (n === 1 ? 'phase' : 'phases')}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Phase Cards */}
-          {phaseCount > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
-              {phases.map((phase, i) => (
-                <div key={i} className="easy-phase-card">
-                  <div className="easy-phase-card-header">
-                    <span className="easy-phase-num">{i + 1}</span>
-                    <span>
-                      {isAr ? `المرحلة ${ORDINALS_AR[i]}` : `${ORDINALS_EN[i]} Phase`}
-                    </span>
-                  </div>
-
-                  {selectedSectors.length > 0 ? (
-                    <div style={{ marginBottom: '12px' }}>
-                      <p className="easy-phase-hint">
-                        {isAr ? 'اختر القطاعات التي تُباع في هذه المرحلة:' : 'Select sectors sold in this phase:'}
-                      </p>
-                      <div className="easy-phase-sectors">
-                        {selectedSectors.map(key => {
-                          const sel = phase.sectors.includes(key);
-                          const ico = SECTORS.find(s => s.key === key)?.icon;
-                          return (
-                            <button
-                              key={key}
-                              type="button"
-                              className={`easy-phase-sector-btn${sel ? ' sel' : ''}`}
-                              onClick={() => togglePhaseSector(i, key)}
-                            >
-                              <span>{ico}</span>
-                              <span>{label(key)}</span>
-                              {sel && <span className="easy-phase-check">✓</span>}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="easy-phase-hint" style={{ color: '#f59e0b' }}>
-                      {isAr ? 'اختر مكونات المشروع أولاً' : 'Select project components first'}
-                    </p>
-                  )}
-
-                  <div className="easy-form-row">
-                    <div className="easy-form-group">
-                      <label className="easy-form-label">
-                        {isAr ? 'سعر البيع (جنيه/م²)' : 'Sale Price (EGP/m²)'}
-                        <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
-                      </label>
-                      <input
-                        type="number"
-                        className="easy-form-input"
-                        placeholder="0"
-                        value={phase.pricePerSqm}
-                        onChange={e => updatePhase(i, 'pricePerSqm', e.target.value)}
-                      />
-                    </div>
-                    <div className="easy-form-group">
-                      <label className="easy-form-label">
-                        {isAr ? 'نسبة من الإجمالي (%)' : 'Share of total (%)'}
-                        <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
-                      </label>
-                      <input
-                        type="number"
-                        className="easy-form-input"
-                        placeholder="0"
-                        value={phase.percentOfTotal}
-                        onChange={e => updatePhase(i, 'percentOfTotal', e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="easy-form-group" style={{ marginTop: '6px' }}>
-                    <label className="easy-form-label">
-                      {isAr ? 'مدة المرحلة (أشهر)' : 'Phase duration (months)'}
-                      <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
-                    </label>
-                    <input
-                      type="number"
-                      className="easy-form-input"
-                      placeholder="0"
-                      value={phase.durationMonths}
-                      onChange={e => updatePhase(i, 'durationMonths', e.target.value)}
-                      style={{ maxWidth: '160px' }}
-                    />
-                  </div>
-                </div>
-              ))}
+          {/* ── Location ── */}
+          <SectionTitle label={lbl('الموقع', 'Location')} />
+          <div className="easy-form-row">
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('المحافظة', 'Governorate')} <Req isAr={isAr} />
+              </label>
+              <input
+                className="easy-form-input"
+                placeholder={lbl('مثال: القاهرة', 'e.g. Cairo')}
+                value={governorate}
+                onChange={e => setGovernorate(e.target.value)}
+              />
             </div>
-          )}
-
-          {phaseCount === 0 && (
-            <div className="easy-phase-empty" style={{ marginBottom: '20px' }}>
-              {isAr ? 'حدد عدد مراحل البيع بالأعلى لتظهر تفاصيل كل مرحلة' : 'Set the number of sales phases above to configure each phase'}
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('الحي / المنطقة', 'District / Area')}
+              </label>
+              <input
+                className="easy-form-input"
+                placeholder={lbl('مثال: مدينة نصر', 'e.g. Nasr City')}
+                value={district}
+                onChange={e => setDistrict(e.target.value)}
+              />
             </div>
-          )}
-
-          {/* Notes */}
-          <div className="easy-form-group" style={{ marginBottom: '20px' }}>
+          </div>
+          <div className="easy-form-group" style={{ marginBottom: '4px' }}>
             <label className="easy-form-label">
-              {isAr ? 'ملاحظات إضافية' : 'Additional Notes'}
-              <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
+              {lbl('عنوان الشارع', 'Street Address')}
             </label>
-            <textarea
+            <input
               className="easy-form-input"
-              rows={3}
-              style={{ resize: 'vertical' }}
-              placeholder={isAr ? 'أي تفاصيل إضافية تتعلق بخطة البيع...' : 'Any additional details about the sales plan...'}
-              value={notes}
-              onChange={e => setNotes(e.target.value)}
+              placeholder={lbl('مثال: شارع التحرير، بجوار البنك الأهلي', 'e.g. 5 Tahrir St., next to National Bank')}
+              value={streetAddress}
+              onChange={e => setStreetAddress(e.target.value)}
             />
           </div>
 
-          {/* Hint */}
+          {/* ── Building Areas ── */}
+          <SectionTitle label={lbl('مساحات المبنى', 'Building Areas')} />
+          <div className="easy-form-row">
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('إجمالي مساحة المبنى (م²)', 'Total Building Area (m²)')} <Req isAr={isAr} />
+              </label>
+              <input type="number" className="easy-form-input" placeholder="0"
+                value={totalArea} onChange={e => setTotalArea(e.target.value)} />
+            </div>
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('المساحة القابلة للبيع / التأجير (م²)', 'Sellable / Rentable Area (m²)')} <Req isAr={isAr} />
+              </label>
+              <input type="number" className="easy-form-input" placeholder="0"
+                value={sellableArea} onChange={e => setSellableArea(e.target.value)} />
+            </div>
+          </div>
+          <div className="easy-form-row">
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('عدد الأدوار', 'Number of Floors')} <Req isAr={isAr} />
+              </label>
+              <input type="number" className="easy-form-input" placeholder="0"
+                value={floorCount} onChange={e => setFloorCount(e.target.value)} />
+            </div>
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('متوسط مساحة الدور (م²)', 'Avg. Floor Area (m²)')}
+              </label>
+              <input type="number" className="easy-form-input" placeholder="0"
+                value={areaPerFloor} onChange={e => setAreaPerFloor(e.target.value)} />
+            </div>
+          </div>
+
+          {/* ── Building Details ── */}
+          <SectionTitle label={lbl('تفاصيل المبنى', 'Building Details')} />
+          <div className="easy-form-row">
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('عدد الوحدات / المحلات', 'Unit / Shop Count')} <Req isAr={isAr} />
+              </label>
+              <input type="number" className="easy-form-input" placeholder="0"
+                value={unitCount} onChange={e => setUnitCount(e.target.value)} />
+            </div>
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('عمر المبنى (سنوات)', 'Building Age (years)')}
+              </label>
+              <input type="number" className="easy-form-input" placeholder="0"
+                value={buildingAge} onChange={e => setBuildingAge(e.target.value)} />
+            </div>
+          </div>
+          <div className="easy-form-group" style={{ marginBottom: '4px' }}>
+            <label className="easy-form-label">
+              {lbl('مستوى التشطيب', 'Finish Level')}
+            </label>
+            <select className="easy-form-input" value={finishLevel} onChange={e => setFinishLevel(e.target.value)}>
+              <option value="">{lbl('اختر مستوى التشطيب', 'Select finish level')}</option>
+              <option value="بدون تشطيب">{lbl('بدون تشطيب', 'Shell & Core')}</option>
+              <option value="تشطيب عادي">{lbl('تشطيب عادي', 'Standard Finish')}</option>
+              <option value="تشطيب متوسط">{lbl('تشطيب متوسط', 'Medium Finish')}</option>
+              <option value="تشطيب راقي">{lbl('تشطيب راقي', 'Premium Finish')}</option>
+              <option value="تشطيب فندقي">{lbl('تشطيب فندقي', 'Luxury Finish')}</option>
+            </select>
+          </div>
+
+          {/* ── Pricing ── */}
+          <SectionTitle label={lbl('التسعير المستهدف', 'Target Pricing')} />
+          <div className="easy-form-row">
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('سعر البيع المستهدف (جنيه/م²)', 'Target Sale Price (EGP/m²)')}
+              </label>
+              <input type="number" className="easy-form-input" placeholder="0"
+                value={targetPrice} onChange={e => setTargetPrice(e.target.value)} />
+            </div>
+            <div className="easy-form-group">
+              <label className="easy-form-label">
+                {lbl('شروط الدفع / خطة التقسيط', 'Payment Terms / Installment Plan')}
+              </label>
+              <input className="easy-form-input"
+                placeholder={lbl('مثال: 20% مقدم + 36 قسط', 'e.g. 20% down + 36 installments')}
+                value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} />
+            </div>
+          </div>
+
+          {/* ── Notes ── */}
+          <div className="easy-form-group" style={{ marginTop: '4px' }}>
+            <label className="easy-form-label">
+              {lbl('ملاحظات إضافية', 'Additional Notes')}
+            </label>
+            <textarea className="easy-form-input" rows={3} style={{ resize: 'vertical' }}
+              placeholder={lbl('أي تفاصيل إضافية عن المشروع أو خطة البيع...', 'Any additional details about the project or sales plan...')}
+              value={notes} onChange={e => setNotes(e.target.value)} />
+          </div>
+
+          {/* ── Photos (required) ── */}
+          <div style={{ marginTop: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
+                  📸 {lbl('صور المبنى', 'Building Photos')} <span style={{ color: '#e74c3c' }}>*</span>
+                </div>
+                <div style={{ fontSize: '11px', color: '#888' }}>
+                  {lbl('ارفع صوراً واضحة للواجهة والمداخل والوحدات', 'Upload clear photos of the façade, entrances, and units')}
+                </div>
+              </div>
+              <button onClick={() => photoRef.current?.click()} style={{
+                padding: '7px 14px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer',
+                border: '1.5px solid #1e3a5f', background: 'white', color: '#1e3a5f',
+              }}>
+                + {lbl('إضافة صور', 'Add Photos')}
+              </button>
+              <input ref={photoRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+                onChange={e => addFiles(e.target.files, setPhotos)} />
+            </div>
+            <FileStrip files={photos} onRemove={i => setPhotos(prev => prev.filter((_, idx) => idx !== i))} isImage={true} />
+          </div>
+
+          {/* ── Ownership Docs (required) ── */}
+          <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid #eee' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#1e3a5f' }}>
+                  📎 {lbl('مستندات الملكية', 'Ownership Documents')} <span style={{ color: '#e74c3c' }}>*</span>
+                </div>
+                <div style={{ fontSize: '11px', color: '#888' }}>
+                  {lbl('عقد الملكية، الرسم المعماري، رخصة البناء', 'Title deed, architectural drawings, building permit')}
+                </div>
+              </div>
+              <button onClick={() => docRef.current?.click()} style={{
+                padding: '7px 14px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer',
+                border: '1.5px solid var(--purple)', background: 'white', color: 'var(--purple)',
+              }}>
+                + {lbl('إضافة مستندات', 'Add Documents')}
+              </button>
+              <input ref={docRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.dwg" multiple style={{ display: 'none' }}
+                onChange={e => addFiles(e.target.files, setDocFiles)} />
+            </div>
+            <FileStrip files={docFiles} onRemove={i => setDocFiles(prev => prev.filter((_, idx) => idx !== i))} isImage={false} />
+          </div>
+
+          {/* ── Hint ── */}
           {!canGenerate && (
             <div style={{
-              display: 'flex', alignItems: 'center', gap: '8px',
-              background: '#FFFDE7', border: '1px solid #F9A825',
-              borderRadius: '8px', padding: '10px 14px', marginBottom: '12px',
-              fontSize: '12px', color: '#795548',
+              marginTop: '16px', padding: '10px 14px', borderRadius: '8px',
+              background: '#FFFDE7', border: '1.5px solid #F9A825',
+              fontSize: '12px', color: '#7c6100', display: 'flex', gap: '8px', alignItems: 'center',
             }}>
-              <span style={{ fontSize: '16px' }}>⚠️</span>
-              <span>
-                {projectName.trim() === ''
-                  ? (isAr ? 'أدخل اسم المشروع أولاً' : 'Enter the project name first')
-                  : selectedSectors.length === 0
-                  ? (isAr ? 'اختر مكونات المشروع' : 'Select project components')
-                  : (isAr ? 'اختر عدد مراحل البيع' : 'Set the number of sales phases')}
-              </span>
+              <span>⚠️</span><span>{hint}</span>
             </div>
           )}
 
-          {/* Generate Button */}
-          <div className="easy-btn-row">
+          {/* ── Generate ── */}
+          <div className="easy-btn-row" style={{ marginTop: '16px' }}>
             <button
               className="easy-btn-primary"
               disabled={!canGenerate}
               style={{ opacity: canGenerate ? 1 : 0.45 }}
               onClick={() => {}}
             >
-              📊 {isAr ? 'إنشاء الدراسة البيعية' : 'Generate Sales Study'}
+              📊 {lbl('إنشاء الدراسة البيعية', 'Generate Sales Study')}
             </button>
           </div>
 
