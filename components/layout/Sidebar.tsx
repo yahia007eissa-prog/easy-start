@@ -289,6 +289,13 @@ export function Sidebar({ className = '' }: SidebarProps) {
         <div className="easy-nav-section">{t('navMain')}</div>
         {navItems.map(renderNavItem)}
 
+        <div className="easy-nav-section easy-nav-section-services" style={{ marginTop: '10px' }}>
+          {t('navServices')}
+        </div>
+        <div className="easy-nav-services-wrap">
+          {serviceItems.map(renderServiceItem)}
+        </div>
+
         <div className="easy-nav-section" style={{ marginTop: '6px' }}>
           {t('navInfo')}
         </div>

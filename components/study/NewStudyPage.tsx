@@ -1,13 +1,123 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { generateStudy, type StudyFormData } from '@/app/actions/study';
 import { downloadStudyHtml } from '@/lib/html/studyDownload';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { CommonFields } from './forms/CommonFields';
 import { RealEstateForm } from './forms/RealEstateForm';
 import { AgriculturalForm } from './forms/AgriculturalForm';
+
+/* ─── Service Selection Screen ─── */
+function ServiceSelectionScreen({
+  onChooseFeasibility,
+}: {
+  onChooseFeasibility: () => void;
+}) {
+  const t = useTranslations('easyStart');
+  const locale = useLocale();
+  const isAr = locale === 'ar';
+  const router = useRouter();
+
+  const services = [
+    {
+      icon: '📊',
+      titleAr: 'دراسة الجدوى',
+      titleEn: 'Feasibility Study',
+      descAr: 'دراسة جدوى اقتصادية شاملة للمشروعات العقارية والزراعية',
+      descEn: 'Full economic feasibility study for real estate and agricultural projects',
+      action: onChooseFeasibility,
+      color: '#1e3a5f',
+      bg: 'linear-gradient(135deg, #f0f5ff, #e8f0ff)',
+      border: '#1e3a5f',
+    },
+    {
+      icon: '⚖️',
+      titleAr: 'تقييم الملكية',
+      titleEn: 'Property Valuation',
+      descAr: 'تقرير تقييم احترافي للأراضي والشقق والعقارات التجارية',
+      descEn: 'Professional valuation report for land, apartments, and commercial properties',
+      action: () => router.push('/valuation'),
+      color: '#5B21B6',
+      bg: 'linear-gradient(135deg, #f5f0ff, #ede8ff)',
+      border: '#7C3AED',
+    },
+    {
+      icon: '📈',
+      titleAr: 'الدراسة البيعية',
+      titleEn: 'Sales Study',
+      descAr: 'تحليل خطة البيع وتوقعات الإيرادات للمباني التجارية والسكنية',
+      descEn: 'Sales plan analysis and revenue projections for residential and commercial buildings',
+      action: () => router.push('/sales-study'),
+      color: '#065f46',
+      bg: 'linear-gradient(135deg, #f0fdf4, #e8f5e9)',
+      border: '#059669',
+    },
+  ];
+
+  return (
+    <div>
+      <div className="easy-topbar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Link href="/" className="easy-back-btn">
+            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/>
+            </svg>
+          </Link>
+          <div>
+            <div className="easy-page-title">{isAr ? 'ابدأ دراسة جديدة' : 'Start New Study'}</div>
+            <div className="easy-page-sub">{isAr ? 'اختر نوع الخدمة المطلوبة' : 'Choose the service you need'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="easy-content">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '680px', margin: '0 auto' }}>
+          {services.map((svc, i) => (
+            <button
+              key={i}
+              onClick={svc.action}
+              style={{
+                border: `2px solid ${svc.border}`,
+                borderRadius: '14px',
+                padding: '22px 24px',
+                background: svc.bg,
+                cursor: 'pointer',
+                textAlign: isAr ? 'right' : 'left',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '18px',
+                width: '100%',
+              }}
+            >
+              <div style={{
+                fontSize: '40px', flexShrink: 0,
+                width: '64px', height: '64px', borderRadius: '14px',
+                background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              }}>
+                {svc.icon}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 800, fontSize: '17px', color: svc.color, marginBottom: '6px', fontFamily: 'Cairo, sans-serif' }}>
+                  {isAr ? svc.titleAr : svc.titleEn}
+                </div>
+                <div style={{ fontSize: '13px', color: '#555', lineHeight: 1.6, fontFamily: 'Cairo, sans-serif' }}>
+                  {isAr ? svc.descAr : svc.descEn}
+                </div>
+              </div>
+              <div style={{ fontSize: '22px', color: svc.color, flexShrink: 0, opacity: 0.6 }}>
+                {isAr ? '←' : '→'}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ─── Data Entry Method Screen ─── */
 function DataEntryMethodScreen({
@@ -197,6 +307,7 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
 
   const mergedDefaults = { ...defaultValues };
 
+  const [serviceSelected, setServiceSelected] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<MainCategory>(
     (mergedDefaults.studyType as MainCategory) || 'realEstate'
@@ -588,6 +699,12 @@ export function NewStudyPage({ showHeader = true, defaultValues }: NewStudyPageP
       )}
     </div>
   );
+
+  if (!serviceSelected) {
+    return (
+      <ServiceSelectionScreen onChooseFeasibility={() => setServiceSelected(true)} />
+    );
+  }
 
   return (
     <div>
