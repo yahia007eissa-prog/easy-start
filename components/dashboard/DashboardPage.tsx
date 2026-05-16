@@ -127,7 +127,7 @@ export function DashboardPage() {
             className="easy-btn-primary flex items-center gap-2"
           >
             <PlusIcon />
-            {t("navNewStudy")} · PDF
+            {t("dashboardNewStudyBtn")} · PDF
           </Link>
         </div>
       </div>

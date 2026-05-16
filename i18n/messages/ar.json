@@ -188,6 +188,7 @@
     "dashboardTitle": "لوحة التحكم",
     "dashboardSub": "مرحباً — عندك {count} مشاريع نشطة",
     "exportPdf": "تصدير PDF",
+    "dashboardNewStudyBtn": "دراسة جدوى",
     "kpiTotal": "إجمالي الدراسات",
     "kpiInProgress": "قيد التنفيذ",
     "kpiTotalValue": "إجمالي قيمة المشاريع",

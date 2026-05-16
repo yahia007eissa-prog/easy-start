@@ -188,6 +188,7 @@
     "dashboardTitle": "Dashboard",
     "dashboardSub": "You have {count} active projects",
     "exportPdf": "Export PDF",
+    "dashboardNewStudyBtn": "New Study",
     "kpiTotal": "Total Studies",
     "kpiInProgress": "In Progress",
     "kpiTotalValue": "Total Projects Value",
