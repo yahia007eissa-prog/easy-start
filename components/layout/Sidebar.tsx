@@ -198,6 +198,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
           <div className="flex items-center justify-between">
             <div>
               <div className="easy-logo-text">{t('logo')}</div>
+              <div className="easy-logo-divider" />
               <div className="easy-logo-en">{t('logoSub')}</div>
             </div>
             <button
@@ -282,6 +283,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
     <aside className="easy-sidebar">
       <div className="easy-logo">
         <div className="easy-logo-text">{t('logo')}</div>
+        <div className="easy-logo-divider" />
         <div className="easy-logo-en">{t('logoSub')}</div>
       </div>
 

@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "source": "استشاري هندسي معتمد",
+    "currency": "ج.م",
+    "year": 2026,
+    "note": "أسعار تقريبية معتمدة للسوق المصري 2026"
+  },
+
+  "structural": {
+    "label": "الهيكل الإنشائي",
+    "items": {
+      "excavation":        { "label": "أعمال الحفر والتسوية",       "price": 1350,  "unit": "ج.م/م³" },
+      "piles_foundations": { "label": "الخوازيق والأساسات",          "price": 6750,  "unit": "ج.م/م²" },
+      "reinforced_concrete":{ "label": "أعمال الخرسانة المسلحة",     "price": 11250, "unit": "ج.م/م²" },
+      "brickwork":         { "label": "أعمال الطوب والبناء",          "price": 1650,  "unit": "ج.م/م²" },
+      "steel_rebar":       { "label": "أعمال الحديد والتسليح",        "price": 65000, "unit": "ج.م/طن" }
+    },
+    "basement_multiplier": {
+      "formula": "التكلفة الأساسية × (1 + 0.5 × عدد البدرومات)",
+      "table": {
+        "0": 1.0,
+        "1": 1.5,
+        "2": 2.0,
+        "3": 2.5,
+        "4": 3.0
+      },
+      "note": "يُطبَّق المعامل على تكاليف الأساسات والخوازيق والحفر فقط"
+    }
+  },
+
+  "finishing": {
+    "label": "التشطيبات",
+    "items": {
+      "ceramic_tiles":   { "label": "أعمال السيراميك والبلاط",       "price": 1700,  "unit": "ج.م/م²" },
+      "plaster_paint":   { "label": "أعمال الجبس والدهانات",          "price": 1250,  "unit": "ج.م/م²" },
+      "aluminum_glass":  { "label": "أعمال الألمنيوم والزجاج",        "price": 5750,  "unit": "ج.م/م²" },
+      "doors_windows":   { "label": "أعمال الأبواب والشبابيك",        "price": 21000, "unit": "ج.م/وحدة" },
+      "marble_granite":  { "label": "أعمال الرخام والغرانيت",         "price": 5250,  "unit": "ج.م/م²" },
+      "roof_insulation": { "label": "أعمال عزل الأسطح",               "price": 475,   "unit": "ج.م/م²" }
+    }
+  },
+
+  "mep": {
+    "label": "الأعمال الميكانيكية والكهربائية",
+    "items": {
+      "electrical_lighting": { "label": "أعمال الكهرباء والإنارة",        "price": 2000,    "unit": "ج.م/م²" },
+      "plumbing_drainage":   { "label": "أعمال السباكة والصرف",            "price": 1600,    "unit": "ج.م/م²" },
+      "central_ac":          { "label": "تمديدات التكييف المركزي",          "price": 3150,    "unit": "ج.م/م²" },
+      "fire_suppression":    { "label": "أعمال إطفاء الحريق",              "price": 825,     "unit": "ج.م/م²" },
+      "elevators":           { "label": "المصاعد",                          "price": 3250000, "unit": "ج.م/وحدة" }
+    }
+  },
+
+  "indirect_costs": {
+    "label": "التكاليف غير المباشرة",
+    "items": {
+      "design_consulting":    { "label": "التصميم المعماري والاستشارات",   "rate": 0.020 },
+      "licensing_fees":       { "label": "رسوم الترخيص",                   "rate": 0.015 },
+      "engineering_supervision":{ "label": "الإشراف الهندسي",              "rate": 0.015 },
+      "decoration":           { "label": "أعمال الديكور",                   "rate": 0.030, "requires_finishing": true },
+      "site_preparation":     { "label": "تجهيز الموقع والتنظيف",           "rate": 0.0075 },
+      "contingency":          { "label": "الطوارئ والمصاريف غير المتوقعة", "rate": 0.075 }
+    },
+    "total_indirect_rate": 0.165
+  },
+
+  "total_cost_benchmarks": {
+    "label": "متوسط تكلفة البناء الكلية التقريبية — مصر 2026",
+    "levels": {
+      "economy":      { "label": "اقتصادي",       "min": 12000, "max": 18000, "unit": "ج.م/م²" },
+      "mid":          { "label": "متوسط",          "min": 18000, "max": 28000, "unit": "ج.م/م²" },
+      "upper_mid":    { "label": "فوق المتوسط",    "min": 28000, "max": 45000, "unit": "ج.م/م²" },
+      "luxury":       { "label": "فاخر",           "min": 45000, "max": 80000, "unit": "ج.م/م²" }
+    }
+  }
+}

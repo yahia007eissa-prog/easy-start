@@ -1,6 +1,7 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { FloorRatioList, useFloorRatio } from './FloorRatioList';
 
 interface AdminTabProps {
   formData: Record<string, string>;
@@ -10,16 +11,17 @@ interface AdminTabProps {
 const Req = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
   <span className="easy-field-badge easy-field-required">{t('fieldRequired')}</span>
 );
-const Opt = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
-  <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
-);
 
 export function AdminTab({ formData, onChange }: AdminTabProps) {
   const t  = useTranslations('easyStart');
   const ti = useTranslations('easyStart.integrated');
+  const locale = useLocale();
+  const isAr = locale === 'ar';
 
   const set = (field: string, value: string) =>
     onChange({ ...formData, [field]: value });
+
+  const adminRatio = useFloorRatio(formData, onChange, 'adminUniformRatio', 'adminUniformRatioValue', 'adminFloorRatios');
 
   return (
     <div className="easy-tab-content">
@@ -59,7 +61,7 @@ export function AdminTab({ formData, onChange }: AdminTabProps) {
           <input
             type="number" min="1"
             className="easy-form-input"
-            placeholder="مثال: 2"
+            placeholder={isAr ? 'مثال: 2' : 'e.g. 2'}
             value={formData.adminBuildingCount || ''}
             onChange={(e) => set('adminBuildingCount', e.target.value)}
           />
@@ -71,7 +73,7 @@ export function AdminTab({ formData, onChange }: AdminTabProps) {
           <input
             type="number" min="0"
             className="easy-form-input"
-            placeholder="مثال: 3,000"
+            placeholder={isAr ? 'مثال: 3,000' : 'e.g. 3,000'}
             value={formData.adminArea || ''}
             onChange={(e) => set('adminArea', e.target.value)}
           />
@@ -86,26 +88,26 @@ export function AdminTab({ formData, onChange }: AdminTabProps) {
           <input
             type="text"
             className="easy-form-input"
-            placeholder="مثال: أرضي + 6"
+            placeholder={isAr ? 'مثال: أرضي + 6' : 'e.g. Ground + 6'}
             value={formData.adminFloors || ''}
             onChange={(e) => set('adminFloors', e.target.value)}
           />
         </div>
-        <div className="easy-form-group">
-          <label className="easy-form-label">
-            {ti('buildingRequirements')} <Opt t={t} />
-          </label>
-          <textarea
-            className="easy-form-input"
-            rows={2}
-            placeholder={ti('buildingRequirementsPlaceholder')}
-            value={formData.adminRequirements || ''}
-            onChange={(e) => set('adminRequirements', e.target.value)}
-          />
-        </div>
+        <div className="easy-form-group" />
       </div>
 
-      <p className="easy-field-hint">📄 {ti('uploadLicenseHint')}</p>
+      {/* Floor ratios */}
+      <FloorRatioList
+        isAr={isAr}
+        uniform={adminRatio.uniform}
+        uniformRatio={formData.adminUniformRatioValue || ''}
+        entries={adminRatio.floorEntries}
+        onUniformChange={adminRatio.onUniformChange}
+        onUniformRatioChange={adminRatio.onUniformRatioChange}
+        onEntriesChange={adminRatio.setFloorEntries}
+      />
+
+      <p className="easy-field-hint" style={{ marginTop: '14px' }}>📄 {ti('uploadLicenseHint')}</p>
     </div>
   );
 }

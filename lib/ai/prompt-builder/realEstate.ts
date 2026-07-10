@@ -1,4 +1,5 @@
 import type { PromptBuilder, StudyFormData } from './types';
+import { getConstructionRatesPrompt } from '@/lib/pricing/get-construction-rates';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -45,17 +46,39 @@ function labeled(label: string, v: string | undefined) {
 function buildIntegratedPrompt(d: StudyFormData): string {
   const method = d.method === 'fast' ? 'تقريبية (80%+)' : 'تفصيلية كاملة (BOQ)';
 
+  // ── Partnership helper ──
+  const isPartnership = d.ownershipType === 'partnership' && !!d.ownerShare && !!d.developerShare;
+  const ownerPct = isPartnership ? parseFloat(d.ownerShare!) : 0;
+  const devPct   = isPartnership ? parseFloat(d.developerShare!) : 0;
+
+  function splitLine(areaM2: number): string {
+    if (!isPartnership || areaM2 <= 0) return '';
+    const oArea = Math.round(areaM2 * ownerPct / 100);
+    const dArea = Math.round(areaM2 * devPct  / 100);
+    return `\n  → نصيب المالك (${ownerPct}%): ${oArea.toLocaleString('ar-EG')} م²  |  نصيب المطور (${devPct}%): ${dArea.toLocaleString('ar-EG')} م²`;
+  }
+
   // ── Land section ──
   const ownership = OWNERSHIP_LABEL[d.ownershipType || 'full'] ?? d.ownershipType ?? 'ملكية ثابتة';
   const usufruct = d.ownershipType === 'usufruct' && d.usufructDuration
     ? `\n- مدة حق الانتفاع: ${d.usufructDuration}` : '';
+
+  let partnershipLines = '';
+  if (isPartnership) {
+    const totalLand = parseFloat(d.totalLandArea || '0');
+    const ownerArea = totalLand > 0 ? Math.round(totalLand * ownerPct / 100) : 0;
+    const devArea   = totalLand > 0 ? Math.round(totalLand * devPct  / 100) : 0;
+    partnershipLines = `
+- نسبة المالك: ${ownerPct}% (${ownerArea.toLocaleString('ar-EG')} م²)
+- نسبة المطور: ${devPct}% (${devArea.toLocaleString('ar-EG')} م²)`;
+  }
 
   const landSection = `
 === بيانات الأرض ===
 - موقع الأرض: ${val(d.landLocation ?? d.location)}
 - المساحة الإجمالية للأرض: ${val(d.totalLandArea)} م²
 ${labeled('سعر المتر', d.landPrice)}
-- نوع الملكية: ${ownership}${usufruct}`.trim();
+- نوع الملكية: ${ownership}${usufruct}${partnershipLines}`.trim();
 
   // ── Components ──
   const components: string[] = [];
@@ -69,22 +92,80 @@ ${labeled('سعر المتر', d.landPrice)}
     let resDetails = `🏠 القطاع السكني — ${resLabel} | ${status}`;
 
     if (resType === 'villas' || resType === 'mixed') {
+      let villaLines = '';
+      let villaTotalArea = 0;
+      try {
+        const types = JSON.parse(d.villaTypes || '[]') as { count: string; area: string }[];
+        if (types.length > 0) {
+          villaLines = types.map((t, i) => {
+            const typeArea = parseFloat(t.count || '0') * parseFloat(t.area || '0');
+            villaTotalArea += typeArea;
+            return `  النوع ${i + 1}: ${val(t.count, '؟')} فيلا — مساحة الأرض ${val(t.area, '؟')} م²${splitLine(typeArea)}`;
+          }).join('\n');
+        }
+      } catch { /* ignore */ }
+      if (!villaLines) {
+        villaTotalArea = parseFloat(d.villaArea || '0');
+        villaLines = `  - العدد: ${val(d.villaCount)} فيلا — مساحة الأرض: ${val(d.villaArea)} م²${splitLine(villaTotalArea)}`;
+      }
+
+      let villaRatioLines = '';
+      if (d.villaUniformRatio === 'true' && d.villaUniformRatioValue) {
+        villaRatioLines = `  - نسبة البناء: ${d.villaUniformRatioValue}% (موحدة لجميع الأدوار)`;
+      } else if (d.villaUniformRatio === 'false' && d.villaFloorRatios) {
+        try {
+          const ratios = JSON.parse(d.villaFloorRatios) as { name: string; ratio: string }[];
+          if (ratios.length > 0) {
+            villaRatioLines = `  - نسب البناء بالأدوار:\n` + ratios.map(r =>
+              `    • ${r.name}: ${r.ratio}%`
+            ).join('\n');
+          }
+        } catch { /* ignore */ }
+      }
+
       resDetails += `
   فيلات:
-  - العدد: ${val(d.villaCount)} فيلا
-  - مساحة الفيلا: ${val(d.villaArea)} م²
+${villaLines}
   - عدد الأدوار: ${val(d.villaFloors)}
-  ${d.villaRequirements ? `- اشتراطات: ${d.villaRequirements}` : ''}`.trimEnd();
+${villaRatioLines ? villaRatioLines + '\n' : ''}`.trimEnd();
     }
 
     if (resType === 'apartments' || resType === 'mixed') {
+      let aptLines = '';
+      try {
+        const types = JSON.parse(d.apartmentTypes || '[]') as { count: string; area: string }[];
+        if (types.length > 0) {
+          aptLines = types.map((t, i) => {
+            const typeArea = parseFloat(t.count || '0') * parseFloat(t.area || '0');
+            return `  النوع ${i + 1}: ${val(t.count, '؟')} عمارة — مساحة الأرض ${val(t.area, '؟')} م²${splitLine(typeArea)}`;
+          }).join('\n');
+        }
+      } catch { /* ignore */ }
+      if (!aptLines) {
+        const aptTotalArea = parseFloat(d.apartmentBuildingArea || '0');
+        aptLines = `  - عدد العمارات: ${val(d.apartmentBuildingCount)} — مساحة الأرض: ${val(d.apartmentBuildingArea)} م²${splitLine(aptTotalArea)}`;
+      }
+
+      let aptRatioLines = '';
+      if (d.aptUniformRatio === 'true' && d.aptUniformRatioValue) {
+        aptRatioLines = `  - نسبة البناء: ${d.aptUniformRatioValue}% (موحدة لجميع الأدوار)`;
+      } else if (d.aptUniformRatio === 'false' && d.aptFloorRatios) {
+        try {
+          const ratios = JSON.parse(d.aptFloorRatios) as { name: string; ratio: string }[];
+          if (ratios.length > 0) {
+            aptRatioLines = `  - نسب البناء بالأدوار:\n` + ratios.map(r =>
+              `    • ${r.name}: ${r.ratio}%`
+            ).join('\n');
+          }
+        } catch { /* ignore */ }
+      }
+
       resDetails += `
   عمارات:
-  - عدد العمارات: ${val(d.apartmentBuildingCount)}
-  - مساحة أرض العمارة: ${val(d.apartmentBuildingArea)} م²
+${aptLines}
   - عدد الأدوار: ${val(d.apartmentFloors)}
   ${d.unitsPerFloor ? `- وحدات في الدور: ${d.unitsPerFloor}` : ''}
-  ${d.apartmentRequirements ? `- اشتراطات: ${d.apartmentRequirements}` : ''}`.trimEnd();
+${aptRatioLines ? aptRatioLines + '\n' : ''}`.trimEnd();
     }
 
     components.push(resDetails);
@@ -93,19 +174,35 @@ ${labeled('سعر المتر', d.landPrice)}
   if (d.hasCommercial === 'true') {
     const comType = d.commercialType === 'shops' ? 'محلات منفردة' : 'مول';
     const status = d.commercialBuildingStatus === 'shared' ? 'في مبنى مشترك' : 'مبنى منفصل';
+    let comRatioLines = '';
+    if (d.comUniformRatio === 'true' && d.comUniformRatioValue) {
+      comRatioLines = `\n  - نسبة البناء: ${d.comUniformRatioValue}% (موحدة لجميع الأدوار)`;
+    } else if (d.comUniformRatio === 'false' && d.comFloorRatios) {
+      try {
+        const ratios = JSON.parse(d.comFloorRatios) as { name: string; ratio: string }[];
+        if (ratios.length > 0) comRatioLines = '\n  - نسب البناء بالأدوار:\n' + ratios.map(r => `    • ${r.name}: ${r.ratio}%`).join('\n');
+      } catch { /* ignore */ }
+    }
     components.push(`🏬 القطاع التجاري — ${comType} | ${status}
-  - المساحة: ${val(d.commercialArea)} م²
-  - الأدوار: ${val(d.commercialFloors)}
-  ${d.commercialRequirements ? `- اشتراطات: ${d.commercialRequirements}` : ''}`.trimEnd());
+  - المساحة: ${val(d.commercialArea)} م²${splitLine(parseFloat(d.commercialArea || '0'))}
+  - الأدوار: ${val(d.commercialFloors)}${comRatioLines}`);
   }
 
   if (d.hasAdministrative === 'true') {
     const status = d.adminBuildingStatus === 'shared' ? 'في مبنى مشترك' : 'مبنى منفصل';
+    let adminRatioLines = '';
+    if (d.adminUniformRatio === 'true' && d.adminUniformRatioValue) {
+      adminRatioLines = `\n  - نسبة البناء: ${d.adminUniformRatioValue}% (موحدة لجميع الأدوار)`;
+    } else if (d.adminUniformRatio === 'false' && d.adminFloorRatios) {
+      try {
+        const ratios = JSON.parse(d.adminFloorRatios) as { name: string; ratio: string }[];
+        if (ratios.length > 0) adminRatioLines = '\n  - نسب البناء بالأدوار:\n' + ratios.map(r => `    • ${r.name}: ${r.ratio}%`).join('\n');
+      } catch { /* ignore */ }
+    }
     components.push(`🏢 القطاع الإداري | ${status}
   - عدد المباني: ${val(d.adminBuildingCount)}
-  - المساحة: ${val(d.adminArea)} م²
-  - الأدوار: ${val(d.adminFloors)}
-  ${d.adminRequirements ? `- اشتراطات: ${d.adminRequirements}` : ''}`.trimEnd());
+  - المساحة: ${val(d.adminArea)} م²${splitLine(parseFloat(d.adminArea || '0'))}
+  - الأدوار: ${val(d.adminFloors)}${adminRatioLines}`);
   }
 
   if (d.hasMedical === 'true') {
@@ -117,11 +214,19 @@ ${labeled('سعر المتر', d.landPrice)}
     };
     const medType = medTypes[d.medicalType || 'clinics'] ?? d.medicalType ?? 'عيادات';
     const status = d.medicalBuildingStatus === 'shared' ? 'في مبنى مشترك' : 'مبنى منفصل';
+    let medRatioLines = '';
+    if (d.medUniformRatio === 'true' && d.medUniformRatioValue) {
+      medRatioLines = `\n  - نسبة البناء: ${d.medUniformRatioValue}% (موحدة لجميع الأدوار)`;
+    } else if (d.medUniformRatio === 'false' && d.medFloorRatios) {
+      try {
+        const ratios = JSON.parse(d.medFloorRatios) as { name: string; ratio: string }[];
+        if (ratios.length > 0) medRatioLines = '\n  - نسب البناء بالأدوار:\n' + ratios.map(r => `    • ${r.name}: ${r.ratio}%`).join('\n');
+      } catch { /* ignore */ }
+    }
     components.push(`🏥 القطاع الطبي — ${medType} | ${status}
-  - المساحة: ${val(d.medicalArea)} م²
+  - المساحة: ${val(d.medicalArea)} م²${splitLine(parseFloat(d.medicalArea || '0'))}
   - الأدوار: ${val(d.medicalFloors)}
-  ${d.bedsCount ? `- عدد الأسرّة: ${d.bedsCount}` : ''}
-  ${d.medicalRequirements ? `- اشتراطات: ${d.medicalRequirements}` : ''}`.trimEnd());
+  ${d.bedsCount ? `- عدد الأسرّة: ${d.bedsCount}` : ''}${medRatioLines}`.trimEnd());
   }
 
   if (d.hasHotel === 'true') {
@@ -154,58 +259,40 @@ ${labeled('سعر المتر', d.landPrice)}
     ? `=== مكونات المشروع ===\n${components.join('\n\n')}`
     : '=== مكونات المشروع ===\nلم يتم تحديد مكونات بعد';
 
-  // ── Sales plan section ──
-  const PHASE_NAMES = ['الأولى', 'الثانية', 'الثالثة', 'الرابعة', 'الخامسة', 'السادسة'];
-  const COMPONENT_LABELS: Record<string, string> = {
-    residential: 'سكني', commercial: 'تجاري', administrative: 'إداري',
-    medical: 'طبي', hotel: 'فندقي', entertainment: 'ترفيهي',
-  };
-
-  let salesSection = '';
-  if (d.salePhases && parseInt(d.salePhases) > 0) {
-    const phaseCount = parseInt(d.salePhases);
-    const phaseLines: string[] = [];
-    for (let i = 1; i <= phaseCount; i++) {
-      const raw = d[`salePhase${i}Components`] || '';
-      const comps = raw.split(',').filter(Boolean).map(c => COMPONENT_LABELS[c] || c).join(' + ');
-      const price = d[`salePhase${i}SalePrice`] ? `\n   - سعر البيع: ${d[`salePhase${i}SalePrice`]} ج.م/م²` : '';
-      phaseLines.push(`  المرحلة ${PHASE_NAMES[i - 1]}: ${comps || 'غير محدد'}${price}`);
-    }
-    salesSection = `
-=== خطة البيع على مراحل ===
-- إجمالي مدة البيع: ${val(d.saleDuration)}
-- عدد مراحل البيع: ${phaseCount} مرحلة
-${phaseLines.join('\n')}`;
-  }
-
   const detailLevel = d.method === 'fast'
     ? `3. تقدير التكلفة التقريبية (80%+) — مجموع لكل مكون مع نطاق (الحد الأدنى — الحد الأقصى) بالجنيه المصري
 4. جدول زمني أولي للتنفيذ
-5. تحليل مالي أولي (ROI، فترة الاسترداد، نقطة التعادل)${salesSection ? '\n6. تحليل التدفقات المالية من البيع على المراحل المحددة' : ''}`
+5. تحليل مالي أولي (فترة الاسترداد، نقطة التعادل) — تكاليف الإنشاء فقط`
     : `3. تفصيل BOQ لكل مكون على حدة (تأسيس — هيكل — تشطيب — ميكانيكا وكهرباء)
 4. جدول زمني تفصيلي بالمراحل
-5. تحليل مالي شامل (ROI، التدفقات النقدية، فترة الاسترداد، نقطة التعادل، NPV)${salesSection ? '\n6. جدول التدفقات المالية المتوقعة من البيع — مرحلة بمرحلة (إيرادات، تكاليف، صافي ربح)' : ''}`;
+5. تحليل مالي شامل (تكاليف الإنشاء الكلية، فترة الاسترداد، نقطة التعادل) — تكاليف إنشاء فقط بدون بيانات مبيعات`;
 
-  return `أنت خبير متخصص في دراسات الجدوى العقارية والإنشائية في مصر، لديك خبرة واسعة بأسعار السوق المصري الحالية.
+  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel);
+
+  const finishingLabel = FINISHING_LABEL[d.finishingLevel || 'none'] ?? 'بدون تشطيب';
+
+  return `أنت خبير متخصص في دراسات الجدوى العقارية والإنشائية في مصر.
+
+${ratesBlock}
 
 === بيانات المشروع ===
 - اسم المشروع: ${val(d.projectName)}
 - نوع المشروع: تطوير عمراني متكامل
 - دقة الدراسة: ${method}
+- مستوى التشطيب: ${finishingLabel}
 ${d.description ? `- وصف المشروع: ${d.description}` : ''}
 
 ${landSection}
 
 ${componentsSection}
-${salesSection}
 
 === المطلوب ===
-أعد دراسة جدوى شاملة باللغة العربية تشمل:
+أعد دراسة جدوى إنشائية شاملة باللغة العربية تشمل تكاليف الإنشاء فقط — لا تُدرج أي بيانات مبيعات أو إيرادات:
 
 1. ملخص تنفيذي (3-5 أسطر)
 2. تحليل الموقع والبنية التحتية
 ${detailLevel}
-${salesSection ? '7' : '6'}. تقييم المخاطر والتوصيات
+6. تقييم المخاطر والتوصيات
 
 === قواعد الإخراج — HTML كامل (ألوان: نيلي + ذهبي + فضي) ===
 أخرج الدراسة كاملةً بصيغة HTML صالحة للعرض المباشر في المتصفح. اتبع هذه القواعد بدقة:
@@ -257,7 +344,7 @@ ${salesSection ? '7' : '6'}. تقييم المخاطر والتوصيات
 10. التحذيرات والملاحظات في <div class="note">.
 11. العملة: الجنيه المصري (ج.م) — قدّم نطاقاً (الحد الأدنى — الحد الأقصى).
 12. أضف هامش احتياطي 10% على التكاليف.
-13. استند على أسعار السوق المصري الحالية من خبرتك.
+13. استخدم قاعدة الأسعار المعتمدة المُحقَنة أعلاه فقط — لا تخترع أرقاماً من خارجها.
 14. وضّح أن هذه دراسة تقديرية وليست أسعاراً نهائية.`;
 }
 
@@ -311,7 +398,11 @@ function buildStandardPrompt(d: StudyFormData): string {
 4. جدول زمني تفصيلي بالمراحل
 5. تحليل مالي شامل (ROI، التدفقات النقدية، فترة الاسترداد، نقطة التعادل)`;
 
-  return `أنت خبير متخصص في دراسات الجدوى العقارية والإنشائية في مصر، لديك خبرة واسعة بأسعار السوق المصري الحالية.
+  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel);
+
+  return `أنت خبير متخصص في دراسات الجدوى العقارية والإنشائية في مصر.
+
+${ratesBlock}
 
 === بيانات المشروع ===
 - اسم المشروع: ${val(d.projectName)}
@@ -347,7 +438,7 @@ ${detailLevel}
 9. صناديق التحذير/الملاحظات: خلفية #FFF8DC، حد يسار 4px #C9A84C.
 10. العملة: الجنيه المصري (ج.م) — قدّم نطاقاً (الحد الأدنى — الحد الأقصى).
 11. أضف هامش احتياطي 10% على التكاليف.
-12. استند على أسعار السوق المصري الحالية من خبرتك.
+12. استخدم قاعدة الأسعار المعتمدة المُحقَنة أعلاه فقط — لا تخترع أرقاماً من خارجها.
 13. وضّح أن هذه دراسة تقديرية وليست أسعاراً نهائية.`;
 }
 
@@ -461,7 +552,12 @@ function buildFinishingPrompt(d: StudyFormData): string {
 - أعمال السباكة والتكييف
 - ديكور وجبس بورد (حسب المستوى)`;
 
-  return `أنت خبير متخصص في أعمال التشطيب والديكور الداخلي في مصر، لديك خبرة واسعة بأسعار المواد والعمالة الحالية في السوق المصري وبمتطلبات الكود المصري للبناء.
+  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel);
+
+  return `أنت خبير متخصص في أعمال التشطيب والديكور الداخلي في مصر.
+
+${ratesBlock}
+
 
 === بيانات مشروع التشطيب ===
 - اسم المشروع: ${val(d.projectName)}
@@ -600,7 +696,12 @@ function buildIndustrialPrompt(d: StudyFormData): string {
 4. جدول زمني تفصيلي بالمراحل
 5. تحليل مالي شامل (تكلفة الإنشاء + تكلفة التشغيل الأولى + ROI + فترة الاسترداد)`;
 
-  return `أنت خبير متخصص في دراسات الجدوى الإنشائية والصناعية في مصر، لديك خبرة واسعة بتكاليف المنشآت الصناعية وأسعار السوق المصري الحالية.
+  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel);
+
+  return `أنت خبير متخصص في دراسات الجدوى الإنشائية والصناعية في مصر.
+
+${ratesBlock}
+
 
 === بيانات المشروع الصناعي ===
 - اسم المشروع: ${val(d.projectName)}
@@ -634,7 +735,7 @@ ${detailLevel}
 8. الأرقام المالية: لون var(--gold) وخط عريض، بفواصل.
 9. العملة: الجنيه المصري (ج.م) — قدّم نطاقاً (الحد الأدنى — الحد الأقصى).
 10. أضف هامش احتياطي 10% على التكاليف.
-11. استند على أسعار السوق المصري الحالية من خبرتك.
+11. استخدم قاعدة الأسعار المعتمدة المُحقَنة أعلاه فقط — لا تخترع أرقاماً من خارجها.
 12. وضّح أن هذه دراسة تقديرية وليست أسعاراً نهائية.`;
 }
 

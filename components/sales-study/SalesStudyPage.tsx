@@ -23,6 +23,16 @@ const BUILDING_TYPES: { key: BuildingType; icon: string; labelAr: string; labelE
   { key: 'mixed',          icon: '🏙️', labelAr: 'متعدد الأنشطة', labelEn: 'Mixed-Use'      },
 ];
 
+const MIXED_ACTIVITIES: { key: string; icon: string; labelAr: string; labelEn: string }[] = [
+  { key: 'residential',    icon: '🏠', labelAr: 'سكني',        labelEn: 'Residential'    },
+  { key: 'commercial',     icon: '🏪', labelAr: 'تجاري',       labelEn: 'Commercial'     },
+  { key: 'administrative', icon: '🏢', labelAr: 'إداري',       labelEn: 'Administrative' },
+  { key: 'medical',        icon: '🏥', labelAr: 'طبي',         labelEn: 'Medical'        },
+  { key: 'hotel',          icon: '🏨', labelAr: 'فندقي',       labelEn: 'Hotel'          },
+  { key: 'entertainment',  icon: '🎭', labelAr: 'ترفيهي',      labelEn: 'Entertainment'  },
+  { key: 'educational',    icon: '🏫', labelAr: 'تعليمي',      labelEn: 'Educational'    },
+];
+
 const LICENSE_TYPES: { key: LicenseType; labelAr: string; labelEn: string }[] = [
   { key: 'residential',    labelAr: 'سكني',   labelEn: 'Residential'    },
   { key: 'commercial',     labelAr: 'تجاري',  labelEn: 'Commercial'     },
@@ -69,7 +79,8 @@ export function SalesStudyPage() {
   const isAr = locale === 'ar';
 
   /* ── form state ── */
-  const [buildingType,  setBuildingType]  = useState<BuildingType | null>(null);
+  const [buildingType,    setBuildingType]    = useState<BuildingType | null>(null);
+  const [mixedActivities, setMixedActivities] = useState<string[]>([]);
   const [licenseType,   setLicenseType]   = useState<LicenseType | ''>('');
   const [governorate,   setGovernorate]   = useState('');
   const [district,      setDistrict]      = useState('');
@@ -101,6 +112,7 @@ export function SalesStudyPage() {
   /* ── validation ── */
   const canGenerate =
     !!buildingType &&
+    (buildingType !== 'mixed' || mixedActivities.length > 0) &&
     !!licenseType &&
     governorate.trim() !== '' &&
     totalArea.trim() !== '' &&
@@ -112,6 +124,8 @@ export function SalesStudyPage() {
 
   const hint = !buildingType
     ? (isAr ? 'اختر نوع المبنى أولاً' : 'Select the building type first')
+    : (buildingType === 'mixed' && mixedActivities.length === 0)
+    ? (isAr ? 'اختر الأنشطة المتعددة للمبنى' : 'Select the building activities')
     : !licenseType
     ? (isAr ? 'اختر نوع الترخيص' : 'Select the license type')
     : !governorate.trim()
@@ -164,13 +178,48 @@ export function SalesStudyPage() {
               <button
                 key={key}
                 className={`easy-subtype-btn ${buildingType === key ? 'sel' : ''}`}
-                onClick={() => setBuildingType(key)}
+                onClick={() => { setBuildingType(key); if (key !== 'mixed') setMixedActivities([]); }}
               >
                 <span className="easy-subtype-icon">{icon}</span>
                 <span className="easy-subtype-name">{isAr ? labelAr : labelEn}</span>
               </button>
             ))}
           </div>
+
+          {/* ── Mixed Activities (shown only when mixed is selected) ── */}
+          {buildingType === 'mixed' && (
+            <div style={{
+              marginTop: '12px', padding: '14px 16px', borderRadius: '10px',
+              background: 'var(--purple-faint)', border: '1.5px solid var(--purple-border)',
+            }}>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--purple-dark)', marginBottom: '10px' }}>
+                {lbl('اختر الأنشطة المتضمنة في المبنى', 'Select building activities')}
+                {' '}<span style={{ color: '#e74c3c' }}>*</span>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {MIXED_ACTIVITIES.map(({ key, icon, labelAr, labelEn }) => {
+                  const sel = mixedActivities.includes(key);
+                  return (
+                    <button key={key} onClick={() => {
+                      setMixedActivities(prev =>
+                        sel ? prev.filter(k => k !== key) : [...prev, key]
+                      );
+                    }} style={{
+                      padding: '7px 16px', borderRadius: '20px', fontSize: '13px', cursor: 'pointer',
+                      border: `1.5px solid ${sel ? 'var(--purple)' : 'var(--border-dark)'}`,
+                      background: sel ? 'var(--purple-light)' : '#fff',
+                      color: sel ? 'var(--purple-dark)' : 'var(--text)',
+                      fontWeight: sel ? 700 : 500, transition: 'all 0.15s',
+                      fontFamily: 'Cairo, sans-serif',
+                    }}>
+                      {icon} {isAr ? labelAr : labelEn}
+                      {sel && ' ✓'}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* ── License Type ── */}
           <SectionTitle label={lbl('نوع الترخيص', 'License Type')} />

@@ -372,28 +372,40 @@ body {
 }
 
 .easy-logo {
-  padding: 22px 18px 18px;
+  padding: 22px 18px 20px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .easy-logo-text {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
   font-family: 'Cairo', sans-serif;
-  background: linear-gradient(135deg, #e0cfff, #ffffff);
+  background: linear-gradient(135deg, #c4b5fd, #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1.2;
+}
+
+.easy-logo-divider {
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--purple), transparent);
+  border-radius: 2px;
+  margin: 5px 0 4px;
+}
+
+[dir="ltr"] .easy-logo-divider {
+  background: linear-gradient(90deg, var(--purple), transparent);
 }
 
 .easy-logo-en {
-  font-size: 11px;
-  color: rgba(255,255,255,0.4);
-  margin-top: 1px;
-  font-weight: 400;
-  direction: ltr;
-  text-align: right;
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.38);
+  font-weight: 500;
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: 0.2px;
 }
 
 .easy-nav {

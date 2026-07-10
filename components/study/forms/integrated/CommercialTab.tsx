@@ -1,6 +1,7 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { FloorRatioList, useFloorRatio } from './FloorRatioList';
 
 interface CommercialTabProps {
   formData: Record<string, string>;
@@ -10,16 +11,17 @@ interface CommercialTabProps {
 const Req = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
   <span className="easy-field-badge easy-field-required">{t('fieldRequired')}</span>
 );
-const Opt = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
-  <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
-);
 
 export function CommercialTab({ formData, onChange }: CommercialTabProps) {
   const t  = useTranslations('easyStart');
   const ti = useTranslations('easyStart.integrated');
+  const locale = useLocale();
+  const isAr = locale === 'ar';
 
   const set = (field: string, value: string) =>
     onChange({ ...formData, [field]: value });
+
+  const comRatio = useFloorRatio(formData, onChange, 'comUniformRatio', 'comUniformRatioValue', 'comFloorRatios');
 
   return (
     <div className="easy-tab-content">
@@ -85,7 +87,7 @@ export function CommercialTab({ formData, onChange }: CommercialTabProps) {
           <input
             type="number" min="0"
             className="easy-form-input"
-            placeholder="مثال: 10,000"
+            placeholder={isAr ? 'مثال: 10,000' : 'e.g. 10,000'}
             value={formData.commercialArea || ''}
             onChange={(e) => set('commercialArea', e.target.value)}
           />
@@ -97,29 +99,25 @@ export function CommercialTab({ formData, onChange }: CommercialTabProps) {
           <input
             type="text"
             className="easy-form-input"
-            placeholder="مثال: أرضي + 3"
+            placeholder={isAr ? 'مثال: أرضي + 3' : 'e.g. Ground + 3'}
             value={formData.commercialFloors || ''}
             onChange={(e) => set('commercialFloors', e.target.value)}
           />
         </div>
       </div>
 
-      <div className="easy-form-row">
-        <div className="easy-form-group">
-          <label className="easy-form-label">
-            {ti('buildingRequirements')} <Opt t={t} />
-          </label>
-          <textarea
-            className="easy-form-input"
-            rows={3}
-            placeholder={ti('buildingRequirementsPlaceholder')}
-            value={formData.commercialRequirements || ''}
-            onChange={(e) => set('commercialRequirements', e.target.value)}
-          />
-        </div>
-      </div>
+      {/* Floor ratios */}
+      <FloorRatioList
+        isAr={isAr}
+        uniform={comRatio.uniform}
+        uniformRatio={formData.comUniformRatioValue || ''}
+        entries={comRatio.floorEntries}
+        onUniformChange={comRatio.onUniformChange}
+        onUniformRatioChange={comRatio.onUniformRatioChange}
+        onEntriesChange={comRatio.setFloorEntries}
+      />
 
-      <p className="easy-field-hint">📄 {ti('uploadLicenseHint')}</p>
+      <p className="easy-field-hint" style={{ marginTop: '14px' }}>📄 {ti('uploadLicenseHint')}</p>
     </div>
   );
 }

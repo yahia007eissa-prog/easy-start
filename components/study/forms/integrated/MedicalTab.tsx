@@ -1,6 +1,7 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { FloorRatioList, useFloorRatio } from './FloorRatioList';
 
 interface MedicalTabProps {
   formData: Record<string, string>;
@@ -10,21 +11,22 @@ interface MedicalTabProps {
 const Req = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
   <span className="easy-field-badge easy-field-required">{t('fieldRequired')}</span>
 );
-const Opt = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
-  <span className="easy-field-badge easy-field-optional">{t('fieldOptional')}</span>
-);
 
 type MedType = 'clinics' | 'hospital' | 'dispensary' | 'mixed';
 
 export function MedicalTab({ formData, onChange }: MedicalTabProps) {
   const t  = useTranslations('easyStart');
   const ti = useTranslations('easyStart.integrated');
+  const locale = useLocale();
+  const isAr = locale === 'ar';
 
   const set = (field: string, value: string) =>
     onChange({ ...formData, [field]: value });
 
   const medType = (formData.medicalType as MedType) || 'clinics';
   const showBeds = medType === 'hospital' || medType === 'mixed';
+
+  const medRatio = useFloorRatio(formData, onChange, 'medUniformRatio', 'medUniformRatioValue', 'medFloorRatios');
 
   return (
     <div className="easy-tab-content">
@@ -89,7 +91,7 @@ export function MedicalTab({ formData, onChange }: MedicalTabProps) {
           <input
             type="number" min="0"
             className="easy-form-input"
-            placeholder="مثال: 2,000"
+            placeholder={isAr ? 'مثال: 2,000' : 'e.g. 2,000'}
             value={formData.medicalArea || ''}
             onChange={(e) => set('medicalArea', e.target.value)}
           />
@@ -101,7 +103,7 @@ export function MedicalTab({ formData, onChange }: MedicalTabProps) {
           <input
             type="text"
             className="easy-form-input"
-            placeholder="مثال: أرضي + 4"
+            placeholder={isAr ? 'مثال: أرضي + 4' : 'e.g. Ground + 4'}
             value={formData.medicalFloors || ''}
             onChange={(e) => set('medicalFloors', e.target.value)}
           />
@@ -122,25 +124,22 @@ export function MedicalTab({ formData, onChange }: MedicalTabProps) {
               onChange={(e) => set('bedsCount', e.target.value)}
             />
           </div>
+          <div className="easy-form-group" />
         </div>
       )}
 
-      <div className="easy-form-row">
-        <div className="easy-form-group">
-          <label className="easy-form-label">
-            {ti('buildingRequirements')} <Opt t={t} />
-          </label>
-          <textarea
-            className="easy-form-input"
-            rows={3}
-            placeholder={ti('buildingRequirementsPlaceholder')}
-            value={formData.medicalRequirements || ''}
-            onChange={(e) => set('medicalRequirements', e.target.value)}
-          />
-        </div>
-      </div>
+      {/* Floor ratios */}
+      <FloorRatioList
+        isAr={isAr}
+        uniform={medRatio.uniform}
+        uniformRatio={formData.medUniformRatioValue || ''}
+        entries={medRatio.floorEntries}
+        onUniformChange={medRatio.onUniformChange}
+        onUniformRatioChange={medRatio.onUniformRatioChange}
+        onEntriesChange={medRatio.setFloorEntries}
+      />
 
-      <p className="easy-field-hint">📄 {ti('uploadLicenseHint')}</p>
+      <p className="easy-field-hint" style={{ marginTop: '14px' }}>📄 {ti('uploadLicenseHint')}</p>
     </div>
   );
 }
