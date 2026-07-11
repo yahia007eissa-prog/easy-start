@@ -18,10 +18,11 @@ const FINISHING_LABEL: Record<string, string> = {
 };
 
 const BASEMENT_LABEL: Record<string, string> = {
-  none: 'لا يوجد بدروم',
-  one:  'بدروم واحد',
-  two:  'بدرومين',
-  more: 'أكثر من بدرومين',
+  none:  'لا يوجد بدروم',
+  one:   'بدروم واحد',
+  two:   'بدرومين',
+  three: '3 بدرومات',
+  four:  '4 بدرومات',
 };
 
 const SUBTYPE_LABEL: Record<string, string> = {
@@ -39,6 +40,11 @@ function val(v: string | undefined, fallback = 'غير محدد') {
 function labeled(label: string, v: string | undefined) {
   if (!v || !v.trim()) return '';
   return `- ${label}: ${v.trim()}`;
+}
+
+function parseJsonArray(raw: string | undefined): string[] {
+  try { const p = JSON.parse(raw || '[]'); return Array.isArray(p) ? p : []; }
+  catch { return []; }
 }
 
 // ── Integrated Urban Development prompt ──────────────────────────────────────
@@ -267,7 +273,20 @@ ${aptRatioLines ? aptRatioLines + '\n' : ''}`.trimEnd();
 4. جدول زمني تفصيلي بالمراحل
 5. تحليل مالي شامل (تكاليف الإنشاء الكلية، فترة الاسترداد، نقطة التعادل) — تكاليف إنشاء فقط بدون بيانات مبيعات`;
 
-  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel);
+  const basementExtraKeys = ['villaBasementExtras', 'aptBasementExtras', 'comBasementExtras', 'adminBasementExtras', 'medBasementExtras'];
+  const basementExtras = Array.from(new Set(basementExtraKeys.flatMap(key => parseJsonArray(d[key]))));
+
+  const floorRatioKeys = ['villaFloorRatios', 'aptFloorRatios', 'comFloorRatios', 'adminFloorRatios', 'medFloorRatios'];
+  const hasBasement = floorRatioKeys.some(key =>
+    parseJsonArray(d[key]).some((e: unknown) =>
+      typeof e === 'object' && e !== null && 'name' in e && String((e as { name: string }).name).includes('بدروم')
+    )
+  );
+  const basementNote = hasBasement
+    ? '\n⚠️ ملحوظة: البدروم يغطي عادةً كامل مساحة الأرض (100%) وليس نسبة البناء المحددة لباقي الأدوار، ما لم يُذكر خلاف ذلك.\n'
+    : '';
+
+  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel, basementExtras);
 
   const finishingLabel = FINISHING_LABEL[d.finishingLevel || 'none'] ?? 'بدون تشطيب';
 
@@ -281,6 +300,7 @@ ${ratesBlock}
 - دقة الدراسة: ${method}
 - مستوى التشطيب: ${finishingLabel}
 ${d.description ? `- وصف المشروع: ${d.description}` : ''}
+${basementNote}
 
 ${landSection}
 
@@ -356,6 +376,11 @@ function buildStandardPrompt(d: StudyFormData): string {
 
   const finishing = FINISHING_LABEL[d.finishingLevel || ''] ?? d.finishingLevel ?? 'غير محدد';
   const basement  = BASEMENT_LABEL[d.basement || 'none'] ?? 'لا يوجد';
+  const hasBasement = !!d.basement && d.basement !== 'none';
+  const basementNote = hasBasement
+    ? '\n  ⚠️ البدروم يغطي عادةً كامل مساحة الأرض (100%) وليس نسبة البناء المحددة لباقي الأدوار، ما لم يُذكر خلاف ذلك.'
+    : '';
+  const basementExtras = parseJsonArray(d.basementExtras);
 
   // Mixed-use floor distribution
   const MIXED_LABELS: Record<string, string> = {
@@ -383,7 +408,7 @@ function buildStandardPrompt(d: StudyFormData): string {
     labeled('سعر متر الأرض', d.landPrice),
     labeled('مساحة البناء المقررة', d.constructionArea),
     labeled('عدد الأدوار', d.floorsCount),
-    `- البدروم: ${basement}`,
+    `- البدروم: ${basement}${basementNote}`,
     `- مستوى التشطيب: ${finishing}`,
     `- نوع الملكية: ${ownershipLabel}${partnershipLine}`,
     labeled('نوع المشروع التفصيلي', d.projectType),
@@ -398,7 +423,7 @@ function buildStandardPrompt(d: StudyFormData): string {
 4. جدول زمني تفصيلي بالمراحل
 5. تحليل مالي شامل (ROI، التدفقات النقدية، فترة الاسترداد، نقطة التعادل)`;
 
-  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel);
+  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel, basementExtras);
 
   return `أنت خبير متخصص في دراسات الجدوى العقارية والإنشائية في مصر.
 
@@ -670,6 +695,10 @@ function buildIndustrialPrompt(d: StudyFormData): string {
   const method   = d.method === 'fast' ? 'تقريبية (80%+)' : 'تفصيلية كاملة (BOQ)';
   const basement = BASEMENT_LABEL[d.basement || 'none'] ?? 'لا يوجد';
   const finishing = FINISHING_LABEL[d.finishingLevel || 'normal'] ?? 'عادي';
+  const basementNote = d.basement && d.basement !== 'none'
+    ? '\n  ⚠️ البدروم يغطي عادةً كامل مساحة الأرض (100%) وليس نسبة البناء المحددة لباقي الأدوار، ما لم يُذكر خلاف ذلك.'
+    : '';
+  const basementExtras = parseJsonArray(d.basementExtras);
 
   const partnershipLine = d.ownershipType === 'partnership'
     ? `\n- نسبة مالك الأرض: ${val(d.ownerShare)}\n- نسبة المطور: ${val(d.developerShare)}`
@@ -682,7 +711,7 @@ function buildIndustrialPrompt(d: StudyFormData): string {
     labeled('سعر متر الأرض', d.landPrice),
     labeled('مساحة البناء المقررة', d.constructionArea),
     labeled('عدد الأدوار', d.floorsCount),
-    `- البدروم: ${basement}`,
+    `- البدروم: ${basement}${basementNote}`,
     `- مستوى التشطيب الصناعي: ${finishing}`,
     `- نوع الملكية: ${ownershipLabel}${partnershipLine}`,
     labeled('وصف إضافي', d.description),
@@ -696,7 +725,7 @@ function buildIndustrialPrompt(d: StudyFormData): string {
 4. جدول زمني تفصيلي بالمراحل
 5. تحليل مالي شامل (تكلفة الإنشاء + تكلفة التشغيل الأولى + ROI + فترة الاسترداد)`;
 
-  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel);
+  const ratesBlock = getConstructionRatesPrompt(d.finishingLevel, basementExtras);
 
   return `أنت خبير متخصص في دراسات الجدوى الإنشائية والصناعية في مصر.
 

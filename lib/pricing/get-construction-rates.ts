@@ -12,6 +12,7 @@ interface RatesData {
     items: Record<string, { label: string; price: number; unit: string }>;
     basement_multiplier: { table: Record<string, number>; note: string };
   };
+  basement_optional: { label: string; items: Record<string, { label: string; price: number; unit: string }> };
   finishing: { label: string; items: Record<string, { label: string; price: number; unit: string }> };
   mep:       { label: string; items: Record<string, { label: string; price: number; unit: string }> };
   indirect_costs: {
@@ -33,7 +34,7 @@ function loadData(): RatesData {
   return rawData;
 }
 
-export function getConstructionRatesPrompt(finishingLevel?: string): string {
+export function getConstructionRatesPrompt(finishingLevel?: string, basementExtras?: string[]): string {
   const r = loadData();
   const hasFinishing = finishingLevel && finishingLevel !== 'none';
   const fmt = (n: number) => n.toLocaleString('ar-EG');
@@ -46,6 +47,16 @@ export function getConstructionRatesPrompt(finishingLevel?: string): string {
   const basementRows = Object.entries(r.structural.basement_multiplier.table)
     .map(([k, v]) => `  ${k === '0' ? 'بدون بدروم' : k + ' بدروم'}: ×${v}`)
     .join('\n');
+
+  // ── Basement optional works — only the items the user actually selected ──
+  const selectedExtras = (basementExtras || []).filter(key => r.basement_optional.items[key]);
+  const basementExtrasBlock = selectedExtras.length
+    ? `\n【 أعمال إضافية بالبدروم — مُختارة لهذا المشروع 】\n` +
+      selectedExtras.map(key => {
+        const i = r.basement_optional.items[key];
+        return `  • ${i.label}: ${fmt(i.price)} ${i.unit}`;
+      }).join('\n') + '\n'
+    : '';
 
   // ── Finishing ──
   const finishRows = hasFinishing
@@ -92,7 +103,7 @@ ${structRows}
 【 معامل البدرومات — يُطبَّق على الأساسات والحفر فقط 】
 ${basementRows}
   (${r.structural.basement_multiplier.note})
-
+${basementExtrasBlock}
 【 التشطيبات 】
 ${finishRows}
 

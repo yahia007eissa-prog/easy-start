@@ -128,8 +128,8 @@ export function ResidentialTab({ formData, onChange }: ResidentialTabProps) {
   };
 
   /* ── floor ratio entries ── */
-  const villaRatio = useFloorRatio(formData, onChange, 'villaUniformRatio', 'villaUniformRatioValue', 'villaFloorRatios');
-  const aptRatio   = useFloorRatio(formData, onChange, 'aptUniformRatio',   'aptUniformRatioValue',   'aptFloorRatios');
+  const villaRatio = useFloorRatio(formData, onChange, 'villaUniformRatio', 'villaUniformRatioValue', 'villaFloorRatios', 'villaBasementExtras');
+  const aptRatio   = useFloorRatio(formData, onChange, 'aptUniformRatio',   'aptUniformRatioValue',   'aptFloorRatios',   'aptBasementExtras');
 
   return (
     <div className="easy-tab-content">
@@ -221,6 +221,8 @@ export function ResidentialTab({ formData, onChange }: ResidentialTabProps) {
             onUniformChange={villaRatio.onUniformChange}
             onUniformRatioChange={villaRatio.onUniformRatioChange}
             onEntriesChange={villaRatio.setFloorEntries}
+            basementExtras={villaRatio.basementExtras}
+            onBasementExtrasChange={villaRatio.onBasementExtrasChange}
           />
         </>
       )}
@@ -274,6 +276,8 @@ export function ResidentialTab({ formData, onChange }: ResidentialTabProps) {
             onUniformChange={aptRatio.onUniformChange}
             onUniformRatioChange={aptRatio.onUniformRatioChange}
             onEntriesChange={aptRatio.setFloorEntries}
+            basementExtras={aptRatio.basementExtras}
+            onBasementExtrasChange={aptRatio.onBasementExtrasChange}
           />
         </>
       )}

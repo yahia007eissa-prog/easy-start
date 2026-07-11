@@ -21,7 +21,7 @@ export function CommercialTab({ formData, onChange }: CommercialTabProps) {
   const set = (field: string, value: string) =>
     onChange({ ...formData, [field]: value });
 
-  const comRatio = useFloorRatio(formData, onChange, 'comUniformRatio', 'comUniformRatioValue', 'comFloorRatios');
+  const comRatio = useFloorRatio(formData, onChange, 'comUniformRatio', 'comUniformRatioValue', 'comFloorRatios', 'comBasementExtras');
 
   return (
     <div className="easy-tab-content">
@@ -115,6 +115,8 @@ export function CommercialTab({ formData, onChange }: CommercialTabProps) {
         onUniformChange={comRatio.onUniformChange}
         onUniformRatioChange={comRatio.onUniformRatioChange}
         onEntriesChange={comRatio.setFloorEntries}
+        basementExtras={comRatio.basementExtras}
+        onBasementExtrasChange={comRatio.onBasementExtrasChange}
       />
 
       <p className="easy-field-hint" style={{ marginTop: '14px' }}>📄 {ti('uploadLicenseHint')}</p>

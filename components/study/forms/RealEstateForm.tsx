@@ -280,10 +280,63 @@ export function RealEstateForm({ formData, onChange, subType }: RealEstateFormPr
             <option value="none">{t('noBasement')}</option>
             <option value="one">{t('oneBasement')}</option>
             <option value="two">{t('twoBasement')}</option>
-            <option value="more">{t('moreBasement')}</option>
+            <option value="three">{t('threeBasement')}</option>
+            <option value="four">{t('fourBasement')}</option>
           </select>
         </div>
       </div>
+
+      {formData.basement && formData.basement !== 'none' && (
+        <BasementExtras t={t} formData={formData} updateField={updateField} />
+      )}
     </>
+  );
+}
+
+/* ─── basement extra works (إحلال / شير وول / خوازيق) ──────────────────────── */
+const BASEMENT_EXTRA_ITEMS = ['soilReplacement', 'shearWall', 'piles'] as const;
+
+function parseBasementExtras(raw: string | undefined): string[] {
+  if (!raw) return [];
+  try { const p = JSON.parse(raw); return Array.isArray(p) ? p : []; }
+  catch { return []; }
+}
+
+function BasementExtras({ t, formData, updateField }: {
+  t: ReturnType<typeof useTranslations>;
+  formData: Record<string, string>;
+  updateField: (field: string, value: string) => void;
+}) {
+  const selected = parseBasementExtras(formData.basementExtras);
+  const toggle = (key: string) => {
+    const next = selected.includes(key) ? selected.filter(k => k !== key) : [...selected, key];
+    updateField('basementExtras', JSON.stringify(next));
+  };
+
+  return (
+    <div className="easy-form-group">
+      <label className="easy-form-label" style={{ marginBottom: '8px', display: 'block' }}>
+        🧱 {t('basementExtras')}
+      </label>
+      <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
+        {t('basementExtrasHint')}
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        {BASEMENT_EXTRA_ITEMS.map(key => {
+          const checked = selected.includes(key);
+          return (
+            <label key={key} style={{
+              display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer',
+              fontSize: '13px', border: `1.5px solid ${checked ? '#C9A84C' : '#e2e8f0'}`,
+              background: checked ? '#FFF8DC' : '#fff',
+              borderRadius: '8px', padding: '6px 12px',
+            }}>
+              <input type="checkbox" checked={checked} onChange={() => toggle(key)} />
+              {t(key)}
+            </label>
+          );
+        })}
+      </div>
+    </div>
   );
 }

@@ -21,7 +21,7 @@ export function AdminTab({ formData, onChange }: AdminTabProps) {
   const set = (field: string, value: string) =>
     onChange({ ...formData, [field]: value });
 
-  const adminRatio = useFloorRatio(formData, onChange, 'adminUniformRatio', 'adminUniformRatioValue', 'adminFloorRatios');
+  const adminRatio = useFloorRatio(formData, onChange, 'adminUniformRatio', 'adminUniformRatioValue', 'adminFloorRatios', 'adminBasementExtras');
 
   return (
     <div className="easy-tab-content">
@@ -105,6 +105,8 @@ export function AdminTab({ formData, onChange }: AdminTabProps) {
         onUniformChange={adminRatio.onUniformChange}
         onUniformRatioChange={adminRatio.onUniformRatioChange}
         onEntriesChange={adminRatio.setFloorEntries}
+        basementExtras={adminRatio.basementExtras}
+        onBasementExtrasChange={adminRatio.onBasementExtrasChange}
       />
 
       <p className="easy-field-hint" style={{ marginTop: '14px' }}>📄 {ti('uploadLicenseHint')}</p>

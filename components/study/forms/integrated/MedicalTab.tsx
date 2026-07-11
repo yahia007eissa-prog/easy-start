@@ -26,7 +26,7 @@ export function MedicalTab({ formData, onChange }: MedicalTabProps) {
   const medType = (formData.medicalType as MedType) || 'clinics';
   const showBeds = medType === 'hospital' || medType === 'mixed';
 
-  const medRatio = useFloorRatio(formData, onChange, 'medUniformRatio', 'medUniformRatioValue', 'medFloorRatios');
+  const medRatio = useFloorRatio(formData, onChange, 'medUniformRatio', 'medUniformRatioValue', 'medFloorRatios', 'medBasementExtras');
 
   return (
     <div className="easy-tab-content">
@@ -137,6 +137,8 @@ export function MedicalTab({ formData, onChange }: MedicalTabProps) {
         onUniformChange={medRatio.onUniformChange}
         onUniformRatioChange={medRatio.onUniformRatioChange}
         onEntriesChange={medRatio.setFloorEntries}
+        basementExtras={medRatio.basementExtras}
+        onBasementExtrasChange={medRatio.onBasementExtrasChange}
       />
 
       <p className="easy-field-hint" style={{ marginTop: '14px' }}>📄 {ti('uploadLicenseHint')}</p>
